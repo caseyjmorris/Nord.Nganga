@@ -53,9 +53,9 @@
       <Project>{d57b30bf-6e21-4c47-a06c-2155f6c2c8ca}</Project>
       <Name>Nord.Nganga.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Nord.Nganga.ViewModels\Nord.Nganga.ViewModels.csproj">
+    <ProjectReference Include="..\Nord.Nganga.ViewModels\Nord.Nganga.Models.csproj">
       <Project>{7ccea467-e8b3-4c22-8420-cf1851c96824}</Project>
-      <Name>Nord.Nganga.ViewModels</Name>
+      <Name>Nord.Nganga.Models</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

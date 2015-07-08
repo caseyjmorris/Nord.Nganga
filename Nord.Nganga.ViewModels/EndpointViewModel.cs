@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Nord.Nganga.ViewModels
+namespace Nord.Nganga.Models
 {
   public class EndpointViewModel
   {

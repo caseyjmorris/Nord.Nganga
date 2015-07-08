@@ -1,4 +1,4 @@
-﻿namespace Nord.Nganga.ViewModels.Configuration
+﻿namespace Nord.Nganga.Models.Configuration
 {
   public class WebApiSettingsPackage : IConfigurationPackage
   {

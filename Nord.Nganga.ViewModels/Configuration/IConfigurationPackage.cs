@@ -1,4 +1,4 @@
-﻿namespace Nord.Nganga.ViewModels.Configuration
+﻿namespace Nord.Nganga.Models.Configuration
 {
   /// <summary>
   /// Data class representing user settings.

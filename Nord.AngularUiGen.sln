@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.AngularUiGen.Mappers",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.Core", "Nord.Nganga.Core\Nord.Nganga.Core.csproj", "{D57B30BF-6E21-4C47-A06C-2155F6C2C8CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.ViewModels", "Nord.Nganga.ViewModels\Nord.Nganga.ViewModels.csproj", "{7CCEA467-E8B3-4C22-8420-CF1851C96824}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.Models", "Nord.Nganga.ViewModels\Nord.Nganga.Models.csproj", "{7CCEA467-E8B3-4C22-8420-CF1851C96824}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
