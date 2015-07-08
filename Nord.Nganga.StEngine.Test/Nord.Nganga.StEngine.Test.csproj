@@ -57,7 +57,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nord.AngularUiGen.StEngine\Nord.Nganga.StEngine.csproj">
+    <ProjectReference Include="..\Nord.Nganga.StEngine\Nord.Nganga.StEngine.csproj">
       <Project>{b4bcbb48-b413-4d29-9f74-21c24ece18cc}</Project>
       <Name>Nord.Nganga.StEngine</Name>
     </ProjectReference>
