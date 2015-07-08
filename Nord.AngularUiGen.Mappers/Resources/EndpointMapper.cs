@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Nord.AngularUiGen.Annotations.Attributes.Angular;
 using Nord.AngularUiGen.Annotations.Attributes.Html;
 using Nord.Nganga.Core.Reflection;
-using Nord.Nganga.Models;
+using Nord.Nganga.Core.Text;
 using Nord.Nganga.Models.Configuration;
 using Nord.Nganga.Models.ViewModels;
 
@@ -89,7 +90,8 @@ namespace Nord.AngularUiGen.Mappers.Resources
       {
         HttpMethod = m.httpMethod,
         MethodName = m.methodInfo.Name,
-        Arguments = m.methodInfo.GetParameters().Select(p => p.Name).ToList(),
+        ArgumentNames = m.methodInfo.GetParameters().Select(p => p.Name).ToList(),
+        ArgumentQueryString = this.FormatArgsForQueryString(m.methodInfo.GetParameters().Select(p => p.Name)),
         ArgumentTypes = m.methodInfo.GetParameters().Select(p => p.ParameterType).ToList(),
         HasReturnValue = m.hasReturnType,
         ReturnsIEnumerable = m.isEnumerable,
@@ -111,6 +113,24 @@ namespace Nord.AngularUiGen.Mappers.Resources
 
       AppDomain.CurrentDomain.AssemblyResolve -= handler;
       return endpointModels;
+    }
+
+    private string FormatArgsForQueryString(IEnumerable<string> args)
+    {
+      var hasId = args.Contains("id");
+      var hasNonIdArgs = args.Any(a => a != "id");
+      var sb = new StringBuilder("/");
+      sb
+        .AppendIf(":id", hasId)
+        .AppendIf("/", hasId && hasNonIdArgs);
+
+      if (hasNonIdArgs)
+      {
+        sb.Append("?");
+        var bodies = args.Where(a => a != "id").Select(a => string.Format("{0}=:{0}", a));
+        sb.Append(string.Join("&", bodies));
+      }
+      return sb.ToString();
     }
   }
 }

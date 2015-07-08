@@ -6,7 +6,7 @@ namespace Nord.Nganga.Models.ViewModels
   public class EndpointViewModel
   {
     public string MethodName { get; set; }
-    public IEnumerable<string> Arguments { get; set; }
+    public IEnumerable<string> ArgumentNames { get; set; }
     public bool HasReturnValue { get; set; }
     public bool ReturnsIEnumerable { get; set; }
     public HttpMethodType HttpMethod { get; set; }
@@ -17,6 +17,7 @@ namespace Nord.Nganga.Models.ViewModels
     public IEnumerable<string> OnPostSuccessExpressions { get; set; }
     public IEnumerable<string> OnPostFailureExpressions { get; set; }
     public bool ResourceOnly { get; set; }
+    public string ArgumentQueryString { get; set; }
 
     public enum HttpMethodType
     {
