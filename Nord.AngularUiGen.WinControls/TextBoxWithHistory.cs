@@ -11,24 +11,24 @@ namespace Nord.AngularUiGen.WinControls
 
     public Action<StringCollection> StringCollectionVisitor { get; set; }
 
-    private StringCollection _history;
+    private StringCollection history;
     public StringCollection History
     {
       set
       {
-        this._history = value;
+        this.history = value;
         this.comboBox1.DataSource = (from string s in value select s).ToList(); 
       }
       get
       {
-         return this._history ;
+         return this.history ;
       }
     }
 
     public TextBoxWithHistory()
     {
       this.InitializeComponent();
-      this._history = new StringCollection();
+      this.history = new StringCollection();
     }
 
     public new string Text
@@ -70,13 +70,13 @@ namespace Nord.AngularUiGen.WinControls
     {
       if (string.IsNullOrEmpty(currentText))
         return;
-      if ((from string s in this._history select s)
+      if ((from string s in this.history select s)
         .Any(i => i.Equals(currentText, StringComparison.InvariantCultureIgnoreCase))) return;
 
-      this._history.Add(currentText);
+      this.history.Add(currentText);
 
       this.comboBox1.DataSource = null;
-      this.comboBox1.DataSource = this._history;
+      this.comboBox1.DataSource = this.history;
 
       if (this.HistoryChanged != null)
       {
@@ -103,7 +103,7 @@ namespace Nord.AngularUiGen.WinControls
     private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
     {
       this.deleteToolStripMenuItem.DropDownItems.Clear();
-      (from string s in this._history select s).ToList().ForEach(i =>
+      (from string s in this.history select s).ToList().ForEach(i =>
       {
         var mi = new ToolStripMenuItem(i);
         mi.Click += this.mi_Click;
@@ -113,7 +113,7 @@ namespace Nord.AngularUiGen.WinControls
 
     void mi_Click(object sender, EventArgs e)
     {
-      this._history.Remove(((ToolStripMenuItem)sender).Text);
+      this.history.Remove(((ToolStripMenuItem)sender).Text);
     }
 
     private void comboBox1_Format(object sender, ListControlConvertEventArgs e)

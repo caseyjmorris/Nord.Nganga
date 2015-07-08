@@ -9,9 +9,9 @@ namespace Nord.AngularUiGen.Engine.Support
   /// <typeparam name="T">An equatable object</typeparam>
   public class OccurrenceCounter<T> where T : IEquatable<T>
   {
-    private readonly Dictionary<T, int> _dict = new Dictionary<T, int>();
+    private readonly Dictionary<T, int> dict = new Dictionary<T, int>();
 
-    private readonly int _offset;
+    private readonly int offset;
 
     /// <summary>
     /// Create a new occurence counter.
@@ -19,7 +19,7 @@ namespace Nord.AngularUiGen.Engine.Support
     /// <param name="offset">All counts will start here.</param>
     public OccurrenceCounter(int offset = 0)
     {
-      this._offset = offset;
+      this.offset = offset;
     }
 
     /// <summary>
@@ -29,12 +29,12 @@ namespace Nord.AngularUiGen.Engine.Support
     /// <returns>Previous references plus current count</returns>
     public int Count(T input)
     {
-      if (this._dict.ContainsKey(input))
+      if (this.dict.ContainsKey(input))
       {
-        return ++this._dict[input];
+        return ++this.dict[input];
       }
-      this._dict[input] = this._offset;
-      return this._offset;
+      this.dict[input] = this.offset;
+      return this.offset;
     }
 
     /// <summary>
@@ -48,11 +48,11 @@ namespace Nord.AngularUiGen.Engine.Support
     public int Peek(T input)
     {
       int val;
-      if (this._dict.TryGetValue(input, out val))
+      if (this.dict.TryGetValue(input, out val))
       {
         return val;
       }
-      return this._offset - 1;
+      return this.offset - 1;
     }
   }
 }

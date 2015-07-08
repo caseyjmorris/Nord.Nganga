@@ -21,12 +21,12 @@ namespace Nord.AngularUiGen.WinApp
 {
   public partial class Form1 : Form
   {
-    private readonly Dictionary<Type, CoordinationResult> _coordinationResults =
+    private readonly Dictionary<Type, CoordinationResult> coordinationResults =
       new Dictionary<Type, CoordinationResult>();
 
-    private readonly CsProjEditor _csProjEditor = new CsProjEditor();
-    private Dictionary<string, string> _customOutputMappingDictionary = new Dictionary<string, string>();
-    private readonly Dictionary<string, string> _vsIntegrationDictionary = new Dictionary<string, string>();
+    private readonly CsProjEditor csProjEditor = new CsProjEditor();
+    private Dictionary<string, string> customOutputMappingDictionary = new Dictionary<string, string>();
+    private readonly Dictionary<string, string> vsIntegrationDictionary = new Dictionary<string, string>();
 
     public Form1()
     {
@@ -58,7 +58,7 @@ namespace Nord.AngularUiGen.WinApp
       this.useCustomOutputMappingToolStripMenuItem.Checked = Settings1.Default.UseCustomOutputMapping;
       if (Settings1.Default.UseCustomOutputMapping)
       {
-        this._customOutputMappingDictionary = (from string mapEntry in Settings1.Default.CustomOutputMap
+        this.customOutputMappingDictionary = (from string mapEntry in Settings1.Default.CustomOutputMap
           let toks = mapEntry.Split('=')
           let key = toks[0]
           let value = toks[1]
@@ -202,11 +202,11 @@ namespace Nord.AngularUiGen.WinApp
       this.resourceRTB.Clear();
       var targetType = this.controllerTypeSelector.SelectedType;
       this.GenerateTarget(targetType);
-      if (!this._coordinationResults.ContainsKey(targetType)) return;
+      if (!this.coordinationResults.ContainsKey(targetType)) return;
 
-      this.viewRTB.Text = this._coordinationResults[targetType].ViewBody;
-      this.contorllerRTB.Text = this._coordinationResults[targetType].ControllerBody;
-      this.resourceRTB.Text = this._coordinationResults[targetType].ResourceBody;
+      this.viewRTB.Text = this.coordinationResults[targetType].ViewBody;
+      this.contorllerRTB.Text = this.coordinationResults[targetType].ControllerBody;
+      this.resourceRTB.Text = this.coordinationResults[targetType].ResourceBody;
     }
 
     private void GenerateTarget(Type targetControllerType)
@@ -218,7 +218,7 @@ namespace Nord.AngularUiGen.WinApp
           new HtmlGenerator(new OccurrenceCounter<string>()),
           new ResourceGenerator(),
           new ControllerGenerator(), new NameSuggester());
-        this._coordinationResults[targetControllerType] = coordinator.CoordinateUiGeneration(targetControllerType);
+        this.coordinationResults[targetControllerType] = coordinator.CoordinateUiGeneration(targetControllerType);
         this.Log("{0} - generated.", targetControllerType.Name);
       }
       catch (Exception generationException)
@@ -231,7 +231,7 @@ namespace Nord.AngularUiGen.WinApp
     private void saveToolStripMenuItem_Click(object sender, EventArgs e)
     {
       var targetType = this.controllerTypeSelector.SelectedType;
-      if (!this._coordinationResults.ContainsKey(targetType))
+      if (!this.coordinationResults.ContainsKey(targetType))
       {
         MessageBox.Show(
           Resources._The_selected_controller_has_not_been_generated,
@@ -241,9 +241,9 @@ namespace Nord.AngularUiGen.WinApp
         return;
       }
 
-      this._vsIntegrationDictionary.Clear();
+      this.vsIntegrationDictionary.Clear();
 
-      this.SaveResult(this._coordinationResults[targetType]);
+      this.SaveResult(this.coordinationResults[targetType]);
 
       this.IntegrateFiles();
 
@@ -268,7 +268,7 @@ namespace Nord.AngularUiGen.WinApp
       {
         File.WriteAllText(targetFileName, dataProvider());
         this.Log("{0} written to disk.", targetFileName);
-        this._vsIntegrationDictionary[targetFileName] = relativeName;
+        this.vsIntegrationDictionary[targetFileName] = relativeName;
         return;
       }
 
@@ -279,14 +279,14 @@ namespace Nord.AngularUiGen.WinApp
       if (f == null)
       {
         var d = new SaveFileDialog();
-        if (!this._customOutputMappingDictionary.ContainsKey(targetFileName))
+        if (!this.customOutputMappingDictionary.ContainsKey(targetFileName))
         {
           d.FileName = targetFileName;
-          d.Filter = this._saveFileFiltersDictionary[Path.GetExtension(targetFileName)];
+          d.Filter = this.saveFileFiltersDictionary[Path.GetExtension(targetFileName)];
           var dr = d.ShowDialog();
           if (dr == DialogResult.OK)
           {
-            this._customOutputMappingDictionary[targetFileName] = d.FileName;
+            this.customOutputMappingDictionary[targetFileName] = d.FileName;
           }
           else
           {
@@ -296,14 +296,14 @@ namespace Nord.AngularUiGen.WinApp
       }
       else
       {
-        this._customOutputMappingDictionary[targetFileName] = f;
+        this.customOutputMappingDictionary[targetFileName] = f;
       }
-      File.WriteAllText(this._customOutputMappingDictionary[targetFileName], dataProvider());
-      this.Log("{0} written to disk.", this._customOutputMappingDictionary[targetFileName]);
-      this._vsIntegrationDictionary[targetFileName] = relativeName;
+      File.WriteAllText(this.customOutputMappingDictionary[targetFileName], dataProvider());
+      this.Log("{0} written to disk.", this.customOutputMappingDictionary[targetFileName]);
+      this.vsIntegrationDictionary[targetFileName] = relativeName;
     }
 
-    private readonly Dictionary<string,string> _saveFileFiltersDictionary = new Dictionary<string, string>
+    private readonly Dictionary<string,string> saveFileFiltersDictionary = new Dictionary<string, string>
     {
       {".html","HTML | *.html"},
       {".js","JavaScript| *.js"}
@@ -318,7 +318,7 @@ namespace Nord.AngularUiGen.WinApp
     private void Form1_FormClosing(object sender, FormClosingEventArgs e)
     {
       var sc = new StringCollection();
-      foreach (var kvp in this._customOutputMappingDictionary)
+      foreach (var kvp in this.customOutputMappingDictionary)
       {
         sc.Add(kvp.Key + "=" + kvp.Value);
       }
@@ -328,12 +328,12 @@ namespace Nord.AngularUiGen.WinApp
 
     private void allToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      this._vsIntegrationDictionary.Clear();
+      this.vsIntegrationDictionary.Clear();
       foreach (var target in this.controllerTypeSelector.TypeList)
       {
         this.GenerateTarget(target);
-        if (!this._coordinationResults.ContainsKey(target)) continue;
-        this.SaveResult(this._coordinationResults[target]);
+        if (!this.coordinationResults.ContainsKey(target)) continue;
+        this.SaveResult(this.coordinationResults[target]);
       }
       this.IntegrateFiles();
     }
@@ -345,7 +345,7 @@ namespace Nord.AngularUiGen.WinApp
 
       this.Log("VS integration target is {0}", vsProjectFile);
 
-      this._vsIntegrationDictionary.Keys.ToList().ForEach(fileName => this.Log("{0}{1}", '\t', fileName));
+      this.vsIntegrationDictionary.Keys.ToList().ForEach(fileName => this.Log("{0}{1}", '\t', fileName));
       if (!Settings1.Default.AutoVSIntegration)
       {
         this.Log("Integration disabled.");
@@ -355,8 +355,8 @@ namespace Nord.AngularUiGen.WinApp
       {
         this.Log("Integration starting.");
 
-        this._csProjEditor.AddFileToCsProj(
-          vsProjectFile, this._vsIntegrationDictionary.Keys.ToList(),
+        this.csProjEditor.AddFileToCsProj(
+          vsProjectFile, this.vsIntegrationDictionary.Keys.ToList(),
           (p)=> this.Log("{0}{1}",'\t',p));
 
         this.Log("Integration complete.");

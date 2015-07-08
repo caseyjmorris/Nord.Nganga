@@ -8,24 +8,23 @@ namespace Nord.AngularUiGen.Annotations.Attributes.ViewModels
   [AttributeUsage(AttributeTargets.Property)]
   public class SelectCommonAttribute : Attribute
   {
-
-    private string _providerExpression;
+    private string providerExpression;
 
     public string NotResolvedExpression
     {
       get { return string.Format("(!{0}.{1}.$resolved)", this.ObjectName, this.CommonInformationName); }
     }
 
-    public string GetReadOnlyExpression(string indexer="")
+    public string GetReadOnlyExpression(string indexer = "")
     {
-        return string.Format(
-          "(!{0}.{1}.$resolved){2}", 
-          this.ObjectName,
-          this.CommonInformationName,
-          string.IsNullOrEmpty(indexer)
-            ? ""
-            : string.Format(" || (!{0}.{1}{2})", this.ObjectName, this.CommonInformationName, indexer)
-          );
+      return string.Format(
+        "(!{0}.{1}.$resolved){2}",
+        this.ObjectName,
+        this.CommonInformationName,
+        string.IsNullOrEmpty(indexer)
+          ? ""
+          : string.Format(" || (!{0}.{1}{2})", this.ObjectName, this.CommonInformationName, indexer)
+        );
     }
 
     public string QualifiedName
@@ -45,25 +44,22 @@ namespace Nord.AngularUiGen.Annotations.Attributes.ViewModels
     {
       get
       {
-        if (this._providerExpression != null)
+        if (this.providerExpression != null)
         {
-          return this._providerExpression;
+          return this.providerExpression;
         }
         var chrArr = this.CommonInformationName.ToCharArray();
         chrArr[0] = char.ToUpperInvariant(chrArr[0]);
         var st = new string(chrArr);
         return string.Format("commonRecordsService.get{0}(); ", st);
       }
-      set { this._providerExpression = value; }
+      set { this.providerExpression = value; }
     }
 
-    private string _commonInformationName;
     /// <summary>
     /// The name of the common records
     /// </summary>
-    public string CommonInformationName { 
-    get{return _commonInformationName;}
-      set { _commonInformationName = value.ToCamelCase(); } }
+    public string CommonInformationName { get; set; }
 
     /// <summary>
     /// The name of the object attached to the $scope which will be looked up for values.
@@ -98,6 +94,5 @@ namespace Nord.AngularUiGen.Annotations.Attributes.ViewModels
       this.RestrictUntilResolved = true;
       this.ObjectName = "common";
     }
-
   }
 }

@@ -20,12 +20,12 @@ namespace Nord.AngularUiGen.Engine.Html
 {
   public class HtmlGenerator
   {
-    private readonly OccurrenceCounter<string> _idCounter;
+    private readonly OccurrenceCounter<string> idCounter;
 
 
     public HtmlGenerator(OccurrenceCounter<string> idCounter)
     {
-      this._idCounter = idCounter;
+      this.idCounter = idCounter;
     }
 
     internal string PrettyPrint(string html)
@@ -155,7 +155,7 @@ namespace Nord.AngularUiGen.Engine.Html
           col.AppendChild("label")
             .WithOptionalCssClassIf("required-field-label", () => field.Model.IsRequired)
             .WithOptionalAttributeIf("for",
-              string.Format("{0}FormControl{1}", fieldName, this._idCounter.Count(fieldName)),
+              string.Format("{0}FormControl{1}", fieldName, this.idCounter.Count(fieldName)),
               () =>
                 !readOnlyField && !field.IsCollection &&
                 field.Model.DataType.GetNonNullableType() != typeof (bool))
@@ -421,7 +421,7 @@ namespace Nord.AngularUiGen.Engine.Html
           () => field.SelectCommon !=null && field.SelectCommon.RestrictUntilResolved )
         .WithOptionalAttributeIf("required", "required", () => field.IsRequired)
         .WithOptionalAttributeIf("id",
-          string.Format("{0}FormControl{1}", field.FieldName, this._idCounter.Peek(field.FieldName)), () => withEdit)
+          string.Format("{0}FormControl{1}", field.FieldName, this.idCounter.Peek(field.FieldName)), () => withEdit)
         .WithAttribute("data-ng-model", string.Format("{0}{1}.{2}", ancestorAppendString, model.Name, field.FieldName))
         .WithAttribute("data-ng-options",field.SelectCommon.GetIteratorExpression("item", commonRecordsIndexer))
         .WithOptionalAttributeIf("disabled", "disabled", () => !withEdit)
@@ -443,7 +443,7 @@ namespace Nord.AngularUiGen.Engine.Html
 
         var trueRadioId = string.Format("{0}-{1}-true-radio", model.Name, field.FieldName);
 
-        var occ = this._idCounter.Count(trueRadioId);
+        var occ = this.idCounter.Count(trueRadioId);
 
         if (occ > 0)
         {
@@ -514,7 +514,7 @@ namespace Nord.AngularUiGen.Engine.Html
         .WithOptionalAttributeIf("step", "1", () => type == typeof (int))
         .WithOptionalAttributeIf("step", ".01", () => type == typeof (decimal))
         .WithOptionalAttributeIf("step", "any", () => type == typeof (double))
-        .WithAttribute("id", string.Format("{0}FormControl{1}", field.FieldName, this._idCounter.Peek(field.FieldName)))
+        .WithAttribute("id", string.Format("{0}FormControl{1}", field.FieldName, this.idCounter.Peek(field.FieldName)))
         .WithAttribute("data-ng-model", ngModelStr);
     }
 

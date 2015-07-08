@@ -25,9 +25,9 @@ namespace Nord.AngularUiGen.Engine.JavaScript
   /// </remarks>
   public class ControllerGenerator
   {
-    private int _indentLevel = 1;
+    private int indentLevel = 1;
 
-    private readonly object _lockObj = new object();
+    private readonly object lockObj = new object();
 
     public string GenerateController(Type controller)
     {
@@ -48,7 +48,7 @@ namespace Nord.AngularUiGen.Engine.JavaScript
 
       var applicationName = controller.GetAttribute<AngularModuleNameAttribute>().ModuleName;
 
-      lock (this._lockObj)
+      lock (this.lockObj)
       {
         return this.GenerateControllerInternal(controller, idParameter, applicationName, idParameterIsNullable);
       }
@@ -96,9 +96,9 @@ namespace Nord.AngularUiGen.Engine.JavaScript
         .Append(".controller('")
         .Append(controller.Name.ToCamelCase().Replace("Controller", "Ctrl"))
         .Append("',\r\n")
-        .Indent(this._indentLevel)
+        .Indent(this.indentLevel)
         .AppendLine("[")
-        .Indent(++this._indentLevel);
+        .Indent(++this.indentLevel);
 
       var ctrlSvc = controller.Name.Replace("Controller", string.Empty).ToCamelCase() + "Service";
 
@@ -107,14 +107,14 @@ namespace Nord.AngularUiGen.Engine.JavaScript
           a => a.Services));
 
       stringBuilder
-        .Indent(++this._indentLevel);
+        .Indent(++this.indentLevel);
 
       if (idParameter != null)
       {
         stringBuilder
           .AppendFormat("var {0} = $stateParams.{0};", idParameter)
           .SkipLines(2)
-          .Indent(this._indentLevel);
+          .Indent(this.indentLevel);
       }
 
       if (privilegedRoleList != null)
@@ -131,10 +131,10 @@ namespace Nord.AngularUiGen.Engine.JavaScript
           builder =>
           {
             this.AppendControllerRetrievals(builder, controller, ctrlSvc, idParameter);
-            builder.Remove(builder.Length - (10 + this._indentLevel), 10 + this._indentLevel);
+            builder.Remove(builder.Length - (10 + this.indentLevel), 10 + this.indentLevel);
           });
 
-        stringBuilder.SkipLinesAndIndent(this._indentLevel, 2);
+        stringBuilder.SkipLinesAndIndent(this.indentLevel, 2);
       }
       else
       {
@@ -158,10 +158,10 @@ namespace Nord.AngularUiGen.Engine.JavaScript
       }
 
       stringBuilder
-        .Remove(stringBuilder.Length - (this._indentLevel*2 + 2), (this._indentLevel*2 + 2))
-        .Indent(--this._indentLevel)
+        .Remove(stringBuilder.Length - (this.indentLevel*2 + 2), (this.indentLevel*2 + 2))
+        .Indent(--this.indentLevel)
         .Append("}")
-        .SkipLineAndIndent(--this._indentLevel)
+        .SkipLineAndIndent(--this.indentLevel)
         .Append("]);");
 
       return stringBuilder.ToString();
@@ -185,7 +185,7 @@ namespace Nord.AngularUiGen.Engine.JavaScript
 
       stringBuilder
         .SkipLines()
-        .Indent(this._indentLevel)
+        .Indent(this.indentLevel)
         .Append("function(");
 
       foreach (var commonSvc in commonSvcs)
@@ -196,7 +196,7 @@ namespace Nord.AngularUiGen.Engine.JavaScript
       stringBuilder.Remove(stringBuilder.Length - 2, 2)
         .Append(")")
         .SkipLines()
-        .Indent(++this._indentLevel)
+        .Indent(++this.indentLevel)
         .Append("{")
         .SkipLines();
     }
@@ -209,7 +209,7 @@ namespace Nord.AngularUiGen.Engine.JavaScript
         stringBuilder.AppendFormat(" || userInfoService.userIsInRole('{0}')", roles[i]);
       }
       stringBuilder.Append(";")
-        .SkipLinesAndIndent(this._indentLevel, 2);
+        .SkipLinesAndIndent(this.indentLevel, 2);
     }
 
     private void AppendCommonRecords(StringBuilder stringBuilder, ICollection<ViewModelViewModel> viewModels)
@@ -224,14 +224,14 @@ namespace Nord.AngularUiGen.Engine.JavaScript
       foreach (var scopeCommonRecordObject in scopeCommonRecordObjects)
       {
         stringBuilder.AppendFormat("$scope.{0} = $scope.{0} || {{}};", scopeCommonRecordObject)
-          .SkipLinesAndIndent(this._indentLevel, 2);
+          .SkipLinesAndIndent(this.indentLevel, 2);
       }
 
       foreach (var commonRecord in commonRecords)
       {
         stringBuilder.AppendFormat("$scope.{0} = {1}", commonRecord.Key,
           commonRecord.Value)
-          .SkipLinesAndIndent(this._indentLevel, 2);
+          .SkipLinesAndIndent(this.indentLevel, 2);
       }
     }
 
@@ -260,7 +260,7 @@ namespace Nord.AngularUiGen.Engine.JavaScript
 
         stringBuilder.AppendFormat(callString)
           .SkipLines(2)
-          .Indent(this._indentLevel);
+          .Indent(this.indentLevel);
       }
     }
 
@@ -268,7 +268,7 @@ namespace Nord.AngularUiGen.Engine.JavaScript
       IList<KeyValuePair<ViewModelViewModel, IList<ViewModelViewModel>>> subordinateObjects)
     {
       stringBuilder.AppendLine("var existingElementIds = {")
-        .Indent(++this._indentLevel);
+        .Indent(++this.indentLevel);
 
       for (var i = 0; i < subordinateObjects.Count; i++)
       {
@@ -277,15 +277,15 @@ namespace Nord.AngularUiGen.Engine.JavaScript
         if (i + 1 < subordinateObjects.Count)
         {
           stringBuilder.Append(",\r\n")
-            .Indent(this._indentLevel);
+            .Indent(this.indentLevel);
         }
       }
 
       stringBuilder.SkipLines()
-        .Indent(--this._indentLevel)
+        .Indent(--this.indentLevel)
         .Append("};")
         .SkipLines(2)
-        .Indent(this._indentLevel);
+        .Indent(this.indentLevel);
     }
 
     private void AppendModalControlMethods(StringBuilder stringBuilder,
@@ -312,73 +312,73 @@ namespace Nord.AngularUiGen.Engine.JavaScript
 
       stringBuilder.AppendFormat("$scope.add{0} = function()", propertyString.WithFirstLetterUppercased())
         .SkipLines()
-        .Indent(++this._indentLevel)
+        .Indent(++this.indentLevel)
         .AppendLine("{")
-        .Indent(++this._indentLevel)
+        .Indent(++this.indentLevel)
         .AppendFormat("$scope.{0}.{1} = $scope.{0}.{1} || [];", ancestorsCleanString,
           pluralNameOfType)
-        .SkipLineAndIndent(this._indentLevel)
+        .SkipLineAndIndent(this.indentLevel)
         .AppendFormat("$scope.{0} = {{}};", propertyString)
         .SkipLines()
-        .Indent(this._indentLevel)
+        .Indent(this.indentLevel)
         .AppendFormat("existingElementIds.{0} = null;", propertyString)
         .SkipLines()
-        .Indent(this._indentLevel)
+        .Indent(this.indentLevel)
         .AppendFormat("modalManagerService.showModal('{0}Modal');", propertyString)
         .SkipLines()
-        .Indent(--this._indentLevel)
+        .Indent(--this.indentLevel)
         .Append("};")
         .SkipLines(2)
-        .Indent(--this._indentLevel);
+        .Indent(--this.indentLevel);
 
       stringBuilder.AppendFormat("$scope.edit{0}At = function(index)",
         propertyString.WithFirstLetterUppercased())
-        .SkipLineAndIndent(++this._indentLevel)
+        .SkipLineAndIndent(++this.indentLevel)
         .Append("{")
-        .SkipLineAndIndent(++this._indentLevel)
+        .SkipLineAndIndent(++this.indentLevel)
         .AppendFormat("$scope.{0} = {{}};", propertyString)
-        .SkipLineAndIndent(this._indentLevel)
+        .SkipLineAndIndent(this.indentLevel)
         .AppendFormat("existingElementIds.{0} = index;", propertyString)
-        .SkipLineAndIndent(this._indentLevel)
+        .SkipLineAndIndent(this.indentLevel)
         .AppendFormat("$.extend($scope.{0}, $scope.{1}.{2}[index]);", propertyString,
           ancestorsCleanString, pluralNameOfType)
-        .SkipLineAndIndent(this._indentLevel)
+        .SkipLineAndIndent(this.indentLevel)
         .AppendFormat("modalManagerService.showModal('{0}Modal');", propertyString)
-        .SkipLineAndIndent(--this._indentLevel)
+        .SkipLineAndIndent(--this.indentLevel)
         .Append("};")
         .SkipLines(2)
-        .Indent(--this._indentLevel);
+        .Indent(--this.indentLevel);
 
       stringBuilder.AppendFormat("$scope.save{0}Modal = function()", propertyString.WithFirstLetterUppercased())
-        .SkipLineAndIndent(++this._indentLevel)
+        .SkipLineAndIndent(++this.indentLevel)
         .Append("{")
-        .SkipLineAndIndent(++this._indentLevel)
+        .SkipLineAndIndent(++this.indentLevel)
         .AppendFormat("if (existingElementIds.{0} === null)", propertyString)
-        .SkipLineAndIndent(++this._indentLevel)
+        .SkipLineAndIndent(++this.indentLevel)
         .Append("{")
-        .SkipLineAndIndent(++this._indentLevel)
+        .SkipLineAndIndent(++this.indentLevel)
         .AppendFormat("$scope.{0}.{1}.push($scope.{2});", ancestorsCleanString, pluralNameOfType,
           propertyString)
-        .SkipLineAndIndent(--this._indentLevel)
+        .SkipLineAndIndent(--this.indentLevel)
         .Append("}")
-        .SkipLineAndIndent(--this._indentLevel)
+        .SkipLineAndIndent(--this.indentLevel)
         .Append("else")
-        .SkipLineAndIndent(++this._indentLevel)
+        .SkipLineAndIndent(++this.indentLevel)
         .Append("{")
-        .SkipLineAndIndent(++this._indentLevel)
+        .SkipLineAndIndent(++this.indentLevel)
         .AppendFormat("$scope.{0}.{1}[existingElementIds.{2}] = $scope.{2};", ancestorsCleanString,
           pluralNameOfType, propertyString)
-        .SkipLineAndIndent(--this._indentLevel)
+        .SkipLineAndIndent(--this.indentLevel)
         .Append("}")
-        .SkipLineAndIndent(--this._indentLevel)
+        .SkipLineAndIndent(--this.indentLevel)
         .AppendFormat("modalManagerService.closeModal('{0}Modal');", propertyString)
-        .SkipLineAndIndent(this._indentLevel)
+        .SkipLineAndIndent(this.indentLevel)
         .AppendFormat("$scope.{0}Form.$setPristine();", propertyString)
-        .SkipLineAndIndent(this._indentLevel)
+        .SkipLineAndIndent(this.indentLevel)
         .AppendFormat("$scope.{0}Form.$setDirty();", ancestorsCleanString)
-        .SkipLineAndIndent(--this._indentLevel)
+        .SkipLineAndIndent(--this.indentLevel)
         .Append("};")
-        .SkipLinesAndIndent(--this._indentLevel, 2);
+        .SkipLinesAndIndent(--this.indentLevel, 2);
 
       stringBuilder.AppendFormat("$scope.delete{0}At = function(index)",
         propertyString.WithFirstLetterUppercased());
@@ -386,12 +386,12 @@ namespace Nord.AngularUiGen.Engine.JavaScript
       this.AppendInBlock(stringBuilder, s =>
       {
         s.AppendFormat("$scope.{0}.{1}.splice(index, 1);", ancestorsCleanString, pluralNameOfType)
-          .SkipLineAndIndent(this._indentLevel)
+          .SkipLineAndIndent(this.indentLevel)
           .AppendFormat("$scope.{0}Form.$setDirty();", ancestorsCleanString);
       });
 
       stringBuilder.Append(";")
-        .SkipLinesAndIndent(this._indentLevel, 2);
+        .SkipLinesAndIndent(this.indentLevel, 2);
     }
 
     private void AppendPostMethods(StringBuilder stringBuilder, IEnumerable<EndpointViewModel> endpoints,
@@ -428,12 +428,12 @@ namespace Nord.AngularUiGen.Engine.JavaScript
             s1 =>
             {
               s1.AppendIf(string.Format("$scope.{0} = result;\r\n", ctrlReturnTypeStr), endpoint.HasReturnValue)
-                .IndentIf(this._indentLevel, endpoint.HasReturnValue)
+                .IndentIf(this.indentLevel, endpoint.HasReturnValue)
                 .AppendFormat("$scope.{0}Form.$setPristine();", modelStr);
 
               foreach (var expression in endpoint.OnPostSuccessExpressions)
               {
-                s1.SkipLineAndIndent(this._indentLevel).Append(expression);
+                s1.SkipLineAndIndent(this.indentLevel).Append(expression);
               }
             });
 
@@ -442,22 +442,22 @@ namespace Nord.AngularUiGen.Engine.JavaScript
 
         stringBuilder
           .Append(";")
-          .SkipLinesAndIndent(this._indentLevel, 2);
+          .SkipLinesAndIndent(this.indentLevel, 2);
       }
     }
 
     private void AppendInBlock(StringBuilder stringBuilder, Action<StringBuilder> action)
     {
-      stringBuilder.SkipLineAndIndent(++this._indentLevel)
+      stringBuilder.SkipLineAndIndent(++this.indentLevel)
         .Append("{")
-        .SkipLineAndIndent(++this._indentLevel);
+        .SkipLineAndIndent(++this.indentLevel);
 
       action(stringBuilder);
 
-      stringBuilder.SkipLineAndIndent(--this._indentLevel)
+      stringBuilder.SkipLineAndIndent(--this.indentLevel)
         .Append("}");
 
-      this._indentLevel--;
+      this.indentLevel--;
     }
 
     private IList<KeyValuePair<ViewModelViewModel, IList<ViewModelViewModel>>> GetAllComplexSubordinates(

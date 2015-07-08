@@ -6,12 +6,12 @@ namespace Nord.AngularUiGen.WinControls
 {
   public partial class WaitDialog : Form
   {
-    private readonly Control _parent;
+    private readonly Control parent;
 
     public WaitDialog(Control parent, string msg)
     {
       this.InitializeComponent();
-      this._parent = parent;
+      this.parent = parent;
       this.label1.Text = msg;
       var vCtr = parent.Top + (parent.Height / 2);
       var hCtr = parent.Left + (parent.Width / 2);
@@ -47,12 +47,12 @@ namespace Nord.AngularUiGen.WinControls
 
     private void SetParentState(bool newState)
     {
-      if (this._parent.InvokeRequired)
+      if (this.parent.InvokeRequired)
       {
-        this._parent.Invoke(new Action<bool>(this.SetParentState), newState);
+        this.parent.Invoke(new Action<bool>(this.SetParentState), newState);
         return;
       }
-      this._parent.Enabled = newState;
+      this.parent.Enabled = newState;
     }
 
     private void WaitDialog_FormClosed(object sender, FormClosedEventArgs e)

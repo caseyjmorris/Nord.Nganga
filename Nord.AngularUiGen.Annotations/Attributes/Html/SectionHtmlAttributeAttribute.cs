@@ -29,11 +29,11 @@ namespace Nord.AngularUiGen.Annotations.Attributes.Html
     /// </summary>
     public string HtmlAttributeValue
     {
-      get { return this._htmlAttributeValue ?? this.HtmlAttributeName; }
-      set { this._htmlAttributeValue = value; }
+      get { return this.htmlAttributeValue ?? this.HtmlAttributeName; }
+      set { this.htmlAttributeValue = value; }
     }
 
-    private string _htmlAttributeValue;
+    private string htmlAttributeValue;
 
     public SectionHtmlAttributeAttribute(string sectionName, string htmlAttributeName)
     {

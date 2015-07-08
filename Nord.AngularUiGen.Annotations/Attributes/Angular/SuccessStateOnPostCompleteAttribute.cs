@@ -14,15 +14,15 @@ namespace Nord.AngularUiGen.Annotations.Attributes.Angular
     /// </summary>
     public string RouteParameters { get; set; }
 
-    private readonly string _destinationState;
+    private readonly string destinationState;
 
     public override string Expression
     {
       get
       {
         return this.RouteParameters != null
-          ? string.Format("$state.go('{0}', {{{1}}});", this._destinationState, this.RouteParameters)
-          : string.Format("$state.go('{0}');", this._destinationState);
+          ? string.Format("$state.go('{0}', {{{1}}});", this.destinationState, this.RouteParameters)
+          : string.Format("$state.go('{0}');", this.destinationState);
       }
     }
 
@@ -32,7 +32,7 @@ namespace Nord.AngularUiGen.Annotations.Attributes.Angular
     /// <param name="destinationState">success destination</param>
     public SuccessStateOnPostCompleteAttribute(string destinationState) : base(null)
     {
-      this._destinationState = destinationState;
+      this.destinationState = destinationState;
     }
   }
 }

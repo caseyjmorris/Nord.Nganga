@@ -15,30 +15,30 @@ namespace Nord.AngularUiGen.Engine.Coordination
 {
   public class GenerationCoordinator
   {
-    private readonly HtmlGenerator _htmlGenerator;
-    private readonly ResourceGenerator _resourceGenerator;
-    private readonly ControllerGenerator _controllerGenerator;
-    private readonly NameSuggester _nameSuggester;
+    private readonly HtmlGenerator htmlGenerator;
+    private readonly ResourceGenerator resourceGenerator;
+    private readonly ControllerGenerator controllerGenerator;
+    private readonly NameSuggester nameSuggester;
 
     public GenerationCoordinator(HtmlGenerator htmlGenerator, ResourceGenerator resourceGenerator,
       ControllerGenerator controllerGenerator, NameSuggester nameSuggester)
     {
-      this._htmlGenerator = htmlGenerator;
-      this._resourceGenerator = resourceGenerator;
-      this._controllerGenerator = controllerGenerator;
-      this._nameSuggester = nameSuggester;
+      this.htmlGenerator = htmlGenerator;
+      this.resourceGenerator = resourceGenerator;
+      this.controllerGenerator = controllerGenerator;
+      this.nameSuggester = nameSuggester;
     }
 
     public CoordinationResult CoordinateUiGeneration(Type controller)
     {
       var result = new CoordinationResult
       {
-        ControllerBody = this._controllerGenerator.GenerateController(controller),
-        ResourceBody = this._resourceGenerator.GenerateResource(controller),
+        ControllerBody = this.controllerGenerator.GenerateController(controller),
+        ResourceBody = this.resourceGenerator.GenerateResource(controller),
         ViewBody = this.CoordinateView(controller),
-        ControllerPath = this._nameSuggester.SuggestControllerFileName(controller),
-        ResourcePath = this._nameSuggester.SuggestResourceFileName(controller),
-        ViewPath = this._nameSuggester.SuggestViewFileName(controller),
+        ControllerPath = this.nameSuggester.SuggestControllerFileName(controller),
+        ResourcePath = this.nameSuggester.SuggestResourceFileName(controller),
+        ViewPath = this.nameSuggester.SuggestViewFileName(controller),
       };
 
       return result;
@@ -78,7 +78,7 @@ namespace Nord.AngularUiGen.Engine.Coordination
 
       return "<!-- GENERATED CODE -- " + DateTime.Now +
              " -- changes to this file may be lost if the code is regenerated -->\r\n" +
-             this._htmlGenerator.PrettyPrint(masterDiv.ToString());
+             this.htmlGenerator.PrettyPrint(masterDiv.ToString());
     }
 
     private void AppendViewOnlyView(TreeTagBuilder tag, bool restrictedEdit, IEnumerable<EndpointViewModel> getEndPoints)
@@ -155,8 +155,8 @@ namespace Nord.AngularUiGen.Engine.Coordination
       tag
         .AppendFullWidthBootStrapRow()
         .AppendChild(asEnumerable
-          ? this._htmlGenerator.GenerateHtmlDisplayTableTag(vm, withEdit, childFormsCollection)
-          : this._htmlGenerator.GenerateHtmlFormTag(vm, withEdit, childFormsCollection));
+          ? this.htmlGenerator.GenerateHtmlDisplayTableTag(vm, withEdit, childFormsCollection)
+          : this.htmlGenerator.GenerateHtmlFormTag(vm, withEdit, childFormsCollection));
     }
   }
 }

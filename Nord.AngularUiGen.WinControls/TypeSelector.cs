@@ -12,15 +12,15 @@ namespace Nord.AngularUiGen.WinControls
     public event EventHandler<EventArgs> SelectionChanged;
     public IEnumerable<TypeSelectorFilter> Filters { private get; set; }
 
-    private Assembly _sourceAssembly;
+    private Assembly sourceAssembly;
 
     public Assembly SourceAssembly
     {
-      get { return this._sourceAssembly; }
+      get { return this.sourceAssembly; }
       set
       {
-        this._sourceAssembly = value;
-        if (this._sourceAssembly == null)
+        this.sourceAssembly = value;
+        if (this.sourceAssembly == null)
         {
           this.TypeList = new List<Type>();
           return;
@@ -30,7 +30,7 @@ namespace Nord.AngularUiGen.WinControls
         var assertModule = this.Filters.Any(f => f.IsActive && f.FilterDescription.Contains("Module"));
         var assertRoute = this.Filters.Any(f => f.IsActive && f.FilterDescription.Contains("Route"));
 
-        var types = this._sourceAssembly.FindWebApiControllers(
+        var types = this.sourceAssembly.FindWebApiControllers(
           assertWebApi,
           assertModule,
           assertRoute).ToList();
@@ -48,18 +48,18 @@ namespace Nord.AngularUiGen.WinControls
       }
     }
 
-    private List<Type> _typeList;
+    private List<Type> typeList;
     public List<Type> TypeList
     {
-      get { return this._typeList; }
+      get { return this.typeList; }
       private set
       {
-        this._typeList = value ?? new List<Type>();
-        this.comboBox1.DataSource = this._typeList;
+        this.typeList = value ?? new List<Type>();
+        this.comboBox1.DataSource = this.typeList;
 
-        if (this._typeList.Count == 1)
+        if (this.typeList.Count == 1)
         {
-          this.SelectedType = this._typeList.First();
+          this.SelectedType = this.typeList.First();
         }
         else
         {
@@ -118,7 +118,7 @@ namespace Nord.AngularUiGen.WinControls
       var filter = menuItem.Tag as TypeSelectorFilter;
       if (filter == null) return;
       filter.IsActive = menuItem.Checked;
-      this.SourceAssembly = this._sourceAssembly;
+      this.SourceAssembly = this.sourceAssembly;
     }
   }
 }

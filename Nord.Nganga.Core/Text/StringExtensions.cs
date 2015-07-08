@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Nord.AngularUiGen.Engine.Extensions.Text
+namespace Nord.Nganga.Core.Text
 {
   public static class StringExtensions
   {
