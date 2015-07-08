@@ -1,16 +1,44 @@
-﻿delimiters "<", ">"
-
-resourceFile(model) ::= <<
+﻿resourceFile(model, getEndpoints, postEndpoints) ::= <<
+//  remard
+<model.AppName>.factory('<model.ServiceName>',[]) 
+{
 <initialization(model)>
 
-<model.getEndPoints: { endpoint | %getEndpointTemplate(endpoint)% }>
+<postEndpoints: { endpoint | <postEndpointTemplate(endpoint)> }>
 
-<model.putEndPoints: { endpoint | %putEndpointTemplate(endpoint)% }>
+<getEndpoints: { endpoint | <getEndpointTemplate(endpoint)> }>
 
+};
 >>
 
-getEndpointTemplate(endpoint) ::= <<
+initialization(model) ::= <<
+// we will init <model.AppName> here
 >>
 
-putEndpointTemplate(endpoint) ::= <<
+getEndpointTemplate(model, endpoint) ::= <<
+<endpoint.MethodName>: function( 
+	<endpoint.ArgumentNames: { arg | <arg> ,}> 
+	successFn,
+	failFn) 
+	{
+		var rsc = $resource(<resourceUri(model, endpoint)>, {}, {'get' : { <isArray(endpoint)> <useCache(endpoint)> }});
+		return rcs.get({ <endpoint.Arguments:{arg| arg: arg; separator=","}> }, {}, successFn, failFn);
+	}
+	
+>>
+
+isArray(endpoint) ::= <<
+isArray: <if(endpoint.ReturnsIsIEnumerable)>true<else>false<endif>
+>>
+
+resourceUri(model, endpoint) ::= <<
+'/api/<model.ControllerName>/<endpoint.MethodName><endpoint.ArgumentQueryString>'
+>>
+
+useCache(endpoint) ::= <<
+<if(endpoint.UseCache)>, cache: true<endif>
+>>
+
+postEndpointTemplate(endpoint) ::= <<
+POST 
 >>

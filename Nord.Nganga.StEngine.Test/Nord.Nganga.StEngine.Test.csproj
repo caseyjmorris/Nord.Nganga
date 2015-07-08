@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nord.Nganga.StEngine.Test</RootNamespace>
     <AssemblyName>Nord.Nganga.StEngine.Test</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -16,6 +16,7 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,7 +39,14 @@
     <Reference Include="Antlr4.StringTemplate">
       <HintPath>..\packages\Antlr4.StringTemplate.4.0.6.9004\lib\net35\Antlr4.StringTemplate.dll</HintPath>
     </Reference>
+    <Reference Include="NORD.RareCare.Presentation.Web">
+      <HintPath>..\..\Nord.RareCare\NORD.RareCare.Presentation.Web\bin\NORD.RareCare.Presentation.Web.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Web.Http, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.0\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -57,9 +65,25 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nord.AngularUiGen.Annotations\Nord.AngularUiGen.Annotations.csproj">
+      <Project>{d653cb9b-920b-451b-9eef-ebba3837ba29}</Project>
+      <Name>Nord.AngularUiGen.Annotations</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nord.AngularUiGen.Mappers\Nord.AngularUiGen.Mappers.csproj">
+      <Project>{773bc0d5-1705-4302-b8a7-1c6772c53d2b}</Project>
+      <Name>Nord.AngularUiGen.Mappers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nord.Nganga.Core\Nord.Nganga.Core.csproj">
+      <Project>{d57b30bf-6e21-4c47-a06c-2155f6c2c8ca}</Project>
+      <Name>Nord.Nganga.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nord.Nganga.StEngine\Nord.Nganga.StEngine.csproj">
       <Project>{b4bcbb48-b413-4d29-9f74-21c24ece18cc}</Project>
       <Name>Nord.Nganga.StEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nord.Nganga.ViewModels\Nord.Nganga.Models.csproj">
+      <Project>{7ccea467-e8b3-4c22-8420-cf1851c96824}</Project>
+      <Name>Nord.Nganga.Models</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
