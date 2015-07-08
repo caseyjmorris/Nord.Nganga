@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Antlr4.StringTemplate;
 
-namespace Nord.AngularUiGen.StEngine
+namespace Nord.Nganga.StEngine
 {
-  public class TemplateFactory
+  public static class TemplateFactory
   {
 
     public enum Context { View, Controller, Resource}

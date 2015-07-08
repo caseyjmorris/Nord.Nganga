@@ -7,8 +7,8 @@
     <ProjectGuid>{B4BCBB48-B413-4D29-9F74-21C24ECE18CC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nord.AngularUiGen.StEngine</RootNamespace>
-    <AssemblyName>Nord.AngularUiGen.StEngine</AssemblyName>
+    <RootNamespace>Nord.Nganga.StEngine</RootNamespace>
+    <AssemblyName>Nord.Nganga.StEngine</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

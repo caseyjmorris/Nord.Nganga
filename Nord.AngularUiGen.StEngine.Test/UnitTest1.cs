@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Nord.AngularUiGen.StEngine.Test
+namespace Nord.Nganga.StEngine.Test
 {
   [TestClass]
   public class UnitTest1
