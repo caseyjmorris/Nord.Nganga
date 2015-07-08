@@ -1,13 +1,10 @@
-﻿resourceFile(model, getEndpoints, postEndpoints) ::= <<
+﻿resourceFile(model, getEndpoints, postEndpoints, hasGetAndPost) ::= <<
 //  remard
 <model.AppName>.factory('<model.ServiceName>',[]) 
 {
 <initialization(model)>
-
-<postEndpoints: { endpoint | <postEndpointTemplate(endpoint)> }>
-
-<getEndpoints: { endpoint | <getEndpointTemplate(endpoint)> }>
-
+<postEndpoints: { endpoint | <postEndpointTemplate(endpoint)> };separator=","><if(hasGetAndPost)>,<endif>
+<getEndpoints: { endpoint | <getEndpointTemplate(model, endpoint)> };separator=",">
 };
 >>
 
@@ -16,15 +13,11 @@ initialization(model) ::= <<
 >>
 
 getEndpointTemplate(model, endpoint) ::= <<
-<endpoint.MethodName>: function( 
-	<endpoint.ArgumentNames: { arg | <arg> ,}> 
-	successFn,
-	failFn) 
+<endpoint.MethodName>: function( <endpoint.ArgumentNames: { arg | <arg> ,}> successFn, failFn) 
 	{
 		var rsc = $resource(<resourceUri(model, endpoint)>, {}, {'get' : { <isArray(endpoint)> <useCache(endpoint)> }});
-		return rcs.get({ <endpoint.Arguments:{arg| arg: arg; separator=","}> }, {}, successFn, failFn);
-	}
-	
+		return rcs.get({ <endpoint.ArgumentNames:{arg| <arg>: <arg>}; separator=","> }, {}, successFn, failFn);
+	}	
 >>
 
 isArray(endpoint) ::= <<
@@ -40,5 +33,8 @@ useCache(endpoint) ::= <<
 >>
 
 postEndpointTemplate(endpoint) ::= <<
-POST 
+<endpoint.MethodName>: function( model, successFn, failFn) 
+	{
+		// tbd ... 
+	}	
 >>

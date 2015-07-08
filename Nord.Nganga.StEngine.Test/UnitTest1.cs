@@ -22,7 +22,7 @@ namespace Nord.Nganga.StEngine.Test
     [TestMethod]
     public void TestResourceCoordination()
     {
-      var t = TemplateFactory.GetTemplate(TemplateFactory.Context.Resource, "resourceFile", true);
+      var t = TemplateFactory.GetTemplate(TemplateFactory.Context.Resource, "resourceFile", false);
 
       var wasp = new WebApiSettingsPackage();
       wasp.SetPropertiesToDefault();
@@ -40,6 +40,7 @@ namespace Nord.Nganga.StEngine.Test
       t.Add("model", model);
       t.Add("getEndpoints", model.GetEndpoints.ToList());
       t.Add("postEndpoints", model.PostEndpoints.ToList());
+      t.Add("hasGetAndPost", model.PostEndpoints.Any() && model.GetEndpoints.Any());
 
       var s = t.Render();
       Console.WriteLine(s);
