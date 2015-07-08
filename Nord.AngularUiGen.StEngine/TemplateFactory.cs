@@ -11,13 +11,16 @@ namespace Nord.AngularUiGen.StEngine
   public class TemplateFactory
   {
 
-    public enum Context { View, Controller, Service }
-    public static Template GetTemplate(Context context, string name)
+    public enum Context { View, Controller, Resource}
+    public static Template GetTemplate(Context context, string name, bool debug = false)
     {
-      var fileName = string.Format(@"{0}/templates/{1}/default.stg", Environment.CurrentDirectory, context);
-      Console.WriteLine(fileName +":");
-      Console.Write(File.ReadAllText(fileName));
-      Console.WriteLine("---");
+      var fileName = string.Format(@"{0}/{1}.stg", Environment.CurrentDirectory, context);
+      if (debug)
+      {
+        Console.WriteLine(fileName +":");
+        Console.Write(File.ReadAllText(fileName));
+        Console.WriteLine("---");
+      }
       TemplateGroup group = new TemplateGroupFile(fileName);
       var template = group.GetInstanceOf(name);
       return template;

@@ -1,0 +1,4 @@
+﻿delimiters "<", ">"
+
+resourceFile(model) ::= <<
+>>

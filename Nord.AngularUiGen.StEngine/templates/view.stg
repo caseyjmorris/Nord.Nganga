@@ -1,0 +1,45 @@
+﻿delimiters "%","%"
+
+t1(model) ::= <<
+%model.people: { person | %letter(person)% }%
+>>
+
+letter(person) ::= <<
+Hello,  %salutationMap.(person.sex)% %person.lastName%
+	%((bodyMap.( salutationMap.( person.sex ) )))()%
+
+>>
+
+t2(model) ::= <<
+	%bodyMap.(model.sex)%
+>>
+
+femaleTemplate() ::= <<
+Throwing a tupperware party! Won't you please join us?
+>>
+
+maleTemplate() ::= <<
+Group fishing trip next week - see you there!
+>>
+
+salutationMap ::= [
+	"female":"Ms.",
+	"male":"Mr.",
+	default: ""
+]
+
+bodyMap ::= [
+	"Ms.": "femaleTemplate",
+	"Mr.": "maleTemplate",
+	default: "defaultBody"
+]
+
+//    <((fk_assignment_rule_map.( CLRTypeMap.( key.column_db_typename ) ))) (key=key)> 
+
+/*
+
+fk_assignment_rule_map ::= [
+	"System.String":"direct_fk_assignment",
+	default:"value_fk_assignment"
+]
+*/
