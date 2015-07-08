@@ -41,9 +41,10 @@
   <ItemGroup>
     <Compile Include="Configuration\WebApiSettingsPackage.cs" />
     <Compile Include="Configuration\IConfigurationPackage.cs" />
-    <Compile Include="EndpointViewModel.cs" />
+    <Compile Include="ViewModels\EndpointViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModelViewModel.cs" />
+    <Compile Include="ViewModels\ResourceCoordinatedInformationViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nord.AngularUiGen.Annotations\Nord.AngularUiGen.Annotations.csproj">

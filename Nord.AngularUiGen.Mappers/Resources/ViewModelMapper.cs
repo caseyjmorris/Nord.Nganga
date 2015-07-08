@@ -10,6 +10,7 @@ using Nord.AngularUiGen.Annotations.Attributes.ViewModels;
 using Nord.Nganga.Core.Reflection;
 using Nord.Nganga.Core.Text;
 using Nord.Nganga.Models;
+using Nord.Nganga.Models.ViewModels;
 
 namespace Nord.AngularUiGen.Mappers.Resources
 {
