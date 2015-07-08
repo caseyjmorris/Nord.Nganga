@@ -28,7 +28,9 @@ namespace Nord.AngularUiGen.Mappers.Resources
           controller.HasAttribute<UseAngularGlobalCacheAttribute>(),
         CustomCacheFactory =
           controller.HasAttribute<UseAngularLocalCacheAttribute>()
-            ? controller.Name.Replace("Controller", string.Empty).ToCamelCase(),
+            ? controller.Name.Replace("Controller", string.Empty).ToCamelCase()
+            : null
+        ,
         GetEndpoints = endpoints.Where(e => e.HttpMethod == EndpointViewModel.HttpMethodType.Get),
         PostEndpoints = endpoints.Where(e => e.HttpMethod == EndpointViewModel.HttpMethodType.Post),
       };

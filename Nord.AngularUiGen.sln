@@ -11,9 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.AngularUiGen.WinApp", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.AngularUiGen.WinControls", "Nord.AngularUiGen.WinControls\Nord.AngularUiGen.WinControls.csproj", "{66C141CB-69B0-4D49-B372-D0D33D5384E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.StEngine", "Nord.AngularUiGen.StEngine\Nord.Nganga.StEngine.csproj", "{B4BCBB48-B413-4D29-9F74-21C24ECE18CC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.AngularUiGen.StEngine", "Nord.AngularUiGen.StEngine\Nord.AngularUiGen.StEngine.csproj", "{B4BCBB48-B413-4D29-9F74-21C24ECE18CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.StEngine.Test", "Nord.AngularUiGen.StEngine.Test\Nord.Nganga.StEngine.Test.csproj", "{A79D810F-0CC4-4B7D-B70A-075DA9E65080}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.AngularUiGen.StEngine.Test", "Nord.AngularUiGen.StEngine.Test\Nord.AngularUiGen.StEngine.Test.csproj", "{A79D810F-0CC4-4B7D-B70A-075DA9E65080}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.AngularUiGen.Mappers", "Nord.AngularUiGen.Mappers\Nord.AngularUiGen.Mappers.csproj", "{773BC0D5-1705-4302-B8A7-1C6772C53D2B}"
 EndProject
