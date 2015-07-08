@@ -1,4 +1,16 @@
 ﻿delimiters "<", ">"
 
 resourceFile(model) ::= <<
+<initialization(model)>
+
+<model.getEndPoints: { endpoint | %getEndpointTemplate(endpoint)% }>
+
+<model.putEndPoints: { endpoint | %putEndpointTemplate(endpoint)% }>
+
+>>
+
+getEndpointTemplate(endpoint) ::= <<
+>>
+
+putEndpointTemplate(endpoint) ::= <<
 >>
