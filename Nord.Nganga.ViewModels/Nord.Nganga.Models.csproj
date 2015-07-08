@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\ConfigurationFactory.cs" />
     <Compile Include="Configuration\WebApiSettingsPackage.cs" />
     <Compile Include="Configuration\IConfigurationPackage.cs" />
     <Compile Include="ViewModels\EndpointViewModel.cs" />

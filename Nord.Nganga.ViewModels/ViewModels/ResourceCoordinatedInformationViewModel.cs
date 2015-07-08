@@ -10,5 +10,6 @@ namespace Nord.Nganga.Models.ViewModels
     public string ServiceName { get; set; }
     public IEnumerable<EndpointViewModel> GetEndpoints { get; set; }
     public IEnumerable<EndpointViewModel> PostEndpoints { get; set; }
+    public string ControllerName { get; set; }
   }
 }
