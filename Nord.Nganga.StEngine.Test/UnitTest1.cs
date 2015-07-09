@@ -9,7 +9,6 @@ namespace Nord.Nganga.StEngine.Test
   [TestClass]
   public class UnitTest1
   {
-
     [TestMethod]
     public void TestResourceCoordination()
     {
@@ -21,11 +20,14 @@ namespace Nord.Nganga.StEngine.Test
       var resourceCoordMapper = new ResourceCoordinationMapper(endpointMapper);
 
       var subjectType =
-        typeof (
+        typeof(
           NORD.RareCare.Presentation.Web.Controllers.Api.Programs.ProgramPeriods.AssociatesAndProviders.
             SponsorsController);
 
       var model = resourceCoordMapper.GetResourceCoordinationInformationViewModel(subjectType);
+      model.UseCustomCache = true;
+      model.CustomCacheFactory = "test";
+      model.ServiceName = "service";
       t.Add("model", model);
 
       var s = t.Render();

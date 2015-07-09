@@ -6,14 +6,19 @@ namespace Nord.Nganga.StEngine
 {
   public static class TemplateFactory
   {
+    public enum Context
+    {
+      View,
+      Controller,
+      Resource
+    }
 
-    public enum Context { View, Controller, Resource}
     public static Template GetTemplate(Context context, string name, bool debug = false)
     {
       var fileName = string.Format(@"{0}/templates/{1}.stg", Environment.CurrentDirectory, context);
       if (debug)
       {
-        Console.WriteLine(fileName +":");
+        Console.WriteLine(fileName + ":");
         Console.WriteLine(File.ReadAllText(fileName));
         Console.WriteLine("---");
       }

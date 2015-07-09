@@ -1,25 +1,28 @@
 ﻿resourceFile(model) ::= <<
 //  This is generated code.  Changes to this file will be lost if the file is regenerated.
 <model.AppName>.factory('<model.ServiceName>', ['$resource', <if(model.UseCustomCache)>'$cacheFactory', <endif>function($resource<if(model.UseCustomCache)>, $cacheFactory<endif>)
-<if(model.UseCustomCache)><cacheInit(model)><endif>
-  return {
-<model.PostEndpoints: { endpoint | <postEndpointTemplate(endpoint)> };separator=","><if(first(model.PostEndpoints) && first(model.GetEndpoints))>,<endif>
-<model.GetEndpoints: { endpoint | <getEndpointTemplate(model, endpoint)> };separator=",">
-  }
-]);
+  {<if(model.UseCustomCache)>
+<cacheInit(model)><endif>
+    return {
+<model.PostEndpoints: { endpoint |<postEndpointTemplate(model, endpoint)>};separator=","><if(first(model.PostEndpoints) && first(model.GetEndpoints))>,<endif>
+<model.GetEndpoints: { endpoint |<getEndpointTemplate(model, endpoint)>};separator=",">
+  };
+}]);
 >>
 
 cacheInit(model) ::= <<
-      var cache
+        var resourceCache = $cacheFactory('<model.CustomCacheFactory>');
+
+
 >>
 
 getEndpointTemplate(model, endpoint) ::= <<
-    <endpoint.MethodName>: function( <endpoint.ArgumentNames: { arg | <arg> ,}> successFn, failFn) 
-      {
-        var rsc = $resource(<resourceUri(model, endpoint)>, {}, {'get' : { <isArray(endpoint)> <useCache(endpoint)> }});
+      <endpoint.MethodName>: function( <endpoint.ArgumentNames: { arg | <arg> ,}> successFn, failFn) 
+        {
+          var rsc = $resource(<resourceUri(model, endpoint)>, {}, {'get' : { <isArray(endpoint)> <useCache(endpoint)> }});
 
-        return rcs.get({ <endpoint.ArgumentNames:{arg| <arg>: <arg>}; separator=","> }, {}, successFn, failFn);
-      }
+          return rcs.get({ <endpoint.ArgumentNames:{arg| <arg>: <arg>}; separator=","> }, {}, successFn, failFn);
+        }
 >>
 
 isArray(endpoint) ::= <<
@@ -34,9 +37,19 @@ useCache(endpoint) ::= <<
 <if(endpoint.UseCache)>, cache: true<endif>
 >>
 
-postEndpointTemplate(endpoint) ::= <<
-      <endpoint.MethodName>: function(model, successFn, failFn) 
+postEndpointTemplate(model, endpoint) ::= <<
+      <endpoint.MethodName>: function(model, successFn, failFn)
         {
-          var rsc  
+          var rsc = $resource(<resourceUri(model, endpoint)>, {}, {'save': {<isArray(endpoint)>, method: 'POST'}});
+
+          rsc.save({}, model,  <if(model.UseCustomCache)><clearCustomCache()><else>succssFn<endif>, failFn);
         }
+>>
+
+clearCustomCache() ::= <<
+function(result)
+          {
+            resourceCache.removeAll();
+            successFn(result);
+          }
 >>
