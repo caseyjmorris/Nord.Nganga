@@ -11,15 +11,6 @@ namespace Nord.Nganga.StEngine.Test
   {
 
     [TestMethod]
-    public void TestMethod3()
-    {
-      var t = TemplateFactory.GetTemplate(TemplateFactory.Context.View, "t1");
-      t.Add("model", new { people = new[] { new { lastName = "Zhao", sex = "female" }, new { lastName = "Morris", sex = "male" } } });
-      var s = t.Render();
-      Console.WriteLine(s);
-    }
-
-    [TestMethod]
     public void TestResourceCoordination()
     {
       var t = TemplateFactory.GetTemplate(TemplateFactory.Context.Resource, "resourceFile", false);
@@ -35,12 +26,7 @@ namespace Nord.Nganga.StEngine.Test
             SponsorsController);
 
       var model = resourceCoordMapper.GetResourceCoordinationInformationViewModel(subjectType);
-      //model.GetEndpoints = model.GetEndpoints.ToList();
-      //model.PostEndpoints = model.PostEndpoints.ToList();
       t.Add("model", model);
-      t.Add("getEndpoints", model.GetEndpoints.ToList());
-      t.Add("postEndpoints", model.PostEndpoints.ToList());
-      t.Add("hasGetAndPost", model.PostEndpoints.Any() && model.GetEndpoints.Any());
 
       var s = t.Render();
       Console.WriteLine(s);

@@ -1,15 +1,12 @@
-﻿resourceFile(model, getEndpoints, postEndpoints, hasGetAndPost) ::= <<
+﻿resourceFile(model) ::= <<
 //  This is generated code.  Changes to this file will be lost if the file is regenerated.
 <model.AppName>.factory('<model.ServiceName>', ['$resource', <if(model.UseCustomCache)>'$cacheFactory', <endif>function($resource<if(model.UseCustomCache)>, $cacheFactory<endif>)
 <if(model.UseCustomCache)><cacheInit(model)><endif>
   return {
-<postEndpoints: { endpoint | <postEndpointTemplate(endpoint)> };separator=","><if(hasGetAndPost)>,<endif>
-<getEndpoints: { endpoint | <getEndpointTemplate(model, endpoint)> };separator=",">
+<model.PostEndpoints: { endpoint | <postEndpointTemplate(endpoint)> };separator=","><if(first(model.PostEndpoints) && first(model.GetEndpoints))>,<endif>
+<model.GetEndpoints: { endpoint | <getEndpointTemplate(model, endpoint)> };separator=",">
   }
 ]);
-<initialization(model)>
-<postEndpoints: { endpoint | <postEndpointTemplate(endpoint)> };separator=","><if(hasGetAndPost)>,<endif>
-<getEndpoints: { endpoint | <getEndpointTemplate(model, endpoint)> };separator=",">
 >>
 
 cacheInit(model) ::= <<
