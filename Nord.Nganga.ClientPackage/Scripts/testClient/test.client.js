@@ -1,5 +1,5 @@
-var ngangaUi = angular.module(
-  'nganga.ui', [
+var ngangaTestClient = angular.module(
+  'nganga.test.client', [
     'ngResource',
     'ui.utils',
     'ui.router',
@@ -7,7 +7,8 @@ var ngangaUi = angular.module(
     'ui.bootstrap',
     'tableSort',
     'toaster',
-    'ngAnimate'
+    'ngAnimate',
+    'nganga.ui'
   ])
   .run([
     '$rootScope', '$state', '$stateParams', function ($rootScope, $state, $stateParams)
@@ -16,5 +17,3 @@ var ngangaUi = angular.module(
         $rootScope.$stateParams = $stateParams;
       }
   ]);
-
-window.ngangaTemplateLocation = '/templates/';

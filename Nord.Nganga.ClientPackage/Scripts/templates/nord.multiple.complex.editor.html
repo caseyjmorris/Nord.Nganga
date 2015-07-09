@@ -1,0 +1,30 @@
+<table class="table table-bordered table-condensed table-striped table-hover table-responsive">
+  <thead>
+  <tr>
+    <th ng-repeat="fieldDefinition in fieldDefinitionValues" ts-criteria="{{fieldDefinition.name}}">
+      <!-- add filter for sorter here -->
+      {{fieldDefinition.label}}
+    </th>
+    <th>
+      Actions
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="item in collection track by $index">
+      <td ng-repeat="fieldDefinition in fieldDefinitionValues">
+        {{collection[$index][fieldDefinition.name]}} <!-- Does not properly handle special values right now... -->
+      </td>
+      <td>
+        <!-- actions-->
+      </td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <th colspan="{{fieldDefinitionValues.length + 1}}">
+        <span>Add another one.</span> <!-- Add actual buttons here -->
+      </th>
+    </tr>
+  </tfoot>
+</table>

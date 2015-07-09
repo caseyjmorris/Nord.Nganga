@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script type="text/javascript" src="..\lib\jq\jquery-2.1.1.js"></script>
+  <script src="..\lib\bootstrap.js"></script>
+  <script src="..\lib\lodash.js"></script>
+  <script src="..\lib\spin.js"></script>
+  <script src="..\lib\modernizr-2.6.2.js"></script>
+  <script src="..\lib\stacktrace.js"></script>
+  <script src="..\lib\ng\angular.js"></script>
+  <script src="..\lib\ng\angular-resource.js"></script>
+  <script src="..\lib\ng\angular-animate.js"></script>
+  <script src="..\lib\ng\angular-cookies.js"></script>
+  <script src="..\lib\ng\angular-tablesort.js"></script>
+  <script src="..\lib\ng-ui\ui-bootstrap.js"></script>
+  <script src="..\lib\ng-ui\ui-utils.js"></script>
+  <script src="..\lib\ng-ui\ui-utils-ieshiv.js"></script>
+  <script src="..\lib\ng-ui\angular-ui-router.js"></script>
+  <script src="..\lib\toaster.js"></script>
+  <script src="..\_ngangaModuleDeclaration.js"></script>
+ <script src="..\exceptionHandling.js"></script>
+  <script src="..\httpHandling.js"></script>
+  <script src="..\svc\spin.proxy.js"></script>
+  <script src="..\ui\directives\nord.multiple.complex.editor.js"></script>
+  <script src="test.client.js"></script>
+  <script src="zsamlectrl.js"></script>
+  <meta charset="UTF-8">
+  <title>Hello world</title>
+</head>
+<body ng-app="nganga.test.client">
+  <div ng-controller="sampleCtrl">
+    <nord-multiple-complex-editor parent-object="obj"
+                                  collection-name="childCollection"
+                                  field-definitions="[{name: 'field1', label: 'First field'}, {name: 'field2', label: 'Second field'}]"></nord-multiple-complex-editor>
+  </div>
+</body>
+</html>
