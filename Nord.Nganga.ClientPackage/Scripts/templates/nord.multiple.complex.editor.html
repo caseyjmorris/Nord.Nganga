@@ -1,8 +1,8 @@
 <table class="table table-bordered table-condensed table-striped table-hover table-responsive">
   <thead>
   <tr>
-    <th ng-repeat="fieldDefinition in fieldDefinitionValues" ts-criteria="{{fieldDefinition.name}}">
-      <!-- add filter for sorter here -->
+    <th ng-repeat="fieldDefinition in fieldDefinitionValues" >
+      <!-- add filter for sorter here with ts-criteria -->
       {{fieldDefinition.label}}
     </th>
     <th>
@@ -13,7 +13,7 @@
   <tbody>
     <tr ng-repeat="item in collection track by $index">
       <td ng-repeat="fieldDefinition in fieldDefinitionValues">
-        {{collection[$index][fieldDefinition.name]}} <!-- Does not properly handle special values right now... -->
+        {{item[fieldDefinition.name]}} <!-- Does not properly handle special values right now... -->
       </td>
       <td>
         <!-- actions-->
