@@ -1,27 +1,70 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Nord.Nganga.Models.Configuration
 {
   /// <summary>
   /// Retrieve configuration files from the file system or create defaults.
   /// </summary>
-  public class ConfigurationFactory
+  public static class ConfigurationFactory
   {
     private static readonly string FileLocation =
-      Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+      Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "NORD",
+        "Nganga"
+        );
 
-    public static T GetConfiguration<T>(string filename) where T : IConfigurationPackage
+    private static readonly HashSet<char> IllegalFileNameCharacters = new HashSet<char>(Path.GetInvalidPathChars());
+
+    private static string GetPath(Type t)
     {
-      var path = Path.Combine(FileLocation, filename);
+      var typeName = t.Name;
 
-      var text = File.ReadAllText(path);
+      var fileName = new string(typeName.Where(tn => IllegalFileNameCharacters.Contains(tn)).ToArray()) + ".json";
 
-      throw new NotImplementedException();
+      return Path.Combine(FileLocation, fileName);
+    }
+
+    public static void UpdateSettings<T>(T settings) where T : IConfigurationPackage
+    {
+      var path = GetPath(typeof(T));
+
+      var serialized = JsonConvert.SerializeObject(settings, new StringEnumConverter());
+
+      File.WriteAllText(path, serialized);
+    }
+
+    public static T GetConfiguration<T>() where T : IConfigurationPackage, new()
+    {
+      var path = GetPath(typeof(T));
+
+      if (File.Exists(path))
+      {
+        var contents = File.ReadAllText(path);
+
+        try
+        {
+          return JsonConvert.DeserializeObject<T>(contents);
+        }
+        catch
+        {
+          Trace.WriteLine(string.Format("Couldn't read configuration file at {0}... setting defaults", path));
+        }
+      }
+
+      var defSettings = new T();
+
+      defSettings.SetPropertiesToDefault();
+
+      UpdateSettings(defSettings);
+
+      return defSettings;
     }
   }
 }
