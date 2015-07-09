@@ -6,6 +6,7 @@ namespace Nord.Nganga.Models.ViewModels
   public class EndpointViewModel
   {
     public string MethodName { get; set; }
+    public string UrlDisplayName { get; set; }
     public IEnumerable<string> ArgumentNames { get; set; }
     public bool HasReturnValue { get; set; }
     public bool ReturnsIEnumerable { get; set; }

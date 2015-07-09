@@ -89,7 +89,8 @@ namespace Nord.AngularUiGen.Mappers.Resources
       var endpointModels = httpMethods.Select(m => new EndpointViewModel
       {
         HttpMethod = m.httpMethod,
-        MethodName = m.methodInfo.Name,
+        UrlDisplayName = m.methodInfo.Name,
+        MethodName = m.methodInfo.Name.ToCamelCase(),
         ArgumentNames = m.methodInfo.GetParameters().Select(p => p.Name).ToList(),
         ArgumentQueryString = this.FormatArgsForQueryString(m.methodInfo.GetParameters().Select(p => p.Name)),
         ArgumentTypes = m.methodInfo.GetParameters().Select(p => p.ParameterType).ToList(),

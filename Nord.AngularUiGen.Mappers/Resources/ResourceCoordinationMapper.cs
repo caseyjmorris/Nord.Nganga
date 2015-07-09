@@ -26,6 +26,7 @@ namespace Nord.AngularUiGen.Mappers.Resources
         UseCache =
           controller.HasAttribute<UseAngularLocalCacheAttribute>() ||
           controller.HasAttribute<UseAngularGlobalCacheAttribute>(),
+        UseCustomCache = controller.HasAttribute<UseAngularLocalCacheAttribute>(),
         CustomCacheFactory =
           controller.HasAttribute<UseAngularLocalCacheAttribute>()
             ? controller.Name.Replace("Controller", string.Empty).ToCamelCase()

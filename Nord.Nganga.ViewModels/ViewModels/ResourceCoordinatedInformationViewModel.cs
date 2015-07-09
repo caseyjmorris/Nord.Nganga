@@ -6,6 +6,7 @@ namespace Nord.Nganga.Models.ViewModels
   {
     public string AppName { get; set; }
     public bool UseCache { get; set; }
+    public bool UseCustomCache { get; set; }
     public string CustomCacheFactory { get; set; }
     public string ServiceName { get; set; }
     public IEnumerable<EndpointViewModel> GetEndpoints { get; set; }

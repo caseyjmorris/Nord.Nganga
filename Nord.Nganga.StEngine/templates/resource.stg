@@ -1,27 +1,32 @@
 ﻿resourceFile(model, getEndpoints, postEndpoints, hasGetAndPost) ::= <<
-//  remard
-<model.AppName>.factory('<model.ServiceName>',[]) 
-{
+//  This is generated code.  Changes to this file will be lost if the file is regenerated.
+<model.AppName>.factory('<model.ServiceName>', ['$resource', <if(model.UseCustomCache)>'$cacheFactory', <endif>function($resource<if(model.UseCustomCache)>, $cacheFactory<endif>)
+<if(model.UseCustomCache)><cacheInit(model)><endif>
+  return {
+<postEndpoints: { endpoint | <postEndpointTemplate(endpoint)> };separator=","><if(hasGetAndPost)>,<endif>
+<getEndpoints: { endpoint | <getEndpointTemplate(model, endpoint)> };separator=",">
+  }
+]);
 <initialization(model)>
 <postEndpoints: { endpoint | <postEndpointTemplate(endpoint)> };separator=","><if(hasGetAndPost)>,<endif>
 <getEndpoints: { endpoint | <getEndpointTemplate(model, endpoint)> };separator=",">
-};
 >>
 
-initialization(model) ::= <<
-// we will init <model.AppName> here
+cacheInit(model) ::= <<
+      var cache
 >>
 
 getEndpointTemplate(model, endpoint) ::= <<
-<endpoint.MethodName>: function( <endpoint.ArgumentNames: { arg | <arg> ,}> successFn, failFn) 
-	{
-		var rsc = $resource(<resourceUri(model, endpoint)>, {}, {'get' : { <isArray(endpoint)> <useCache(endpoint)> }});
-		return rcs.get({ <endpoint.ArgumentNames:{arg| <arg>: <arg>}; separator=","> }, {}, successFn, failFn);
-	}	
+    <endpoint.MethodName>: function( <endpoint.ArgumentNames: { arg | <arg> ,}> successFn, failFn) 
+      {
+        var rsc = $resource(<resourceUri(model, endpoint)>, {}, {'get' : { <isArray(endpoint)> <useCache(endpoint)> }});
+
+        return rcs.get({ <endpoint.ArgumentNames:{arg| <arg>: <arg>}; separator=","> }, {}, successFn, failFn);
+      }
 >>
 
 isArray(endpoint) ::= <<
-isArray: <if(endpoint.ReturnsIsIEnumerable)>true<else>false<endif>
+isArray: <if(endpoint.ReturnsIEnumerable)>true<else>false<endif>
 >>
 
 resourceUri(model, endpoint) ::= <<
@@ -33,8 +38,8 @@ useCache(endpoint) ::= <<
 >>
 
 postEndpointTemplate(endpoint) ::= <<
-<endpoint.MethodName>: function( model, successFn, failFn) 
-	{
-		// tbd ... 
-	}	
+      <endpoint.MethodName>: function(model, successFn, failFn) 
+        {
+          var rsc  
+        }
 >>
