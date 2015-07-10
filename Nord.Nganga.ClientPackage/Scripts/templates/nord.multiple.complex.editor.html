@@ -1,7 +1,10 @@
+
+
 <table class="table table-bordered table-condensed table-striped table-hover table-responsive">
   <thead>
   <tr>
-    <th ng-repeat="fieldDefinition in fieldDefinitionValues">
+
+   <th ng-repeat="fieldDefinition in fieldDefinitionValues">
       <!-- add filter for sorter here with ts-criteria -->
       {{fieldDefinition.label}}
     </th>
@@ -38,7 +41,7 @@
   </tfoot>
 </table>
 
-<form name="{{childFormName}}">
+<ng-form name="childForm" ng-show="editDisplayed">
   <ng-transclude></ng-transclude>
 
   <div class="row">
@@ -51,4 +54,4 @@
 
     </div>
   </div>
-</form>
+</ng-form>

@@ -11,15 +11,14 @@ ngangaUi.directive('nordMultipleComplexEditor', ['$parse', function($parse)
         additionalButtons: '@',
         fieldDefinitions: '@',
         childFieldName: '@',
-        panelTopLabel: '@',
-        childFormName: '@'
+        panelTopLabel: '@'
       },
       compile: function(element, attributes)
         {
           return {
             post: function(scope, element, attrs, controller, transclude)
               {
-                window.dirScope = scope;
+                scope.editDisplayed = false;
                 scope.$$childHead[scope.childFieldName] = {};
                 scope.activeItemIndex = null;
                 //scope.additionalButtonsValues = $parse(element.additionalButtons).call();
@@ -32,7 +31,7 @@ ngangaUi.directive('nordMultipleComplexEditor', ['$parse', function($parse)
                   {
                     scope.$$childHead[scope.childFieldName] = {};
                     scope.activeItemIndex = null;
-                    //show control
+                    scope.editDisplayed = true;
                   };
 
                 scope.editItemAt = function(index)
@@ -41,7 +40,7 @@ ngangaUi.directive('nordMultipleComplexEditor', ['$parse', function($parse)
                     scope.$$childHead[scope.childFieldName] = {};
                     scope.activeItemIndex = index;
                     $.extend(scope.$$childHead[scope.childFieldName], scope.collection[index]);
-                    //show child form
+                    scope.editDisplayed = true;
                   };
 
                 scope.deleteItemAt = function(index)
@@ -61,8 +60,8 @@ ngangaUi.directive('nordMultipleComplexEditor', ['$parse', function($parse)
                       {
                         scope.collection[scope.activeItemIndex] = scope.$$childHead[scope.childFieldName];
                       }
-                    //close child form
-                    //set child form pristine
+                    scope.editDisplayed = false;
+                    scope.childForm.$setPristine();
                     //set parent form dirty
                   }
               }
