@@ -46,8 +46,12 @@
 
   <div class="panel-body" ng-show="editDisplayed">
     <ng-form name="childForm">
-      <ng-transclude></ng-transclude>
-
+      <div class="row">
+        <div class="col-md-12">
+          <ng-transclude></ng-transclude>
+        </div>
+      </div>
+      
       <div class="row">
         <div class="col-md-12">
       <span class="btn-group pull-right">
