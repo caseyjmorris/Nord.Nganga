@@ -11,14 +11,16 @@ ngangaUi.directive('nordMultipleComplexEditor', ['$parse', function($parse)
         additionalButtons: '@',
         fieldDefinitions: '@',
         childFieldName: '@',
+        panelTopLabel: '@',
         childFormName: '@'
       },
       compile: function(element, attributes)
         {
           return {
-            post: function(scope, element)
+            post: function(scope, element, attrs, controller, transclude)
               {
-                scope.activeItem = {};
+                window.dirScope = scope;
+                scope.$$childHead[scope.childFieldName] = {};
                 scope.activeItemIndex = null;
                 //scope.additionalButtonsValues = $parse(element.additionalButtons).call();
                 scope.fieldDefinitionValues = $parse(scope.fieldDefinitions)();
@@ -28,7 +30,7 @@ ngangaUi.directive('nordMultipleComplexEditor', ['$parse', function($parse)
 
                 scope.addItem = function()
                   {
-                    scope.activeItem = {};
+                    scope.$$childHead[scope.childFieldName] = {};
                     scope.activeItemIndex = null;
                     //show control
                   };
@@ -36,9 +38,9 @@ ngangaUi.directive('nordMultipleComplexEditor', ['$parse', function($parse)
                 scope.editItemAt = function(index)
                   {
                     console.log(index);
-                    scope.activeItem = {};
+                    scope.$$childHead[scope.childFieldName] = {};
                     scope.activeItemIndex = index;
-                    $.extend(scope.activeItem, scope.collection[index]);
+                    $.extend(scope.$$childHead[scope.childFieldName], scope.collection[index]);
                     //show child form
                   };
 
@@ -53,11 +55,11 @@ ngangaUi.directive('nordMultipleComplexEditor', ['$parse', function($parse)
                   {
                     if (scope.activeItemIndex === null)
                       {
-                        scope.collection.push(scope.activeItem);
+                        scope.collection.push(scope.$$childHead[scope.childFieldName]);
                       }
                     else
                       {
-                        scope.collection[scope.activeItemIndex] = scope.activeItem;
+                        scope.collection[scope.activeItemIndex] = scope.$$childHead[scope.childFieldName];
                       }
                     //close child form
                     //set child form pristine

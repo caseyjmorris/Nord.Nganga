@@ -1,7 +1,7 @@
 <table class="table table-bordered table-condensed table-striped table-hover table-responsive">
   <thead>
   <tr>
-    <th ng-repeat="fieldDefinition in fieldDefinitionValues" >
+    <th ng-repeat="fieldDefinition in fieldDefinitionValues">
       <!-- add filter for sorter here with ts-criteria -->
       {{fieldDefinition.label}}
     </th>
@@ -11,27 +11,44 @@
   </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="item in collection track by $index">
-      <td ng-repeat="fieldDefinition in fieldDefinitionValues">
-        {{item[fieldDefinition.name]}} <!-- Does not properly handle special values right now... -->
-      </td>
-      <td>
-        <span class="btn-group">
-          <button type="button" class="btn btn-default" ng-click="editItemAt($index)">Edit</button>
-          <button type="button" class="btn btn-danger" ng-click="deleteItemAt($index)">Remove</button>
+  <tr ng-repeat="item in collection track by $index">
+    <td ng-repeat="fieldDefinition in fieldDefinitionValues">
+      {{item[fieldDefinition.name]}} <!-- Does not properly handle special values right now... -->
+    </td>
+    <td>
+        <span class="btn-group pull-right">
+          <button type="button" class="btn btn-default" ng-click="editItemAt($index)">
+            <span class="glyphicon glyphicon-edit"></span> Edit
+          </button>
+          <button type="button" class="btn btn-danger" ng-click="deleteItemAt($index)">
+            <span class="glyphicon glyphicon-remove"></span> Remove
+          </button>
         </span>
-      </td>
-    </tr>
+    </td>
+  </tr>
   </tbody>
   <tfoot>
-    <tr>
-      <th colspan="{{fieldDefinitionValues.length + 1}}">
-        <span>Add another one.</span> <!-- Add actual buttons here -->
-      </th>
-    </tr>
+  <tr>
+    <th colspan="{{fieldDefinitionValues.length + 1}}">
+      <button type="button" class="btn btn-default pull-right" ng-click="addItem()">
+        <span class="glyphicon glyphicon-plus-sign"></span> Add
+      </button>
+    </th>
+  </tr>
   </tfoot>
 </table>
 
 <form name="{{childFormName}}">
   <ng-transclude></ng-transclude>
+
+  <div class="row">
+    <div class="col-md-12">
+      <span class="btn-group pull-right">
+              <button type="button" class="btn btn-info" ng-click="applyActiveItemChanges()">
+                <span class="glyphicon glyphicon-ok"></span> Apply these changes
+              </button>
+      </span>
+
+    </div>
+  </div>
 </form>
