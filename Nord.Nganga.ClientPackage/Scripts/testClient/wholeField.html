@@ -36,7 +36,7 @@
     <nord-multiple-complex-editor parent-object="obj"
                                   collection-name="childCollection"
                                   field-definitions="[{name: 'field1', label: 'First field'}, {name: 'field2', label: 'Second field'}]" child-field-name="childObj">
-      <input ng-model="childObj.field1">
+      <input ng-model="$parent.activeItem.field1">
     </nord-multiple-complex-editor>
   </div>
 </body>
