@@ -1,57 +1,69 @@
+<div class="panel panel-default nganga-panel">
+  <div class="panel-heading">
+    {{panelTopLabel}}
+  </div>
 
+  <table class="table table-condensed table-striped table-hover table-responsive">
+    <thead>
+    <tr>
 
-<table class="table table-bordered table-condensed table-striped table-hover table-responsive">
-  <thead>
-  <tr>
-
-   <th ng-repeat="fieldDefinition in fieldDefinitionValues">
-      <!-- add filter for sorter here with ts-criteria -->
-      {{fieldDefinition.label}}
-    </th>
-    <th>
-      Actions
-    </th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr ng-repeat="item in collection track by $index">
-    <td ng-repeat="fieldDefinition in fieldDefinitionValues">
-      {{item[fieldDefinition.name]}} <!-- Does not properly handle special values right now... -->
-    </td>
-    <td>
+      <th ng-repeat="fieldDefinition in fieldDefinitionValues">
+        <!-- add filter for sorter here with ts-criteria -->
+        {{fieldDefinition.label}}
+      </th>
+      <th>
+        Actions
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="item in collection track by $index" ng-class="{'nganga-table-selected': activeItemIndex === $index}">
+      <td ng-repeat="fieldDefinition in fieldDefinitionValues">
+        {{item[fieldDefinition.name]}} <!-- Does not properly handle special values right now... -->
+      </td>
+      <td>
         <span class="btn-group pull-right">
           <button type="button" class="btn btn-default" ng-click="editItemAt($index)">
             <span class="glyphicon glyphicon-edit"></span> Edit
           </button>
-          <button type="button" class="btn btn-danger" ng-click="deleteItemAt($index)">
+          <button type="button" class="btn btn-danger" ng-click="deleteItemAt($index)" ng-class="{'disabled': activeItemIndex === $index}">
             <span class="glyphicon glyphicon-remove"></span> Remove
           </button>
         </span>
-    </td>
-  </tr>
-  </tbody>
-  <tfoot>
-  <tr>
-    <th colspan="{{fieldDefinitionValues.length + 1}}">
-      <button type="button" class="btn btn-default pull-right" ng-click="addItem()">
-        <span class="glyphicon glyphicon-plus-sign"></span> Add
-      </button>
-    </th>
-  </tr>
-  </tfoot>
-</table>
+      </td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+      <th colspan="{{fieldDefinitionValues.length + 1}}">
+        <button type="button" class="btn btn-default pull-right" ng-click="addItem()">
+          <span class="glyphicon glyphicon-plus-sign"></span> Add
+        </button>
+      </th>
+    </tr>
+    </tfoot>
+  </table>
 
-<ng-form name="childForm" ng-show="editDisplayed">
-  <ng-transclude></ng-transclude>
+  <div class="panel-body" ng-show="editDisplayed">
+    <ng-form name="childForm">
+      <ng-transclude></ng-transclude>
 
-  <div class="row">
-    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12">
       <span class="btn-group pull-right">
-              <button type="button" class="btn btn-info" ng-click="applyActiveItemChanges()">
-                <span class="glyphicon glyphicon-ok"></span> Apply these changes
-              </button>
+        <button type="button" class="btn btn-warning" ng-click="discardActiveItemChanges()">
+          <span class="glyphicon glyphicon-remove-circle"></span> Discard changes
+        </button>
+        <button type="button" class="btn btn-info" ng-click="applyActiveItemChanges()">
+          <span class="glyphicon glyphicon-ok"></span> Apply these changes
+        </button>
       </span>
 
-    </div>
+        </div>
+      </div>
+    </ng-form>
   </div>
-</ng-form>
+</div>
+
+
+

@@ -35,9 +35,9 @@
   <div ng-controller="sampleCtrl">
     <nord-multiple-complex-editor parent-object="obj"
                                   collection-name="childCollection"
-                                  field-definitions="[{name: 'field1', label: 'First field'}, {name: 'field2', label: 'Second field'}]" child-field-name="childObj">
-      <input ng-model="childObj.field1">
-      <input ng-model="childObj.field2">
+                                  field-definitions="[{name: 'field1', label: 'First field'}, {name: 'field2', label: 'Second field'}]" child-field-name="childObj" panel-top-label="Some collection of information">
+      <input ng-model="childObj.field1" class="form-control">
+      <input ng-model="childObj.field2" class="form-control">
       {{childObj.field1}}
     </nord-multiple-complex-editor>
   </div>

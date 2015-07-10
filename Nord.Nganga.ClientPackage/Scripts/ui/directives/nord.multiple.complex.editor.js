@@ -60,9 +60,17 @@ ngangaUi.directive('nordMultipleComplexEditor', ['$parse', function($parse)
                       {
                         scope.collection[scope.activeItemIndex] = scope.$$childHead[scope.childFieldName];
                       }
+                    scope.activeItemIndex = null;
                     scope.editDisplayed = false;
                     scope.childForm.$setPristine();
                     //set parent form dirty
+                  }
+
+                scope.discardActiveItemChanges = function()
+                  {
+                    scope.activeItemIndex = null;
+                    scope.editDisplayed = false;
+                    scope.childForm.$setPristine();
                   }
               }
           }
