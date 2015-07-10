@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="stylesheet" type="text/css" href="/Content/css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="/Content\css\bootstrap-theme.css">
+  <link rel="stylesheet" type="text/css" href="/Content\css\toaster.css">
+  <link rel="stylesheet" type="text/css" href="/Content\css\Site.css">
   <script type="text/javascript" src="..\lib\jq\jquery-2.1.1.js"></script>
   <script src="..\lib\bootstrap.js"></script>
   <script src="..\lib\lodash.js"></script>
@@ -31,7 +35,9 @@
   <div ng-controller="sampleCtrl">
     <nord-multiple-complex-editor parent-object="obj"
                                   collection-name="childCollection"
-                                  field-definitions="[{name: 'field1', label: 'First field'}, {name: 'field2', label: 'Second field'}]"></nord-multiple-complex-editor>
+                                  field-definitions="[{name: 'field1', label: 'First field'}, {name: 'field2', label: 'Second field'}]" child-field-name="childObj">
+      <input ng-model="childObj.field1">
+    </nord-multiple-complex-editor>
   </div>
 </body>
 </html>

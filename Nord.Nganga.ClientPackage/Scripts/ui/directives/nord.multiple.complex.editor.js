@@ -2,21 +2,22 @@ ngangaUi.directive('nordMultipleComplexEditor', ['$parse', function($parse)
   {
     return {
       restrict: 'E',
-      transclude: false,
+      transclude: true,
       templateUrl: window.ngangaTemplateLocation + 'nord.multiple.complex.editor.html',
       scope: {
         parentObject: '=',
         collectionName: '@',
         allowEdit: '@',
         additionalButtons: '@',
-        fieldDefinitions: '@'
+        fieldDefinitions: '@',
+        childFieldName: '@',
+        childFormName: '@'
       },
       compile: function(element, attributes)
         {
           return {
             post: function(scope, element)
               {
-                window.parser = $parse;
                 scope.activeItem = {};
                 scope.activeItemIndex = null;
                 //scope.additionalButtonsValues = $parse(element.additionalButtons).call();
@@ -34,6 +35,7 @@ ngangaUi.directive('nordMultipleComplexEditor', ['$parse', function($parse)
 
                 scope.editItemAt = function(index)
                   {
+                    console.log(index);
                     scope.activeItem = {};
                     scope.activeItemIndex = index;
                     $.extend(scope.activeItem, scope.collection[index]);
@@ -42,6 +44,7 @@ ngangaUi.directive('nordMultipleComplexEditor', ['$parse', function($parse)
 
                 scope.deleteItemAt = function(index)
                   {
+                    console.log(index);
                     scope.collection.splice(index, 1);
                     //set parent form dirty
                   };

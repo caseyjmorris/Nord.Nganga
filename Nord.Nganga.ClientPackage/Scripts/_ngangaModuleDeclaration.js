@@ -17,4 +17,4 @@ var ngangaUi = angular.module(
       }
   ]);
 
-window.ngangaTemplateLocation = '/templates/';
+window.ngangaTemplateLocation = '/Scripts/templates/';
