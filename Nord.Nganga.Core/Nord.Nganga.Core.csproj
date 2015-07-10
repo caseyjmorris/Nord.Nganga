@@ -50,9 +50,9 @@
     <Compile Include="Text\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nord.AngularUiGen.Annotations\Nord.AngularUiGen.Annotations.csproj">
-      <Project>{d653cb9b-920b-451b-9eef-ebba3837ba29}</Project>
-      <Name>Nord.AngularUiGen.Annotations</Name>
+    <ProjectReference Include="..\Nord.Nganga.Annotations\Nord.Nganga.Annotations.csproj">
+      <Project>{d77415e5-25a4-4ceb-8e08-a2d7b82eb1a9}</Project>
+      <Name>Nord.Nganga.Annotations</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

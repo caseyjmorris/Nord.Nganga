@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Nord.Nganga.Annotations.Attributes.ViewModels;
 
-namespace Nord.Nganga.Models.ViewModels
+namespace Nord.Nganga.Engine.Html
 {
   public class ViewModelViewModel
   {

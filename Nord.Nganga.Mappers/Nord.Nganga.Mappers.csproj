@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7CCEA467-E8B3-4C22-8420-CF1851C96824}</ProjectGuid>
+    <ProjectGuid>{8AA252AD-CE48-421D-BF83-4A5A7367F968}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nord.Nganga.Models</RootNamespace>
-    <AssemblyName>Nord.Nganga.Models</AssemblyName>
+    <RootNamespace>Nord.Nganga.Mappers</RootNamespace>
+    <AssemblyName>Nord.Nganga.Mappers</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,11 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -43,21 +40,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\ConfigurationFactory.cs" />
-    <Compile Include="Configuration\WebApiSettingsPackage.cs" />
-    <Compile Include="Configuration\IConfigurationPackage.cs" />
-    <Compile Include="ViewModels\EndpointViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\ResourceCoordinatedInformationViewModel.cs" />
-    <Compile Include="ViewModels\ViewModelViewModel.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <Compile Include="Resources\EndpointMapper.cs" />
+    <Compile Include="Resources\ResourceCoordinationMapper.cs" />
+    <Compile Include="Resources\ViewModelMapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nord.Nganga.Annotations\Nord.Nganga.Annotations.csproj">
       <Project>{d77415e5-25a4-4ceb-8e08-a2d7b82eb1a9}</Project>
       <Name>Nord.Nganga.Annotations</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nord.Nganga.Core\Nord.Nganga.Core.csproj">
+      <Project>{d57b30bf-6e21-4c47-a06c-2155f6c2c8ca}</Project>
+      <Name>Nord.Nganga.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nord.Nganga.ViewModels\Nord.Nganga.Models.csproj">
+      <Project>{7ccea467-e8b3-4c22-8420-cf1851c96824}</Project>
+      <Name>Nord.Nganga.Models</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

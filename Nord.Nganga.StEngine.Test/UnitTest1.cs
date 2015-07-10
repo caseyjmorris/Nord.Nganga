@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nord.AngularUiGen.Mappers.Resources;
+using Nord.Nganga.Mappers.Resources;
 using Nord.Nganga.Models.Configuration;
 
 namespace Nord.Nganga.StEngine.Test

@@ -65,17 +65,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nord.AngularUiGen.Annotations\Nord.AngularUiGen.Annotations.csproj">
-      <Project>{d653cb9b-920b-451b-9eef-ebba3837ba29}</Project>
-      <Name>Nord.AngularUiGen.Annotations</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Nord.AngularUiGen.Mappers\Nord.AngularUiGen.Mappers.csproj">
-      <Project>{773bc0d5-1705-4302-b8a7-1c6772c53d2b}</Project>
-      <Name>Nord.AngularUiGen.Mappers</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Nord.Nganga.Core\Nord.Nganga.Core.csproj">
       <Project>{d57b30bf-6e21-4c47-a06c-2155f6c2c8ca}</Project>
       <Name>Nord.Nganga.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nord.Nganga.Mappers\Nord.Nganga.Mappers.csproj">
+      <Project>{8aa252ad-ce48-421d-bf83-4a5a7367f968}</Project>
+      <Name>Nord.Nganga.Mappers</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nord.Nganga.StEngine\Nord.Nganga.StEngine.csproj">
       <Project>{b4bcbb48-b413-4d29-9f74-21c24ece18cc}</Project>

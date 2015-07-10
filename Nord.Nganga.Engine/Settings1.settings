@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Nord.Nganga.Engine" GeneratedClassName="Settings1">
+  <Profiles />
+  <Settings>
+    <Setting Name="ApiControllerName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ApiController</Value>
+    </Setting>
+    <Setting Name="HttpGetAttributeName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">HttpGetAttribute</Value>
+    </Setting>
+    <Setting Name="HttpPostAttributeName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">HttpPostAttribute</Value>
+    </Setting>
+    <Setting Name="AuthorizeAttributeName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">AuthorizeAttribute</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
