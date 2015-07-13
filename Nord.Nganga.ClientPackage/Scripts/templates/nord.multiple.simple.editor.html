@@ -1,0 +1,13 @@
+<div class="col-md-{{twelfths}}">
+  <label ng-class="{'required-field-label': isRequired}">
+    {{fieldLabelText}}
+  </label>
+
+  <div class="panel panel-default">
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="{{childFieldName}} in collection track by $index">
+        <ng-transclude></ng-transclude>
+      </li>
+    </ul>
+  </div>
+</div>

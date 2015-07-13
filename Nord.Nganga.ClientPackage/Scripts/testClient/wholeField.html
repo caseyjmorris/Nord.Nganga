@@ -27,6 +27,7 @@
   <script src="../svc/spin.proxy.js"></script>
   <script src="../ui/directives/nord.multiple.complex.editor.js"></script>
     <script src="../ui/directives/nord.text.control.js"></script>
+  <script src="../ui/directives/nord.multiple.simple.editor.js"></script>
   <script src="test.client.js"></script>
   <script src="zsamlectrl.js"></script>
   <meta charset="UTF-8">
@@ -34,15 +35,30 @@
 </head>
 <body ng-app="nganga.test.client">
   <div ng-controller="sampleCtrl">
-    <nord-multiple-complex-editor parent-object="obj"
-                                  collection-name="childCollection"
-                                  field-definitions="[{name: 'field1', label: 'First field'}, {name: 'field2', label: 'Second field'}]" child-field-name="childObj" panel-top-label="Some collection of information">
-      <input ng-model="childObj.field1" class="form-control">
-      <input ng-model="childObj.field2" class="form-control">
-      <nord-text-control ng-model="childObj.field1" twelfths="3" required
-                         field-label-text="The first field"
-                         start-cap="$"></nord-text-control>
-    </nord-multiple-complex-editor>
+    <nord-row>
+      <nord-multiple-complex-editor parent-object="obj"
+                                    collection-name="childCollection"
+                                    field-definitions="[{name: 'field1', label: 'First field'}, {name: 'field2', label: 'Second field'}]" child-field-name="childObj" panel-top-label="Some collection of information">
+        <input ng-model="childObj.field1" class="form-control">
+        <input ng-model="childObj.field2" class="form-control">
+        <nord-text-control ng-model="childObj.field1" twelfths="3" required
+                           field-label-text="The first field"
+                           start-cap="$"></nord-text-control>
+      </nord-multiple-complex-editor>
+    </nord-row>
+
+
+    <nord-row>
+      <nord-multiple-simple-editor parent-object="obj" collection-name="childCollection"
+                                   child-field-name="childObj"
+                                   field-label-text="The same information">
+        <input ng-model="childObj.field1" class="form-control">
+        <input ng-model="childObj.field2" class="form-control">
+        <nord-text-control ng-model="childObj.field1" twelfths="3" required
+                           field-label-text="The first field"
+                           start-cap="$"></nord-text-control>
+      </nord-multiple-simple-editor>
+    </nord-row>
   </div>
 </body>
 </html>
