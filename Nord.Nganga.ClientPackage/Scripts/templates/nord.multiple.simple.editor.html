@@ -5,8 +5,18 @@
 
   <div class="panel panel-default">
     <ul class="list-group">
-      <li class="list-group-item" ng-repeat="{{childFieldName}} in collection track by $index">
-        <ng-transclude></ng-transclude>
+      <li class="list-group-item">
+        <div class="row">
+          <div class="col-md-10 pseudotransclude">
+          </div>
+
+          <div class="col-md-2">
+            <button type="button" class="btn btn-danger"
+                    ng-click="deleteItemAt($index)"><span class="glyphicon glyphicon-remove"></span> Remove
+            </button>
+          </div>
+        </div>
+
       </li>
     </ul>
   </div>

@@ -1,46 +1,45 @@
 (function()
   {
-    var beginning =
-      '<div class="row"><div class="col-md-12"><div class="col-md-10"><div class="col-md-{{twelfths}}">' +
-        '<label ng-class="{\'required-field-label\': isRequired}">' +
-          '{{fieldLabelText}}' +
-        '</label>' +
-
-        '<div class="panel panel-default">' +
-           '<ul class="list-group">' +
-              '<li class="list-group-item" ng-repeat="';
-
-    var end = '"></div>' +
-      '<div class="col-md-2">' +
-      '<button type="button" class="btn btn-danger" ng-click="deleteItemAt($index)">' +
-      '<span class="glyphicon glyphicon-remove"></span> Delete' +
-      '</button>' +
+    var template = '<div class="col-md-{{twelfths}}"><label ng-class="{\'required-field-label\': isRequired}">' +
+      '{{fieldLabelText}}</label><div class="panel panel-default">  <ul class="list-group"> ' +
+      ' <li class="list-group-item"> ' +
+      ' <div class="row"> ' +
+      ' <div class="col-md-10 pseudotransclude"> <ng-transclude></ng-transclude> </div>  ' +
+      '<div class="col-md-2">  ' +
+      '<button type="button" class="btn btn-danger drop-item-button">' +
+      '<span class="glyphicon glyphicon-remove"></span> Remove</button>' +
       '</div>' +
-      '</li></ul></div></div></div></div>';
+      '</div>' +
+      '</li></ul></div></div>';
 
-    function getNgRepeatStatement(childFieldName)
+    function getNgRepeatStatement(childFieldName, parentObj, childCollectionName)
       {
-        return childFieldName + ' in collection track by $index';
+        return childFieldName + ' in ' + parentObj + '.' + childCollectionName + ' track by $index';
+      }
+
+    function getDeleteFunction(parentObj, childCollectionName)
+      {
+        return parentObj + '.' + childCollectionName + '.splice($index, 1)';
       }
 
     function compileTextFn(el, attrs, transclude)
       {
         var children = el.children();
 
-        var childFieldName = attrs.childFieldName;
+        var templateObj = angular.element(template);
 
-        var ngRepeatStatement = getNgRepeatStatement(childFieldName);
+        var repeatStatement = getNgRepeatStatement(attrs.childFieldName, attrs.parentObject, attrs.collectionName);
 
-        var htmlText = beginning + ngRepeatStatement + end;
+        templateObj.find('li.list-group-item').attr('ng-repeat', repeatStatement);
 
-        var htmlEl = angular.element(htmlText);
+        templateObj.find('div.pseudotransclude').append(children);
 
-        htmlEl.find('li').append(children);
+        templateObj.find('button.drop-item-button').attr('ng-click', getDeleteFunction(attrs.parentObject, attrs.collectionName));
 
-        el.html('').append(htmlEl);
+        el.html('').append(templateObj);
       }
 
-    function postLinkFn(scope, el, attrs, ctrl, transclude)
+/*    function postLinkFn(scope, el, attrs, ctrl, transclude)
       {
         scope.$$childHead[scope.childFieldName] = {};
 
@@ -58,7 +57,7 @@
             scope.collection.splice(index, 1);
             //set parent form dirty
           };
-      }
+      }*/
 
     ngangaUi.directive('nordMultipleSimpleEditor', [
       function()
@@ -67,18 +66,24 @@
             restrict: 'E',
             transclude: true,
             //templateUrl: window.ngangaTemplateLocation + 'nord.multiple.simple.editor.html',
-            scope: {
+/*            scope: {
               parentObject: '=',
               collectionName: '@',
               allowEdit: '@',
               childFieldName: '@',
               fieldLabelText: '@'
-            },
+            },*/
             compile: function(element, attributes)
               {
                 compileTextFn(element, attributes);
                 return {
-                  post: postLinkFn
+                   post: function(scope, el, attr, ctrl, transclude)
+                    {
+                      transclude(scope, function(prelink)
+                        {
+                          element.append(prelink);
+                        });
+                    }
                 }
               }
           }

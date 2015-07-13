@@ -52,9 +52,9 @@
       <nord-multiple-simple-editor parent-object="obj" collection-name="childCollection"
                                    child-field-name="childObj"
                                    field-label-text="The same information">
-        <input ng-model="childObj.field1" class="form-control">
+        <input ng-model="obj.childCollection[$index].field1" class="form-control">
         <input ng-model="childObj.field2" class="form-control">
-        <nord-text-control ng-model="childObj.field1" twelfths="3" required
+        <nord-text-control ng-model="obj.childCollection[$index].field1" twelfths="3" required
                            field-label-text="The first field"
                            start-cap="$"></nord-text-control>
       </nord-multiple-simple-editor>
