@@ -1,7 +1,6 @@
-<div class="col-md-{{twelfths}}">
+<div class="simple-editor-enclosing">
   <label ng-class="{'required-field-label': isRequired}">
-    {{fieldLabelText}}
-  </label>
+    {{fieldLabelText}}</label>
 
   <div class="panel panel-default">
     <ul class="list-group">
@@ -9,14 +8,14 @@
         <div class="row">
           <div class="col-md-10 pseudotransclude">
           </div>
-
           <div class="col-md-2">
-            <button type="button" class="btn btn-danger"
-                    ng-click="deleteItemAt($index)"><span class="glyphicon glyphicon-remove"></span> Remove
+            <button type="button" class="btn btn-danger drop-item-button"> 
+              <span class="glyphicon glyphicon-remove"> 
+      </span>
+              Remove
             </button>
           </div>
         </div>
-
       </li>
     </ul>
   </div>
