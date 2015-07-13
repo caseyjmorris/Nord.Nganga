@@ -1,6 +1,7 @@
 (function()
   {
-    var template = '<div class="col-md-{{twelfths}}"><label ng-class="{\'required-field-label\': isRequired}">' +
+    var template =
+      '<div class="col-md-{{twelfths}}"><label ng-class="{\'required-field-label\': isRequired}">' +
       '{{fieldLabelText}}</label><div class="panel panel-default">  <ul class="list-group"> ' +
       ' <li class="list-group-item"> ' +
       ' <div class="row"> ' +
@@ -10,7 +11,7 @@
       '<span class="glyphicon glyphicon-remove"></span> Remove</button>' +
       '</div>' +
       '</div>' +
-      '</li></ul></div></div>';
+      '</li></ul></div></div>;
 
     function getNgRepeatStatement(childFieldName, parentObj, childCollectionName)
       {
@@ -64,7 +65,7 @@
         {
           return {
             restrict: 'E',
-            transclude: true,
+            priority: 2000,
             //templateUrl: window.ngangaTemplateLocation + 'nord.multiple.simple.editor.html',
 /*            scope: {
               parentObject: '=',
