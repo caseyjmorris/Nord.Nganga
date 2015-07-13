@@ -5,13 +5,13 @@
       '{{fieldLabelText}}</label><div class="panel panel-default">  <ul class="list-group"> ' +
       ' <li class="list-group-item"> ' +
       ' <div class="row"> ' +
-      ' <div class="col-md-10 pseudotransclude"> <ng-transclude></ng-transclude> </div>  ' +
+      ' <div class="col-md-10 pseudotransclude">  </div>  ' +
       '<div class="col-md-2">  ' +
       '<button type="button" class="btn btn-danger drop-item-button">' +
       '<span class="glyphicon glyphicon-remove"></span> Remove</button>' +
       '</div>' +
       '</div>' +
-      '</li></ul></div></div>;
+      '</li></ul></div></div>';
 
     function getNgRepeatStatement(childFieldName, parentObj, childCollectionName)
       {
@@ -40,52 +40,16 @@
         el.html('').append(templateObj);
       }
 
-/*    function postLinkFn(scope, el, attrs, ctrl, transclude)
-      {
-        scope.$$childHead[scope.childFieldName] = {};
-
-        scope.parentObject[scope.collectionName] = scope.parentObject[scope.collectionName] || [];
-
-        scope.collection = scope.parentObject[scope.collectionName];
-
-        scope.addItem = function()
-          {
-            scope.collection.push({});
-          };
-
-        scope.deleteItemAt = function(index)
-          {
-            scope.collection.splice(index, 1);
-            //set parent form dirty
-          };
-      }*/
-
     ngangaUi.directive('nordMultipleSimpleEditor', [
       function()
         {
           return {
             restrict: 'E',
             priority: 2000,
-            //templateUrl: window.ngangaTemplateLocation + 'nord.multiple.simple.editor.html',
-/*            scope: {
-              parentObject: '=',
-              collectionName: '@',
-              allowEdit: '@',
-              childFieldName: '@',
-              fieldLabelText: '@'
-            },*/
             compile: function(element, attributes)
               {
                 compileTextFn(element, attributes);
-                return {
-                   post: function(scope, el, attr, ctrl, transclude)
-                    {
-                      transclude(scope, function(prelink)
-                        {
-                          element.append(prelink);
-                        });
-                    }
-                }
+                return {}
               }
           }
         }
