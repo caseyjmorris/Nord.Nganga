@@ -40,7 +40,7 @@
       <HintPath>..\packages\Antlr4.StringTemplate.4.0.6.9004\lib\net35\Antlr4.StringTemplate.dll</HintPath>
     </Reference>
     <Reference Include="NORD.RareCare.Presentation.Web">
-      <HintPath>..\..\Nord.RareCare\NORD.RareCare.Presentation.Web\bin\NORD.RareCare.Presentation.Web.dll</HintPath>
+      <HintPath>..\..\..\..\Source\Repos\Nord.RareCare\NORD.RareCare.Presentation.Web\bin\NORD.RareCare.Presentation.Web.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Web.Http, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
