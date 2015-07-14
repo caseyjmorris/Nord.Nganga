@@ -1,33 +1,7 @@
-﻿referrerPortalNgApp.factory('authService', [
+﻿ngangaUi.factory('authService', [
   '$resource', '$cookies', function ($resource, $cookies)
     {
       var service = {};
-
-      service.devHeLogin = function (successFn, failFn)
-        {
-          var rsc = $resource('/api/Auth/DevHeLogin');
-          return rsc.save({}, {}, function (result)
-          {
-            $cookies.userInfo = JSON.stringify(result);
-            if (successFn)
-              {
-                successFn(result);
-              }
-          }, failFn);
-        };
-
-      service.devPssLogin = function (successFn, failFn)
-        {
-          var rsc = $resource('/api/Auth/DevPssLogin');
-          return rsc.save({}, {}, function (result)
-          {
-            $cookies.userInfo = JSON.stringify(result);
-            if (successFn)
-              {
-                successFn(result);
-              }
-          }, failFn);
-        };
 
       service.login = function (model, successFn, failFn)
         {

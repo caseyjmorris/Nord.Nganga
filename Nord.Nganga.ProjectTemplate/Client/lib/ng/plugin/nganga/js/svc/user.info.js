@@ -1,4 +1,4 @@
-referrerPortalNgApp.factory('userInfoService', ['$cookies', '$state', function ($cookies, $state) {
+ngangaUi.factory('userInfoService', ['$cookies', '$state', function ($cookies, $state) {
 
   var avatarName = 'Guest';
   var getParsedUserInfo = function (service) {

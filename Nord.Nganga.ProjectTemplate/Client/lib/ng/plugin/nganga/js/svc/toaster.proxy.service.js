@@ -1,4 +1,4 @@
-﻿referrerPortalNgApp.factory('toasterProxyService', [ 'toaster', function (toaster) {
+﻿ngangaUi.factory('toasterProxyService', ['toaster', function (toaster) {
 
   var service = {};
 
