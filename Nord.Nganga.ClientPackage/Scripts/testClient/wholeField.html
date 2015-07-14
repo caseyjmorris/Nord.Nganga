@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" type="text/css" href="/Content/css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="/Content\css\bootstrap-theme.css">
+  <link rel="stylesheet" type="text/css" href="/Content\css\toaster.css">
+  <link rel="stylesheet" type="text/css" href="/Content\css\Site.css">
+  <link rel="stylesheet" type="text/css" href="/Content/css/bootstrap-theme.css">
+  <script type="text/javascript" src="../lib/jq/jquery-2.1.1.js"></script>
+  <script src="../lib/bootstrap.js"></script>
+  <script src="../lib/lodash.js"></script>
+  <script src="../lib/spin.js"></script>
+  <script src="../lib/modernizr-2.6.2.js"></script>
+  <script src="../lib/stacktrace.js"></script>
+  <script src="../lib/ng/angular.js"></script>
+  <script src="../lib/ng/angular-resource.js"></script>
+  <script src="../lib/ng/angular-animate.js"></script>
+  <script src="../lib/ng/angular-cookies.js"></script>
+  <script src="../lib/ng/angular-tablesort.js"></script>
+  <script src="../lib/ng-ui/ui-bootstrap.js"></script>
+  <script src="../lib/ng-ui/ui-utils.js"></script>
+  <script src="../lib/ng-ui/ui-utils-ieshiv.js"></script>
+  <script src="../lib/ng-ui/angular-ui-router.js"></script>
+  <script src="../lib/toaster.js"></script>
+  <script src="../_ngangaModuleDeclaration.js"></script>
+ <script src="../exceptionHandling.js"></script>
+  <script src="../httpHandling.js"></script>
+  <script src="../svc/spin.proxy.js"></script>
+  <script src="../ui/directives/nord.multiple.complex.editor.js"></script>
+    <script src="../ui/directives/nord.text.control.js"></script>
+  <script src="../ui/directives/nord.multiple.simple.editor.js"></script>
+  <script src="../ui/directives/nord.row.js"></script>
+  <script src="test.client.js"></script>
+  <script src="zsamlectrl.js"></script>
+  <meta charset="UTF-8">
+  <title>Hello world</title>
+</head>
+<body ng-app="nganga.test.client">
+  <div ng-controller="sampleCtrl">
+    <nord-row>
+      <nord-multiple-complex-editor parent-object="obj"
+                                    collection-name="childCollection"
+                                    field-definitions="[{name: 'field1', label: 'First field'}, {name: 'field2', label: 'Second field'}]" child-field-name="childObj" panel-top-label="Some collection of information">
+        <input ng-model="childObj.field1" class="form-control">
+        <input ng-model="childObj.field2" class="form-control">
+        <nord-text-control ng-model="childObj.field1" twelfths="3" required
+                           field-label-text="The first field"
+                           start-cap="$"></nord-text-control>
+      </nord-multiple-complex-editor>
+    </nord-row>
+
+
+    <div class="row">
+      <nord-multiple-simple-editor parent-object="obj" collection-name="childCollection"
+                                   child-field-name="childObj"
+                                   field-label-text="The same information" twelfths="3">
+        <input ng-model="obj.childCollection[$index].field1" class="form-control">
+        <input ng-model="childObj.field2" class="form-control">
+        <nord-text-control ng-model="obj.childCollection[$index].field1" twelfths="3" required
+                           field-label-text="The first field"
+                           start-cap="$"></nord-text-control>
+      </nord-multiple-simple-editor>
+    </div>
+  </div>
+</body>
+</html>

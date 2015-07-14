@@ -1,4 +1,4 @@
-referrerPortalNgApp.filter('yesNo', function ()
+ngangaUi.filter('yesNo', function ()
 {
   return function (input)
     {
@@ -6,7 +6,7 @@ referrerPortalNgApp.filter('yesNo', function ()
     }
 });
 
-referrerPortalNgApp.filter('mustOrMustNotHave', function ()
+ngangaUi.filter('mustOrMustNotHave', function ()
 {
   return function (input)
     {
@@ -15,14 +15,14 @@ referrerPortalNgApp.filter('mustOrMustNotHave', function ()
 });
 
 
-referrerPortalNgApp.filter('unknownAsInProcessIf', function () {
+ngangaUi.filter('unknownAsInProcessIf', function () {
   return function (input, condition) {
     return condition ? (input === 'Unknown' ? 'In-process' : input) : input;
   }
 });
 
 
-referrerPortalNgApp.filter('commonRecord', function ()
+ngangaUi.filter('commonRecord', function ()
 {
   return function (input, list)
     {

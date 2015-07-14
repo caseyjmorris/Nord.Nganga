@@ -230,3 +230,8 @@ ul.editing-list li, ul.viewing-list li
 {
     font-size: 24px;    
 }
+
+.nganga-panel .panel-body, .nganga-table-selected td
+{
+  background-color: rgba(3, 6, 255, 0.06) !important;
+}
