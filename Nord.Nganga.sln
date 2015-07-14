@@ -21,9 +21,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.WinApp", "Nord.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.WinControls", "Nord.Nganga.WinControls\Nord.Nganga.WinControls.csproj", "{F39A3344-69CD-4C60-87D2-3423ECF39A5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.ProjectTemplate", "..\..\..\..\Documents\Visual Studio 2013\Projects\Nord.Nganga.ProjectTemplate\Nord.Nganga.ProjectTemplate\Nord.Nganga.ProjectTemplate.csproj", "{6CF5E91E-95FE-47E1-A8B4-CAD120AB6B3D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.ProjectTemplate", "Nord.Nganga.ProjectTemplate\Nord.Nganga.ProjectTemplate.csproj", "{6CF5E91E-95FE-47E1-A8B4-CAD120AB6B3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.ProjectTemplate.Wizard", "..\..\..\..\Documents\Visual Studio 2013\Projects\Nord.Nganga.ProjectTemplate\Nord.Nganga.ProjectTemplate.Wizard\Nord.Nganga.ProjectTemplate.Wizard.csproj", "{DA234E98-B383-4C0F-AEC6-68C247EE1035}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.ProjectTemplate.Wizard", "Nord.Nganga.ProjectTemplate.Wizard\Nord.Nganga.ProjectTemplate.Wizard.csproj", "{DA234E98-B383-4C0F-AEC6-68C247EE1035}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
