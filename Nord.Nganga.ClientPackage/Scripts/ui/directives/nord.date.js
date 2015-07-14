@@ -1,4 +1,4 @@
-﻿referrerPortalNgApp.directive('nordDate', [
+﻿ngangaUi.directive('nordDate', [
   function () {
 
     // a custom date directive intended to normalize date behavior on browsers not 
@@ -180,7 +180,7 @@
       // no special processing is required in this model
       return {
         restrict: 'E',
-        templateUrl: '/ui-views/templates/nord.date.intrinsic.html',
+        templateUrl: window.ngangaTemplateLocation + 'nord.date.intrinsic.html',
         replace: true
       }
     } else {
@@ -189,7 +189,7 @@
       // no special processing is required in this model
       return {
         restrict: 'E',
-        templateUrl: '/ui-views/templates/nord.date.shim.html',
+        templateUrl: window.ngangaTemplateLocation + 'nord.date.shim.html',
         replace: true,
         require: 'ngModel',
         link: function ($scope, $element, $attrs, modelCtrl) {
