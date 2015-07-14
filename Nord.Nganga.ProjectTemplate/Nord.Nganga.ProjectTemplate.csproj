@@ -965,7 +965,6 @@
     <Folder Include="Client\app\js\ui\directives\" />
     <Folder Include="Client\app\js\ui\templates\" />
     <Folder Include="Client\app\js\ui\views\" />
-    <Folder Include="Client\lib\ng\plugin\ui-router\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
