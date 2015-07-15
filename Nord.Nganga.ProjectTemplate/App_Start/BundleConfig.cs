@@ -14,12 +14,10 @@ namespace Nord.Nganga.ProjectTemplate
 #else
         BundleTable.EnableOptimizations = true;
 #endif
-      
+
 
       var jquery = new ScriptBundle("~/bundles/jquery")
         .Include("~/client/lib/jq/jquery-2.1.4.js");
-        //.Include("~/Scripts/libraries/modernizr-2.6.2.js")
-        //.Include("~/Scripts/libraries/Blob.js");
 #if DEBUG
       jquery.Transforms.Clear();
 #endif
@@ -28,18 +26,16 @@ namespace Nord.Nganga.ProjectTemplate
       var bootStrapJs = new ScriptBundle("~/bundles/bootstrap")
         .Include(
           "~/client/lib/bootstrap/js/bootstrap.js");
-          //"~/Scripts/libraries/respond.js");
 
 #if DEBUG
       bootStrapJs.Transforms.Clear();
 #endif
 
       bundles.Add(bootStrapJs);
-      
-      bundles.Add(new StyleBundle("~/Content/referrerPortalCSS")
+
+      bundles.Add(new StyleBundle("~/Content/appCss")
         .Include(
           "~/client/lib/bootstrap/css/bootstrap.css",
-          //"~/Content/ng-grid.min.css",
           "~/Client/lib/ng/plugin/nganga/css/Site.csss",
           "~/Client/lib/ng/plugin/tablesort/tablesort.css",
           "~/Client/lib/ng/plugin/toaster/toaster.css"));
@@ -56,19 +52,14 @@ namespace Nord.Nganga.ProjectTemplate
           "~/client/lib/ng/core/angular-resource.js",
           "~/client/lib/ng/core/angular-sanitize.js",
           "~/client/lib/ng/core/angular-touch.js",
-          "~/client/lib/ng/plugin/hg-ui/ui-utils.js",
-          "~/client/lib/ng/plugin/hg-ui/ui-bootstrap.js",
-          "~/client/lib/ng/plugin/hg-ui/angular-ui-router.js",
-          "~/client/lib/ng/plugin/hg-ui/ui-bootstrap-tpls.js",
-          //"~/Scripts/libraries/ng-grid.js",
           "~/client/lib/ng/plugin/tablesort/angular-tablesort.js",
-         // "~/Scripts/libraries/ng-file-upload.js",
           "~~/client/lib/ng/plugin/toaster/toaster.js",
           "~/client/lib/ng/plugin/nganga/js/_ngangaModuleDeclaration.js",
-          "~/client/lib/ng/plugin/nganga/js/exceptionHandling.js")
-          //"~/Scripts/ui/*.js")
-        .IncludeDirectory("~/client/app/js/", "*.js", true);
-        //.IncludeDirectory("~/Scripts/controllers/", "*.js", true);
+          "~/client/lib/ng/plugin/nganga/js/exceptionHandling.js",
+          "~/client/lib/ng/plugin/nganga/js/httpHandling.js")
+        .IncludeDirectory("~/client/lib/ng/plugin/ng-ui", "*.js", false)
+        .IncludeDirectory("~/client/app/js/svc", "*.js", true)
+        .IncludeDirectory("~/client/lib/ng/plugin/nganga/ui", "*.js", true);
 
 #if DEBUG
       ngBundle.Transforms.Clear();
