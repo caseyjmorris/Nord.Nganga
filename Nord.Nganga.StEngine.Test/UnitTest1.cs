@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nord.Nganga.Mappers;
 using Nord.Nganga.Mappers.Resources;
 using Nord.Nganga.Models.Configuration;
 

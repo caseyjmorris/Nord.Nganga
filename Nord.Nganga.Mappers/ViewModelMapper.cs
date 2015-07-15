@@ -4,15 +4,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
-using Nord.Nganga.Annotations;
 using Nord.Nganga.Annotations.Attributes.Html;
 using Nord.Nganga.Annotations.Attributes.ViewModels;
 using Nord.Nganga.Core.Reflection;
 using Nord.Nganga.Core.Text;
-using Nord.Nganga.Models;
 using Nord.Nganga.Models.ViewModels;
 
-namespace Nord.Nganga.Mappers.Resources
+namespace Nord.Nganga.Mappers
 {
   public class ViewModelMapper
   {
@@ -104,7 +102,7 @@ namespace Nord.Nganga.Mappers.Resources
               var wrapper = new SubordinateViewModelWrapper
               {
                 Model =
-                  GetViewModelViewModel(t.PropertyType.GetGenericArguments().First()),
+                  this.GetViewModelViewModel(t.PropertyType.GetGenericArguments().First()),
                 Section =
                   t.GetAttributePropertyValueOrDefault<UiSectionAttribute, string>(s => s.SectionName) ?? string.Empty,
                 DisplayName =

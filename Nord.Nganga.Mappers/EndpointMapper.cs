@@ -10,7 +10,7 @@ using Nord.Nganga.Core.Text;
 using Nord.Nganga.Models.Configuration;
 using Nord.Nganga.Models.ViewModels;
 
-namespace Nord.Nganga.Mappers.Resources
+namespace Nord.Nganga.Mappers
 {
   public class EndpointMapper
   {
