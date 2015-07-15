@@ -46,6 +46,7 @@
     <Compile Include="Configuration\ConfigurationFactory.cs" />
     <Compile Include="Configuration\WebApiSettingsPackage.cs" />
     <Compile Include="Configuration\IConfigurationPackage.cs" />
+    <Compile Include="ViewModels\ControllerCoordinatedInformationViewModel.cs" />
     <Compile Include="ViewModels\EndpointViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\ResourceCoordinatedInformationViewModel.cs" />
