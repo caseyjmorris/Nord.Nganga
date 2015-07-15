@@ -47,6 +47,8 @@
     <Compile Include="Attributes\Angular\SuccessStateOnPostCompleteAttribute.cs" />
     <Compile Include="Attributes\Html\AngularControllerActionSectionHeaderAttribute.cs" />
     <Compile Include="Attributes\Html\SectionHtmlAttributeAttribute.cs" />
+    <Compile Include="Attributes\Html\TextCasePreferencesAttribute.cs" />
+    <Compile Include="Attributes\ProjectStructureAttribute.cs" />
     <Compile Include="Attributes\ViewModels\SubordinateItemActionAttribute.cs" />
     <Compile Include="Attributes\ViewModels\LedgerAttribute.cs" />
     <Compile Include="Attributes\Angular\PresentAsViewOnlyDataAttribute.cs" />
