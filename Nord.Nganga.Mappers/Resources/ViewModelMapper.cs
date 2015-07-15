@@ -14,7 +14,7 @@ using Nord.Nganga.Models.ViewModels;
 
 namespace Nord.Nganga.Mappers.Resources
 {
-  public static class ViewModelMapper
+  public class ViewModelMapper
   {
     private static readonly ICollection<Type> PrimitiveTypes =
       new HashSet<Type>(new[]
@@ -29,7 +29,7 @@ namespace Nord.Nganga.Mappers.Resources
         typeof(DateTime), typeof(DateTime?),
       });
 
-    public static ViewModelViewModel GetViewModelViewModel(Type type)
+    public ViewModelViewModel GetViewModelViewModel(Type type)
     {
       var collections =
         type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
