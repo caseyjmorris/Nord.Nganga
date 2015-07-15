@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Nord.Nganga.Annotations.Attributes;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -33,3 +34,9 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+
+[assembly: ProjectStructure( 
+  ngControllersPath:@"client\app\js\ctrl\", 
+  ngViewsPath: @"client\app\js\ui\views\", 
+  ngResourcesPath:@"client\app\js\svc\", 
+  csProjectPath: "ProjectDir")]
