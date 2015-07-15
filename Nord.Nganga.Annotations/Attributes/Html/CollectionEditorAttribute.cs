@@ -6,7 +6,7 @@ namespace Nord.Nganga.Annotations.Attributes.Html
   /// Controls the type of HTML editor to be used for a collection of complex objects.
   /// </summary>
   [AttributeUsage(AttributeTargets.Property)]
-  public class CollectionEditorAttribute
+  public class CollectionEditorAttribute : Attribute
   {
     /// <summary>
     /// Create a new CollectionEditorAttribute.

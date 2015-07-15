@@ -44,11 +44,6 @@ namespace Nord.Nganga.Mappers
           var isSelectCommon = s.HasAttribute<SelectCommonAttribute>();
           var selectCommonAttribute = isSelectCommon ? s.GetAttribute<SelectCommonAttribute>() : null;
           var commonRecordsName = isSelectCommon ? selectCommonAttribute.CommonInformationName.ToCamelCase() : null;
-          //var commonRecordsIndex = isSelectCommon ? selectCommonAttribute.Index : null;
-          //var commonRecordResolveFunction =
-          //  s.GetAttributePropertyValueOrDefault<SelectCommonAttribute, string>(a => a.ResolveFunction);
-          //var commonRecordsRestrictUntilResolved = isSelectCommon && selectCommonAttribute.RestrictUntilResolved;
-
 
           var fieldModel = new ViewModelViewModel.FieldViewModel
           {
@@ -64,13 +59,6 @@ namespace Nord.Nganga.Mappers
             Section =
               s.GetAttributePropertyValueOrDefault<UiSectionAttribute, string>(a => a.SectionName) ?? String.Empty,
             SelectCommon = selectCommonAttribute,
-
-            //CommonRecordsObject = s.GetAttributePropertyValueOrDefault<SelectCommonAttribute, string>(a => a.ObjectName),
-            //CommonRecordsName = commonRecordsName,
-            //CommonRecordsIndex = commonRecordsIndex,
-            //CommonRecordResolveFunction = commonRecordResolveFunction,
-            //CommonRecordsRestrictUntilResolved = commonRecordsRestrictUntilResolved,
-
             IsDefaultSort = s.HasAttribute<DefaultSortAttribute>(),
             InputMask = s.HasAttribute<InputMaskAttribute>() ? s.GetAttribute<InputMaskAttribute>().Mask : null,
             Minimum = s.HasAttribute<RangeAttribute>() ? s.GetAttribute<RangeAttribute>().Minimum : null,
@@ -99,7 +87,7 @@ namespace Nord.Nganga.Mappers
               var itemActionAttribute = hasEnumerableItemAction
                 ? t.GetAttribute<SubordinateItemActionAttribute>()
                 : null;
-              var wrapper = new SubordinateViewModelWrapper
+              var wrapper = new ViewModelViewModel.SubordinateViewModelWrapper
               {
                 Model =
                   this.GetViewModelViewModel(t.PropertyType.GetGenericArguments().First()),

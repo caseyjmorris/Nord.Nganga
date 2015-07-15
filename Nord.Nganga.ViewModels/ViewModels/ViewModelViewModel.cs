@@ -8,6 +8,7 @@ namespace Nord.Nganga.Models.ViewModels
   {
     public string Name { get; set; }
     public bool IsViewOnly { get; set; }
+    public IList<MemberWrapper> Members { get; set; }
     public IEnumerable<SubordinateViewModelWrapper> ComplexCollections { get; set; }
     public IEnumerable<FieldViewModel> PrimitiveCollections { get; set; }
     public IEnumerable<FieldViewModel> Scalars { get; set; }
@@ -18,7 +19,49 @@ namespace Nord.Nganga.Models.ViewModels
       return this.Name;
     }
 
-    public class FieldViewModel
+    public interface IMember
+    {
+      string FieldName { get; set; }
+    }
+
+    public enum MemberDiscriminator
+    {
+      PrimitiveCollection,
+      ComplexCollection,
+      Scalar,
+    }
+
+    public class MemberWrapper
+    {
+      public MemberDiscriminator Discriminator { get; set; }
+      public IMember Member { get; set; }
+    }
+
+    public class SubordinateViewModelWrapper : IMember
+    {
+      public ViewModelViewModel Model { get; set; }
+      public string DisplayName { get; set; }
+      public string Section { get; set; }
+      public bool IsLedger { get; set; }
+      public string LedgerSumProperty { get; set; }
+      public SubordinateItemActionAttribute ItemActionAttribute { get; set; }
+
+      public override string ToString()
+      {
+        return this.DisplayName;
+      }
+
+      public string FieldName { get; set; }
+    }
+
+    public class FormFieldWrapper
+    {
+      public FieldViewModel Model { get; set; }
+      public string Section { get; set; }
+      public bool IsCollection { get; set; }
+    }
+
+    public class FieldViewModel : IMember
     {
       public string FieldName { get; set; }
       public string DisplayName { get; set; }
@@ -44,27 +87,5 @@ namespace Nord.Nganga.Models.ViewModels
         return this.FieldName;
       }
     }
-  }
-
-  public class SubordinateViewModelWrapper
-  {
-    public ViewModelViewModel Model { get; set; }
-    public string DisplayName { get; set; }
-    public string Section { get; set; }
-    public bool IsLedger { get; set; }
-    public string LedgerSumProperty { get; set; }
-    public SubordinateItemActionAttribute ItemActionAttribute { get; set; }
-
-    public override string ToString()
-    {
-      return this.DisplayName;
-    }
-  }
-
-  public class FormFieldWrapper
-  {
-    public ViewModelViewModel.FieldViewModel Model { get; set; }
-    public string Section { get; set; }
-    public bool IsCollection { get; set; }
   }
 }
