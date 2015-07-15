@@ -978,9 +978,7 @@
     <Content Include="Client\lib\ng\plugin\nganga\js\exceptionHandling.js" />
     <Content Include="Client\lib\ng\plugin\nganga\js\httpHandling.js" />
     <Content Include="Client\lib\ng\plugin\ng-ui\ui-utils-ieshiv.js" />
-    <Content Include="Client\lib\ng\plugin\ng-ui\ui-utils-ieshiv.min.js" />
     <Content Include="Client\lib\ng\plugin\ng-ui\ui-utils.js" />
-    <Content Include="Client\lib\ng\plugin\ng-ui\ui-utils.min.js" />
     <Content Include="Client\lib\ng\plugin\nganga\js\svc\auth.js" />
     <Content Include="Client\lib\ng\plugin\nganga\js\svc\build.info.js" />
     <Content Include="Client\lib\ng\plugin\nganga\js\svc\modal.manager.js" />

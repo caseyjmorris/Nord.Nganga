@@ -53,13 +53,14 @@ namespace Nord.Nganga.ProjectTemplate
           "~/client/lib/ng/core/angular-sanitize.js",
           "~/client/lib/ng/core/angular-touch.js",
           "~/client/lib/ng/plugin/tablesort/angular-tablesort.js",
-          "~~/client/lib/ng/plugin/toaster/toaster.js",
+          "~/client/lib/ng/plugin/toaster/toaster.js",
           "~/client/lib/ng/plugin/nganga/js/_ngangaModuleDeclaration.js",
           "~/client/lib/ng/plugin/nganga/js/exceptionHandling.js",
           "~/client/lib/ng/plugin/nganga/js/httpHandling.js")
-        .IncludeDirectory("~/client/lib/ng/plugin/ng-ui", "*.js", false)
-        .IncludeDirectory("~/client/app/js/svc", "*.js", true)
-        .IncludeDirectory("~/client/lib/ng/plugin/nganga/ui", "*.js", true);
+        .IncludeDirectory("~/client/lib/ng/plugin/ng-ui", "*.js", false);
+      //TODO:  these directories are empty so they can't be included right now...
+      //.IncludeDirectory("~/client/app/js/svc", "*.js", true)
+      //.IncludeDirectory("~/client/lib/ng/plugin/nganga/ui", "*.js", true);
 
 #if DEBUG
       ngBundle.Transforms.Clear();
