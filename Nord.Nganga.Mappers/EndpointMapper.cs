@@ -41,7 +41,7 @@ namespace Nord.Nganga.Mappers
       var controllerMethods = (
         from MethodInfo methodInfo in controller.GetMethods(BindingFlags.Instance | BindingFlags.Public)
         let customAttribs = methodInfo.GetCustomAttributes()
-        select new { methodInfo, customAttribs }
+        select new {methodInfo, customAttribs}
         ).ToList();
 
       Func<IEnumerable<object>, Type, bool> containsType = (objects, type) =>
@@ -56,6 +56,7 @@ namespace Nord.Nganga.Mappers
                             typeof(IEnumerable<>).IsAssignableFrom(
                               dmi.methodInfo.ReturnType.GetGenericTypeDefinition()))
         let hasReturnType = isEnumerable || dmi.methodInfo.ReturnType.Name.EndsWith("ViewModel")
+        let firstArg = dmi.methodInfo.GetParameters().FirstOrDefault()
         let returnType = hasReturnType
           ? isEnumerable
             ? dmi.methodInfo.ReturnType.GetGenericArguments()[0]
@@ -70,19 +71,31 @@ namespace Nord.Nganga.Mappers
           //Attribute.IsDefined(methodInfo, httpPostAttributeType), 
           isEnumerable,
           hasReturnType,
-          returnType
+          firstArg,
+          returnType,
         }).ToList();
 
       var httpMethods = (from x in decoratedMethods
-                         where x.isGet || x.isPost
-                         let hasAuthorizeAttribute = Attribute.IsDefined(x.methodInfo, authorizeAttribute)
-                         let authAttribute = hasAuthorizeAttribute ? x.methodInfo.GetCustomAttribute(authorizeAttribute) : null
-                         let httpMethod = x.isPost ? EndpointViewModel.HttpMethodType.Post : EndpointViewModel.HttpMethodType.Get
-                         let specialAuth = hasAuthorizeAttribute
-                           ? authAttribute.GetProperty<string>("Roles").Split(',')
-                           : null
-                         select
-                           new { x.methodInfo, x.isGet, x.isPost, x.hasReturnType, x.returnType, x.isEnumerable, specialAuth, httpMethod })
+        where x.isGet || x.isPost
+        let hasAuthorizeAttribute = Attribute.IsDefined(x.methodInfo, authorizeAttribute)
+        let authAttribute = hasAuthorizeAttribute ? x.methodInfo.GetCustomAttribute(authorizeAttribute) : null
+        let httpMethod = x.isPost ? EndpointViewModel.HttpMethodType.Post : EndpointViewModel.HttpMethodType.Get
+        let specialAuth = hasAuthorizeAttribute
+          ? authAttribute.GetProperty<string>("Roles").Split(',')
+          : null
+        select
+          new
+          {
+            x.methodInfo,
+            x.isGet,
+            x.isPost,
+            x.hasReturnType,
+            x.returnType,
+            x.isEnumerable,
+            specialAuth,
+            httpMethod,
+            x.firstArg
+          })
         .ToList();
 
 
@@ -110,6 +123,11 @@ namespace Nord.Nganga.Mappers
             .Where(a => a.Context == JavaScriptOnPostCompleteAttribute.ContextType.Success)
             .Select(a => a.Expression),
         ResourceOnly = m.methodInfo.HasAttribute<GenerateResourceOnlyAttribute>(),
+        ReturnPropertyCamelCase = m.hasReturnType ? m.returnType.GetFriendlyName().ToCamelCase() : null,
+        ReturnPropertyPascalCase = m.hasReturnType ? m.returnType.GetFriendlyName() : null,
+        FirstArgDisplayNameCamelCase =
+          m.firstArg == null ? null : m.firstArg.ParameterType.GetFriendlyName().ToCamelCase(),
+        FirstArgDisplayNamePascalCase = m.firstArg == null ? null : m.firstArg.ParameterType.GetFriendlyName(),
       }).ToList();
 
       AppDomain.CurrentDomain.AssemblyResolve -= handler;

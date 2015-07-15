@@ -19,6 +19,10 @@ namespace Nord.Nganga.Models.ViewModels
     public IEnumerable<string> OnPostFailureExpressions { get; set; }
     public bool ResourceOnly { get; set; }
     public string ArgumentQueryString { get; set; }
+    public string ReturnPropertyCamelCase { get; set; }
+    public string ReturnPropertyPascalCase { get; set; }
+    public string FirstArgDisplayNameCamelCase { get; set; }
+    public string FirstArgDisplayNamePascalCase { get; set; }
 
     public enum HttpMethodType
     {

@@ -4,7 +4,6 @@ using System.Linq;
 using Nord.Nganga.Annotations.Attributes.Angular;
 using Nord.Nganga.Core.Reflection;
 using Nord.Nganga.Core.Text;
-using Nord.Nganga.Mappers.Resources;
 using Nord.Nganga.Models.ViewModels;
 
 namespace Nord.Nganga.Mappers.Controllers
@@ -34,7 +33,7 @@ namespace Nord.Nganga.Mappers.Controllers
       }
 
 
-      IEnumerable<EndpointViewModel> getEndpoints;
+      IList<EndpointViewModel> getEndpoints;
       IEnumerable<EndpointViewModel> postEndpoints;
       IEnumerable<string> privilegedRoles;
       IEnumerable<ViewModelViewModel> complexTypes;
@@ -50,6 +49,7 @@ namespace Nord.Nganga.Mappers.Controllers
         NgControllerName = controller.Name.Replace("Controller", "Ctrl").ToCamelCase(),
         GetEndpoints = getEndpoints,
         PostEndpoints = postEndpoints,
+        RetrievalTargetGetEndpoints = getEndpoints.Where(ge => ge.HasReturnValue),
         EditRestrictedToRoles = privilegedRoles.ToList(),
         ForViewOnlyData = controller.HasAttribute<PresentAsViewOnlyDataAttribute>(),
         ServiceName = controller.Name.Replace("Controller", "Service").ToCamelCase(),
@@ -60,6 +60,8 @@ namespace Nord.Nganga.Mappers.Controllers
       };
 
       model.EditRestricted = model.EditRestrictedToRoles.Any();
+
+      model.HasCommonRecords = model.CommonRecordsWithResolvers.Any();
 
       return model;
     }
@@ -99,7 +101,7 @@ namespace Nord.Nganga.Mappers.Controllers
       return result;
     }
 
-    private void ExamineEndpoints(Type controller, out IEnumerable<EndpointViewModel> getEndpoints,
+    private void ExamineEndpoints(Type controller, out IList<EndpointViewModel> getEndpoints,
       out IEnumerable<EndpointViewModel> postEndpoints, out IEnumerable<ViewModelViewModel> complexTypes,
       out IEnumerable<string> privilegedRoles)
     {

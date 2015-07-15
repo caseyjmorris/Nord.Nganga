@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
+using Humanizer;
 
 namespace Nord.Nganga.Core.Reflection
 {
@@ -97,6 +100,39 @@ namespace Nord.Nganga.Core.Reflection
       Func<TAttribute, TReturn> property) where TAttribute : Attribute
     {
       return member.HasAttribute<TAttribute>() ? property(member.GetAttribute<TAttribute>()) : default(TReturn);
+    }
+
+    public static string GetFriendlyName(this Type type)
+    {
+      if (!type.IsGenericType)
+      {
+        return type.Name;
+      }
+      if (type.IsGenericType && typeof(IEnumerable).IsAssignableFrom(type) && type != typeof(string))
+      {
+        return type.GetGenericArguments()[0].Name.Pluralize();
+      }
+      else
+      {
+        var start =
+          type.GetGenericTypeDefinition().Name;
+
+        start = Regex.Replace(start, @"[^A-Za-z]", string.Empty);
+
+        var sb = new StringBuilder(start).Append("Of");
+
+        var args = type.GetGenericArguments();
+
+        for (var i = 0; i < args.Length; i++)
+        {
+          if (i > 0)
+          {
+            sb.Append("To");
+          }
+          sb.Append(args[i].Name);
+        }
+        return sb.ToString();
+      }
     }
   }
 }

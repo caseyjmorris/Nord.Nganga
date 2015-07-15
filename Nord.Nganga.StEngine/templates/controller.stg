@@ -1,0 +1,59 @@
+﻿controller(model) :: = <<
+// This is generated code.  Changes to this file will be lost if the file is regenerated.
+<module.ngModuleName>.controller('<model.NgControllerName>', 
+  ['$scope', '$state', '$stateParams', commonRecordsService' userInfoService, <model.ServiceName><model.AdditionalNgServices:{svc|, '<svc>' }>,
+  function($scope, $state, $stateParams, commonRecordsService, userInfoService, <model.ServiceName><model.AdditionalNgServices:{svc|, <svc>}>)
+    {
+      <if(model.EditRestricted)><authorizationInformation(model)>
+      
+      <endif>
+      <if(model.HasCommonRecords)>$scope.common = $scope.common || {};<commonRecordsSetup(model.CommonRecordsWithResolvers)><endif>
+      <if(model.RouteIdParameter != null)><primeRouteId(model.RouteIdParameter)><endif>
+      <if(model.RouteIdParameterIsNullable)>
+      if (<model.RouteIdParameter> !== null)
+        {
+          <controllerRetrievals(model)>
+        }
+      <else>
+      <controllerRetrievals(model)>
+      <endif>
+
+      <appendPostMethods(model)>
+    }]);
+>>
+
+primeRouteId(rid) :: = <<
+    var <rid> = $stateParams.<rid>;
+
+>>
+
+authorizationInformation(model) :: = <%
+$scope.canEdit = <model.EditRestrictedToRoles: {role |userInfoService.userIsInRole('<role>')}; seperator=" || ">;
+%>
+
+commonRecordsSetup(commonRecordsCollection) :: = <<
+<commonRecordsCollection: {cr|
+      $scope.common.<cr.Key> = <cr.Value>;}>
+>>
+
+controllerRetrievals(model) :: = <<
+<model.RetrievalTargetGetEndpoints: {ge |
+$scope.<ge.ReturnPropertyCamelCase> = <ge.controllerService>.<ge.MethodName>(<model.RouteIdParameter>);
+}>
+>>
+
+postMethods(model) ::= <<
+<model.PostEndpoints: {pe |
+$scope.saveChangesTo<pe.FirstArgDisplayNamePascalCase> = function()
+  {
+    <model.ServiceName>.<pe.MethodName>($scope.<pe.FirstArgDisplayNameCamelCase>, function(result)
+      {
+        $scope.<pe.FirstArgDisplayNameCamelCase>Form.$setPristine();
+
+        <if(pe.HasReturnValue)>
+        $scope.<pe.ReturnPropertyCamelCase> = result;
+        <endif>
+      })
+  }
+}>
+>>
