@@ -66,7 +66,7 @@ namespace Nord.Nganga.Mappers.Controllers
       return model;
     }
 
-    private IEnumerable<KeyValuePair<string, string>> GetCommonRecordsWithResolvers(
+    private Dictionary<string, string> GetCommonRecordsWithResolvers(
       IList<ViewModelViewModel> complexTypes)
     {
       var targetScalars =

@@ -1,14 +1,14 @@
-﻿controller(model) :: = <<
+﻿controller(model) ::= <<
 // This is generated code.  Changes to this file will be lost if the file is regenerated.
-<module.ngModuleName>.controller('<model.NgControllerName>', 
+<model.NgModuleName>.controller('<model.NgControllerName>', 
   ['$scope', '$state', '$stateParams', commonRecordsService' userInfoService, <model.ServiceName><model.AdditionalNgServices:{svc|, '<svc>' }>,
   function($scope, $state, $stateParams, commonRecordsService, userInfoService, <model.ServiceName><model.AdditionalNgServices:{svc|, <svc>}>)
     {
       <if(model.EditRestricted)><authorizationInformation(model)>
       
       <endif>
-      <if(model.HasCommonRecords)>$scope.common = $scope.common || {};<commonRecordsSetup(model.CommonRecordsWithResolvers)><endif>
-      <if(model.RouteIdParameter != null)><primeRouteId(model.RouteIdParameter)><endif>
+      <if(model.HasCommonRecords)>$scope.common = $scope.common || {};<commonRecordsSetup(model)><endif>
+      <if(model.RouteIdParameter)><primeRouteId(model.RouteIdParameter)><endif>
       <if(model.RouteIdParameterIsNullable)>
       if (<model.RouteIdParameter> !== null)
         {
@@ -18,27 +18,27 @@
       <controllerRetrievals(model)>
       <endif>
 
-      <appendPostMethods(model)>
+      <postMethods(model)>
     }]);
 >>
 
-primeRouteId(rid) :: = <<
+primeRouteId(rid) ::= <<
     var <rid> = $stateParams.<rid>;
 
 >>
 
-authorizationInformation(model) :: = <%
-$scope.canEdit = <model.EditRestrictedToRoles: {role |userInfoService.userIsInRole('<role>')}; seperator=" || ">;
+authorizationInformation(model) ::= <%
+$scope.canEdit = <model.EditRestrictedToRoles: {role |userInfoService.userIsInRole('<role>')}; separator=" || ">;
 %>
 
-commonRecordsSetup(commonRecordsCollection) :: = <<
-<commonRecordsCollection: {cr|
-      $scope.common.<cr.Key> = <cr.Value>;}>
+commonRecordsSetup(model) ::= <<
+<model.CommonRecordsWithResolvers.keys: {cr|
+      $scope.<cr> = <model.CommonRecordsWithResolvers.(cr)>}>
 >>
 
-controllerRetrievals(model) :: = <<
+controllerRetrievals(model) ::= <<
 <model.RetrievalTargetGetEndpoints: {ge |
-$scope.<ge.ReturnPropertyCamelCase> = <ge.controllerService>.<ge.MethodName>(<model.RouteIdParameter>);
+$scope.<ge.ReturnPropertyCamelCase> = <ge.ControllerService>.<ge.MethodName>(<model.RouteIdParameter>);
 }>
 >>
 
@@ -53,7 +53,7 @@ $scope.saveChangesTo<pe.FirstArgDisplayNamePascalCase> = function()
         <if(pe.HasReturnValue)>
         $scope.<pe.ReturnPropertyCamelCase> = result;
         <endif>
-      })
-  }
+      \})
+  \}
 }>
 >>
