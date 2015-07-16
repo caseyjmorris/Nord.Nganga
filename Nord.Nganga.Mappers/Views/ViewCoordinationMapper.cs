@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nord.Nganga.Core.Reflection;
+using System.Linq;
 using Nord.Nganga.Core.Text;
 using Nord.Nganga.Models.ViewModels;
 
@@ -10,24 +10,41 @@ namespace Nord.Nganga.Mappers.Views
   {
     private readonly ViewModelMapper viewModelMapper;
 
-    public ViewCoordinationMapper(ViewModelMapper viewModelMapper)
+    private readonly EndpointFilter endpointFilter;
+
+    private readonly EndpointMapper endpointMapper;
+
+    public ViewCoordinationMapper(ViewModelMapper viewModelMapper, EndpointFilter endpointFilter,
+      EndpointMapper endpointMapper)
     {
       this.viewModelMapper = viewModelMapper;
+      this.endpointFilter = endpointFilter;
+      this.endpointMapper = endpointMapper;
     }
 
     public IEnumerable<ViewCoordinatedInformationViewModel> GetViewCoordinatedInformationCollection(Type controller)
     {
-      throw new NotImplementedException();
+      var endpoints = this.endpointMapper.GetEnpoints(controller);
+
+      var filteredInfo = this.endpointFilter.ExamineEndpoints(endpoints);
+
+      return
+        filteredInfo.TargetComplexTypesAtRoot.Select(this.GetViewCoordinatedInformationSingleInternal).ToList();
     }
 
     public ViewCoordinatedInformationViewModel GetViewCoordinatedInformationSingle(Type vmType)
     {
       var vmVm = this.viewModelMapper.GetViewModelViewModel(vmType);
 
+      return this.GetViewCoordinatedInformationSingleInternal(vmVm);
+    }
+
+    private ViewCoordinatedInformationViewModel GetViewCoordinatedInformationSingleInternal(ViewModelViewModel vmVm)
+    {
       var coord = new ViewCoordinatedInformationViewModel
       {
         //TODO:  case pref
-        SaveButtonText = "Save changes to " + vmType.GetFriendlyName().ToSpaced().ToLower(),
+        SaveButtonText = "Save changes to " + vmVm.Name.ToSpaced().ToLower(),
         Sections = this.SplitSections(vmVm),
       };
 

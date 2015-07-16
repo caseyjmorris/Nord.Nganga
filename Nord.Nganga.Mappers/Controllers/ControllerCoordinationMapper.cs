@@ -12,12 +12,12 @@ namespace Nord.Nganga.Mappers.Controllers
   {
     private readonly EndpointMapper endpointMapper;
 
-    private readonly ViewModelMapper viewModelMapper;
+    private readonly EndpointFilter endpointFilter;
 
-    public ControllerCoordinationMapper(EndpointMapper endpointMapper, ViewModelMapper viewModelMapper)
+    public ControllerCoordinationMapper(EndpointMapper endpointMapper, EndpointFilter endpointFilter)
     {
       this.endpointMapper = endpointMapper;
-      this.viewModelMapper = viewModelMapper;
+      this.endpointFilter = endpointFilter;
     }
 
     public ControllerCoordinatedInformationViewModel GetControllerCoordinatedInformationViewModel(Type controller)
@@ -33,12 +33,9 @@ namespace Nord.Nganga.Mappers.Controllers
       }
 
 
-      IList<EndpointViewModel> getEndpoints;
-      IEnumerable<EndpointViewModel> postEndpoints;
-      IEnumerable<string> privilegedRoles;
-      IEnumerable<ViewModelViewModel> complexTypes;
+      var endpoints = this.endpointMapper.GetEnpoints(controller);
 
-      this.ExamineEndpoints(controller, out getEndpoints, out postEndpoints, out complexTypes, out privilegedRoles);
+      var filteredInfo = this.endpointFilter.ExamineEndpoints(endpoints);
 
       var model = new ControllerCoordinatedInformationViewModel
       {
@@ -47,16 +44,17 @@ namespace Nord.Nganga.Mappers.Controllers
           controller.GetAttributePropertyValueOrDefault<AngularRouteIdParameterAttribute, bool>(a => a.IsNullable),
         NgModuleName = controller.GetAttribute<AngularModuleNameAttribute>().ModuleName,
         NgControllerName = controller.Name.Replace("Controller", "Ctrl").ToCamelCase(),
-        GetEndpoints = getEndpoints,
-        PostEndpoints = postEndpoints,
-        RetrievalTargetGetEndpoints = getEndpoints.Where(ge => ge.HasReturnValue),
-        EditRestrictedToRoles = privilegedRoles == null ? null : privilegedRoles.ToList(),
+        GetEndpoints = filteredInfo.GetEndpoints,
+        PostEndpoints = filteredInfo.PostEndpoints,
+        RetrievalTargetGetEndpoints = filteredInfo.GetEndpoints.Where(ge => ge.HasReturnValue),
+        EditRestrictedToRoles = filteredInfo.PrivilegedRoles == null ? null : filteredInfo.PrivilegedRoles.ToList(),
         ForViewOnlyData = controller.HasAttribute<PresentAsViewOnlyDataAttribute>(),
         ServiceName = controller.Name.Replace("Controller", "Service").ToCamelCase(),
         AdditionalNgServices =
           controller.GetAttributePropertyValueOrDefault<InjectAngularServicesAttribute, IEnumerable<string>>(
             a => a.Services),
-        CommonRecordsWithResolvers = this.GetCommonRecordsWithResolvers(complexTypes.ToList())
+        CommonRecordsWithResolvers =
+          this.GetCommonRecordsWithResolvers(filteredInfo.TargetComplexTypesWithChildren.ToList())
       };
 
       model.EditRestricted = model.EditRestrictedToRoles != null && model.EditRestrictedToRoles.Any();
@@ -99,58 +97,6 @@ namespace Nord.Nganga.Mappers.Controllers
       }
 
       return result;
-    }
-
-    private void ExamineEndpoints(Type controller, out IList<EndpointViewModel> getEndpoints,
-      out IEnumerable<EndpointViewModel> postEndpoints, out IEnumerable<ViewModelViewModel> complexTypes,
-      out IEnumerable<string> privilegedRoles)
-    {
-      var endpoints = this.endpointMapper.GetEnpoints(controller).Where(e => !e.ResourceOnly).ToList();
-
-      getEndpoints = endpoints.Where(e => e.HttpMethod == EndpointViewModel.HttpMethodType.Get).ToList();
-
-      postEndpoints = endpoints.Where(e => e.HttpMethod == EndpointViewModel.HttpMethodType.Post).ToList();
-
-      var viewModels = endpoints.Where(e => e.HasReturnValue).Select(e => e.ReturnType).ToList();
-
-      var vmHash = new HashSet<Type>(viewModels);
-
-      var postEndpointTypes =
-        endpoints.Where(
-          e =>
-            e.HttpMethod == EndpointViewModel.HttpMethodType.Post && e.ArgumentTypes.Any() &&
-            !vmHash.Contains(e.ArgumentTypes.First()))
-          .Select(e => e.ArgumentTypes.First())
-          .Where(t => t.Name.EndsWith("ViewModel"));
-
-      viewModels = viewModels.Concat(postEndpointTypes).Distinct().ToList();
-
-      var vmVms = viewModels.Select(this.viewModelMapper.GetViewModelViewModel).ToList();
-
-      privilegedRoles =
-        endpoints.Where(e => e.HttpMethod == EndpointViewModel.HttpMethodType.Post)
-          .Select(e => e.SpecialAuthorization)
-          .FirstOrDefault(a => a != null);
-
-      complexTypes = vmVms.SelectMany(m => this.GetAllComplexSubordinates(m)).ToList();
-    }
-
-    private IEnumerable<ViewModelViewModel> GetAllComplexSubordinates(ViewModelViewModel model,
-      HashSet<ViewModelViewModel> examined = null)
-    {
-      examined = examined ?? new HashSet<ViewModelViewModel>();
-
-      foreach (var sub in model.ComplexCollections)
-      {
-        if (!examined.Contains(sub.Model))
-        {
-          this.GetAllComplexSubordinates(sub.Model, examined);
-        }
-      }
-
-      examined.Add(model);
-
-      return examined;
     }
   }
 }

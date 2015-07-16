@@ -14,6 +14,7 @@ using Nord.Nganga.Mappers.Views;
 using Nord.Nganga.Models;
 using Nord.Nganga.Models.Configuration;
 using Nord.Nganga.Models.ViewModels;
+using Nord.Nganga.TestConsumer.Controllers.Api;
 using Nord.Nganga.TestConsumer.Models;
 
 namespace Nord.Nganga.StEngine.Test
@@ -36,9 +37,13 @@ namespace Nord.Nganga.StEngine.Test
     [TestMethod]
     public void ExcerciseViewCoordinator()
     {
-      var coord = new ViewCoordinationMapper(new ViewModelMapper());
+      var wasp = new WebApiSettingsPackage();
+      wasp.SetPropertiesToDefault();
 
-      var coordinated = coord.GetViewCoordinatedInformationSingle(typeof(SponsorViewModel));
+      var coord = new ViewCoordinationMapper(new ViewModelMapper(), new EndpointFilter(new ViewModelMapper()),
+        new EndpointMapper(wasp));
+
+      var coordinated = coord.GetViewCoordinatedInformationCollection(typeof(SponsorsController));
     }
 
 
@@ -50,7 +55,8 @@ namespace Nord.Nganga.StEngine.Test
       var wasp = new WebApiSettingsPackage();
       wasp.SetPropertiesToDefault();
       var endpointMapper = new EndpointMapper(wasp);
-      var controllerCoordinatedInfoMapper = new ControllerCoordinationMapper(endpointMapper, new ViewModelMapper());
+      var controllerCoordinatedInfoMapper = new ControllerCoordinationMapper(endpointMapper,
+        new EndpointFilter(new ViewModelMapper()));
 
       var subjectType = typeof(Nganga.TestConsumer.Controllers.Api.SponsorsController);
 

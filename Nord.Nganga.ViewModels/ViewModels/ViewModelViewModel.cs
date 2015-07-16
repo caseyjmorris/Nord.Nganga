@@ -40,6 +40,16 @@ namespace Nord.Nganga.Models.ViewModels
       public NgangaControlType ControlType { get; set; }
       public string ViewOnlyExpression { get; set; }
       public bool IsHidden { get; set; }
+
+      public override string ToString()
+      {
+        if (this.Member == null)
+        {
+          return "(Invalid member)";
+        }
+
+        return this.Member.FieldName;
+      }
     }
 
     public class SubordinateViewModelWrapper : IMember

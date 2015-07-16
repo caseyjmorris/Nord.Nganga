@@ -52,6 +52,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\NgangaControlTypes.cs" />
     <Compile Include="ViewModels\ResourceCoordinatedInformationViewModel.cs" />
+    <Compile Include="ViewModels\UserVisibleEndpointInformation.cs" />
     <Compile Include="ViewModels\ViewCoordinatedInformationViewModel.cs" />
     <Compile Include="ViewModels\ViewModelViewModel.cs" />
   </ItemGroup>
