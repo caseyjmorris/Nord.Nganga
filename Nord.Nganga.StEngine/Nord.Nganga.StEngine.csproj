@@ -50,7 +50,9 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="templates\controller.stg" />
+    <None Include="templates\controller.stg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="templates\resource.stg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

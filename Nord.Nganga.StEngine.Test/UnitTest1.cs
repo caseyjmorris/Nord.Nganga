@@ -17,7 +17,7 @@ namespace Nord.Nganga.StEngine.Test
     [TestMethod]
     public void TestControllerGeneration()
     {
-      var t = TemplateFactory.GetTemplate(TemplateFactory.Context.Resource, "resourceFile", false);
+      var t = TemplateFactory.GetTemplate(TemplateFactory.Context.Controller, "controller", false);
 
       var wasp = new WebApiSettingsPackage();
       wasp.SetPropertiesToDefault();
