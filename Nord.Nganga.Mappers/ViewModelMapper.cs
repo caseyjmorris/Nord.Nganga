@@ -2,9 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Dynamic;
 using System.Linq;
-using System.Net.Sockets;
 using System.Reflection;
 using Nord.Nganga.Annotations.Attributes.Html;
 using Nord.Nganga.Annotations.Attributes.ViewModels;
@@ -41,7 +39,7 @@ namespace Nord.Nganga.Mappers
       return (typeof(IEnumerable).IsAssignableFrom(info.PropertyType) && info.PropertyType != typeof(string));
     }
 
-    public static bool IsComplexCollection(PropertyInfo info)
+    private static bool IsComplexCollection(PropertyInfo info)
     {
       return IsCollection(info) && (info.PropertyType.IsGenericType &&
                                     !PrimitiveTypes.Contains(info.PropertyType.GetGenericArguments().First()));
@@ -70,7 +68,6 @@ namespace Nord.Nganga.Mappers
     {
       var isSelectCommon = info.HasAttribute<SelectCommonAttribute>();
       var selectCommonAttribute = isSelectCommon ? info.GetAttribute<SelectCommonAttribute>() : null;
-      var commonRecordsName = isSelectCommon ? selectCommonAttribute.CommonInformationName.ToCamelCase() : null;
 
       var fieldModel = new ViewModelViewModel.FieldViewModel
       {
@@ -97,7 +94,7 @@ namespace Nord.Nganga.Mappers
 
     private IEnumerable<ViewModelViewModel.FieldViewModel> GetFieldViewModelCollection(IEnumerable<PropertyInfo> t)
     {
-      var pfi = t.Select(s => this.GetFieldViewModel(s));
+      var pfi = t.Select(this.GetFieldViewModel);
       return pfi;
     }
 
@@ -164,7 +161,7 @@ namespace Nord.Nganga.Mappers
         ComplexCollections =
           decoratedProperties.Where(p => p.discriminator == ViewModelViewModel.MemberDiscriminator.ComplexCollection)
             .Select(p => p.pi)
-            .Select(t => this.GetSubordinateViewModelWrapper(t)),
+            .Select(this.GetSubordinateViewModelWrapper),
         PrimitiveCollections = this.GetFieldViewModelCollection(
           decoratedProperties.Where(p => p.discriminator == ViewModelViewModel.MemberDiscriminator.PrimitiveCollection)
             .Select(p => p.pi)),
