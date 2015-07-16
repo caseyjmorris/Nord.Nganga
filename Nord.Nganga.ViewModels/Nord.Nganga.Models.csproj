@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyOptionsModel.cs" />
     <Compile Include="Configuration\ConfigurationFactory.cs" />
     <Compile Include="Configuration\WebApiSettingsPackage.cs" />
     <Compile Include="Configuration\IConfigurationPackage.cs" />

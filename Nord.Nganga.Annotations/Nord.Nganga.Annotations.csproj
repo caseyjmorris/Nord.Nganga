@@ -62,6 +62,8 @@
     <Compile Include="Attributes\ViewModels\NotUserEditableAttribute.cs" />
     <Compile Include="Attributes\ViewModels\SelectCommonAttribute.cs" />
     <Compile Include="Attributes\ViewModels\UiSectionAttribute.cs" />
+    <Compile Include="CasingOption.cs" />
+    <Compile Include="CasingOptionContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
