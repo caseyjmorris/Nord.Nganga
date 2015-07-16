@@ -75,6 +75,8 @@ namespace Nord.Nganga.Mappers.Views
           currentSection.Rows.Add(currentRow);
 
           currentRowWidth = 0;
+
+          sections.Add(currentSection);
         }
 
         currentRowWidth += member.Width;

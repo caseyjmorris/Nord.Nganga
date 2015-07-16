@@ -10,16 +10,17 @@ using Nord.Nganga.Core.Reflection;
 using Nord.Nganga.Mappers;
 using Nord.Nganga.Mappers.Controllers;
 using Nord.Nganga.Mappers.Resources;
+using Nord.Nganga.Mappers.Views;
 using Nord.Nganga.Models;
 using Nord.Nganga.Models.Configuration;
 using Nord.Nganga.Models.ViewModels;
+using Nord.Nganga.TestConsumer.Models;
 
 namespace Nord.Nganga.StEngine.Test
 {
   [TestClass]
   public class UnitTest1
   {
-
     [TestMethod]
     public void TestAssyOptions()
     {
@@ -30,6 +31,14 @@ namespace Nord.Nganga.StEngine.Test
       Console.WriteLine(ao.NgResourcesPath);
       Console.WriteLine(ao.NgViewsPath);
       Console.WriteLine(ao.GetOption(CasingOptionContext.Field));
+    }
+
+    [TestMethod]
+    public void ExcerciseViewCoordinator()
+    {
+      var coord = new ViewCoordinationMapper(new ViewModelMapper());
+
+      var coordinated = coord.GetViewCoordinatedInformationSingle(typeof(SponsorViewModel));
     }
 
 
