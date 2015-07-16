@@ -1,7 +1,7 @@
 ﻿controller(model) ::= <<
 // This is generated code.  Changes to this file will be lost if the file is regenerated.
 <model.NgModuleName>.controller('<model.NgControllerName>', 
-  ['$scope', '$state', '$stateParams', commonRecordsService' userInfoService, <model.ServiceName><model.AdditionalNgServices:{svc|, '<svc>' }>,
+  ['$scope', '$state', '$stateParams', 'commonRecordsService', 'userInfoService', '<model.ServiceName>'<model.AdditionalNgServices:{svc|, '<svc>' }>,
   function($scope, $state, $stateParams, commonRecordsService, userInfoService, <model.ServiceName><model.AdditionalNgServices:{svc|, <svc>}>)
     {
       <if(model.EditRestricted)><authorizationInformation(model)>
@@ -38,7 +38,7 @@ commonRecordsSetup(model) ::= <<
 
 controllerRetrievals(model) ::= <<
 <model.RetrievalTargetGetEndpoints: {ge |
-$scope.<ge.ReturnPropertyCamelCase> = <ge.ControllerService>.<ge.MethodName>(<model.RouteIdParameter>);
+$scope.<ge.ReturnPropertyCamelCase> = <model.ServiceName>.<ge.MethodName>(<model.RouteIdParameter>);
 }>
 >>
 

@@ -104,13 +104,14 @@ namespace Nord.Nganga.Core.Reflection
 
     public static string GetFriendlyName(this Type type)
     {
+      string name;
       if (!type.IsGenericType)
       {
-        return type.Name;
+        name = type.Name;
       }
-      if (type.IsGenericType && typeof(IEnumerable).IsAssignableFrom(type) && type != typeof(string))
+      else if (type.IsGenericType && typeof(IEnumerable).IsAssignableFrom(type) && type != typeof(string))
       {
-        return type.GetGenericArguments()[0].Name.Pluralize();
+        name = type.GetGenericArguments()[0].Name.Pluralize();
       }
       else
       {
@@ -131,8 +132,10 @@ namespace Nord.Nganga.Core.Reflection
           }
           sb.Append(args[i].Name);
         }
-        return sb.ToString();
+        name = sb.ToString();
       }
+
+      return name.Replace("ViewModel", string.Empty);
     }
   }
 }
