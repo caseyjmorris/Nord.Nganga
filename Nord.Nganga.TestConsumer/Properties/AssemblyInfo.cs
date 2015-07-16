@@ -1,6 +1,9 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Nord.Nganga.Annotations;
+using Nord.Nganga.Annotations.Attributes;
+using Nord.Nganga.Annotations.Attributes.Html;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -33,3 +36,12 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: ProjectStructure(
+  ngControllersPath: @"client\app\js\ctrl\",
+  ngViewsPath: @"client\app\js\ui\views\",
+  ngResourcesPath: @"client\app\js\svc\",
+  csProjectPath: "ProjectDir")]
+[assembly: TextCasePreferences(context: CasingOptionContext.Default, option: CasingOption.Sentence)]
+[assembly: TextCasePreferences(context: CasingOptionContext.Button, option: CasingOption.Title)]
+[assembly: TextCasePreferences(context: CasingOptionContext.Field, option: CasingOption.Sentence)]
+[assembly: TextCasePreferences(context: CasingOptionContext.Header, option: CasingOption.Title)]
