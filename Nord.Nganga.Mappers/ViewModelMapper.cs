@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net.Sockets;
 using System.Reflection;
 using Nord.Nganga.Annotations.Attributes.Html;
 using Nord.Nganga.Annotations.Attributes.ViewModels;
@@ -29,13 +30,50 @@ namespace Nord.Nganga.Mappers
 
     public ViewModelViewModel GetViewModelViewModel(Type type)
     {
-      var collections =
-        type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-          .Where(t => typeof(IEnumerable).IsAssignableFrom(t.PropertyType) && t.PropertyType != typeof(string)).ToList();
+    // functoin to detect scalar properties 
+      Func<PropertyInfo, bool> scalarDetector =
+        info => !typeof (IEnumerable).IsAssignableFrom(info.PropertyType) || info.PropertyType == typeof (string);
 
-      var scalars =
-        type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-          .Where(t => !typeof(IEnumerable).IsAssignableFrom(t.PropertyType) || t.PropertyType == typeof(string));
+      Func<PropertyInfo, bool> collectionDetector =
+        info => (typeof (IEnumerable).IsAssignableFrom(info.PropertyType) && info.PropertyType != typeof (string));
+
+      // function to detect complex collection properties 
+      Func<PropertyInfo, bool> complexCollectionDetector =
+        info => collectionDetector(info) && (info.PropertyType.IsGenericType &&
+                !PrimitiveTypes.Contains(info.PropertyType.GetGenericArguments().First()));
+
+        // function to detect primitive collection properties
+      Func<PropertyInfo, bool> primitiveCollectionDetector =
+        info => collectionDetector(info) &&
+        ( info.PropertyType.IsGenericType &&
+                PrimitiveTypes.Contains(info.PropertyType.GetGenericArguments().First()) ) 
+          && !complexCollectionDetector(info);
+
+        // dictionary mapping property detectors to member descriminator enum value 
+        var fd = new Dictionary<Func<PropertyInfo, bool>, ViewModelViewModel.MemberDiscriminator>
+        {
+          { scalarDetector, ViewModelViewModel.MemberDiscriminator.Scalar},
+          { primitiveCollectionDetector, ViewModelViewModel.MemberDiscriminator.PrimitiveCollection},
+          { complexCollectionDetector, ViewModelViewModel.MemberDiscriminator.ComplexCollection}
+        };
+
+        // get the properties 
+      var viewModelProperties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+
+      // decorate them with the descriminator 
+      var decoratedProperties = (from PropertyInfo pi in viewModelProperties
+        let descriminator = fd.Single(kvp => kvp.Key(pi)).Value
+                                select new { pi, descriminator }).ToList();
+
+                                // VVVVVV OLD CODE VVVVVV
+
+      //var collections =
+      //  type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+      //    .Where(t => typeof(IEnumerable).IsAssignableFrom(t.PropertyType) && t.PropertyType != typeof(string)).ToList();
+
+      //var scalars =
+      //  type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+      //    .Where(t => !typeof(IEnumerable).IsAssignableFrom(t.PropertyType) || t.PropertyType == typeof(string));
 
       Func<IEnumerable<PropertyInfo>, IEnumerable<ViewModelViewModel.FieldViewModel>> getPrimitiveFieldInfo = t =>
       {
@@ -74,13 +112,10 @@ namespace Nord.Nganga.Mappers
       var vm = new ViewModelViewModel
       {
         Name = type.Name.Replace("ViewModel", string.Empty).ToCamelCase(),
-        Scalars = getPrimitiveFieldInfo(scalars),
+        Scalars = getPrimitiveFieldInfo(decoratedProperties.Where(p=>p.descriminator == ViewModelViewModel.MemberDiscriminator.Scalar).Select(p=>p.pi)),
         IsViewOnly = type.HasAttribute<NotUserEditableAttribute>(),
         ComplexCollections =
-          collections.Where(
-            t =>
-              t.PropertyType.IsGenericType &&
-              !PrimitiveTypes.Contains(t.PropertyType.GetGenericArguments().First()))
+          decoratedProperties.Where(p => p.descriminator == ViewModelViewModel.MemberDiscriminator.ComplexCollection).Select(p=>p.pi)
             .Select(t =>
             {
               var hasEnumerableItemAction = t.HasAttribute<SubordinateItemActionAttribute>();
@@ -103,11 +138,7 @@ namespace Nord.Nganga.Mappers
               return wrapper;
             }),
         PrimitiveCollections =
-          getPrimitiveFieldInfo(
-            collections.Where(
-              c =>
-                c.PropertyType.IsGenericType &&
-                PrimitiveTypes.Contains(c.PropertyType.GetGenericArguments().First()))),
+          getPrimitiveFieldInfo(decoratedProperties.Where(p => p.descriminator == ViewModelViewModel.MemberDiscriminator.PrimitiveCollection).Select(p => p.pi)),
       };
 
       var sectionsDict = new Dictionary<string, Dictionary<string, string>>();
