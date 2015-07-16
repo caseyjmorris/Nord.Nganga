@@ -22,6 +22,7 @@ namespace Nord.Nganga.Models.ViewModels
     public interface IMember
     {
       string FieldName { get; set; }
+      string DisplayName { get; set; }
     }
 
     public enum MemberDiscriminator
@@ -77,16 +78,12 @@ namespace Nord.Nganga.Models.ViewModels
       public bool IsHidden { get; set; }
       public bool IsViewOnly { get; set; }
       public SelectCommonAttribute SelectCommon { get; set; }
-      //public string CommonRecordResolveFunction { get; set; }
-      //public string CommonRecordsObject { get; set; }
-      //public string CommonRecordsName { get; set; }
-      //public string CommonRecordsIndex { get; set; }
-      //public bool CommonRecordsRestrictUntilResolved { get; set; }
       public string Section { get; set; }
       public bool IsDefaultSort { get; set; }
       public string InputMask { get; set; }
       public object Minimum { get; set; }
       public object Maximum { get; set; }
+      public object Step { get; set; } //1, .01, "any" are the most likely values here
       public Type DataType { get; set; }
 
 

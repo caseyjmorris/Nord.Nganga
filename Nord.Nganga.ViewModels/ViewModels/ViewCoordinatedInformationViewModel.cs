@@ -3,11 +3,24 @@ using System.Linq;
 
 namespace Nord.Nganga.Models.ViewModels
 {
+  public class ViewCoordinationInformationCollectionViewModel
+  {
+    public string NgControllerName { get; set; }
+    public string Header { get; set; }
+    public IEnumerable<ViewCoordinatedInformationViewModel> ViewCoordinatedInfo { get; set; }
+  }
+
   public class ViewCoordinatedInformationViewModel
   {
+    public string Title { get; set; }
+
     public IEnumerable<SectionViewModel> Sections { get; set; }
 
     public string SaveButtonText { get; set; }
+
+    public string NgFormName { get; set; }
+
+    public string NgSubmitAction { get; set; }
 
     public class RowViewModel
     {

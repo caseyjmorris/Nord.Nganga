@@ -22,14 +22,20 @@ namespace Nord.Nganga.Mappers.Views
       this.endpointMapper = endpointMapper;
     }
 
-    public IEnumerable<ViewCoordinatedInformationViewModel> GetViewCoordinatedInformationCollection(Type controller)
+    public ViewCoordinationInformationCollectionViewModel GetViewCoordinatedInformationCollection(Type controller)
     {
       var endpoints = this.endpointMapper.GetEnpoints(controller);
 
       var filteredInfo = this.endpointFilter.ExamineEndpoints(endpoints);
 
-      return
+      var coordinatedInfo =
         filteredInfo.TargetComplexTypesAtRoot.Select(this.GetViewCoordinatedInformationSingleInternal).ToList();
+
+      return new ViewCoordinationInformationCollectionViewModel
+      {
+        NgControllerName = controller.Name.Replace("Controller", string.Empty).ToCamelCase(),
+        ViewCoordinatedInfo = coordinatedInfo,
+      };
     }
 
     public ViewCoordinatedInformationViewModel GetViewCoordinatedInformationSingle(Type vmType)

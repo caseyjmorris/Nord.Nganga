@@ -1,45 +1,119 @@
 ﻿delimiters "%","%"
 
-t1(model) ::= <<
-%model.people: { person | %letter(person)% }%
+view(model) ::= <<
+<!-- GENERATED CODE -- changes to this file may be lost if the code is regenerated -->
+<div ng-controller="%model.NgControllerName%">
+  <nord-row>
+    <h2>
+      %model.Header%
+    </h2>
+  </nord-row>
+  %model.ViewCoordinatedInfo:{vci|%childView(vci)%}%
+</div>
 >>
 
-letter(person) ::= <<
-Hello,  %salutationMap.(person.sex)% %person.lastName%
-	%((bodyMap.( salutationMap.( person.sex ) )))()%
+childView(model) ::= <<
+<nord-row>
+  <h3>
+    %model.Title%
+  </h3>
+</nord-row>
 
+<nord-row>
+  <form name="%model.NgFormName%" id="%model.NgFormName%Form" ng-submit="%model.NgSubmitAction%" class="user-edit-form form-horizontal">
+    %model.Sections:{s|%section(s)%}%
+  </form>
+</nord-row>
 >>
 
-t2(model) ::= <<
-	%bodyMap.(model.sex)%
+section(model) ::= <<
+%if(model.Title)%
+<nord-row>
+  <h4>
+    %model.Title%
+  </h4>
+</nord-row>
+%endif%
+
+%model.Rows:{r|%row(r)%}%
 >>
 
-femaleTemplate() ::= <<
-Throwing a tupperware party! Won't you please join us?
+row(model) ::= <<
+<div class="row"> %! would like to replace with <nord-row-simple> directive !%
+  %model.Members:{m|%member(m)%}%
+</div>
 >>
 
-maleTemplate() ::= <<
-Group fishing trip next week - see you there!
+member(model) ::= <<
+%! This should switch on the model.NgangaControlType property somehow.  Don't know how to do that. !%
 >>
 
-salutationMap ::= [
-	"female":"Ms.",
-	"male":"Mr.",
-	default: ""
-]
+boolControl(model, parentObjectName) ::= <%
+<nord-bool-control 
+ng-model="%parentObjectName%.%model.Member.FieldName%" 
+twelfths="%model.Width%" 
+field-label-text="%model.Member.DisplayName%" 
+%if(model.Member.IsRequired)%
+required
+%endif%
+%! The directive has support for changing the yes and no labels to something else !%
+></nord-bool-control>
+%>
 
-bodyMap ::= [
-	"Ms.": "femaleTemplate",
-	"Mr.": "maleTemplate",
-	default: "defaultBody"
-]
+commonSelect(model, parentObjectName) ::= <%
 
-//    <((fk_assignment_rule_map.( CLRTypeMap.( key.column_db_typename ) ))) (key=key)> 
+%>
 
-/*
+dateControl(model, parentObjectName) ::= <%
+<nord-date-control
+%! Need to fill in startcap, endcap (but no attrs exist ATM) !%
+ng-model="%parentObjectName%.%model.Member.FieldName%"
+twelfths="%model.Width%"
+field-label-text="%model.Member.DisplayName%" 
 
-fk_assignment_rule_map ::= [
-	"System.String":"direct_fk_assignment",
-	default:"value_fk_assignment"
-]
-*/
+%if(model.Member.IsRequired)%
+required
+%endif%
+>
+</nord-date-control>
+%>
+
+multipleComplexEditor(model, parentObjectName) ::= <%
+
+%>
+
+multipleSimpleEditorForComplex(model, parentObjectName) ::= <%
+
+%>
+
+multipleSimpleEditorForPrimitive(model, parentObjectName) ::= <%
+
+%>
+
+numberControl(model, parentObjectName) ::= <%
+<nord-number-control
+%! Need to fill in startcap, endcap (but no attrs exist ATM) !%
+ng-model="%parentObjectName%.%model.Member.FieldName%"
+twelfths="%model.Width%"
+field-label-text="%model.Member.DisplayName%"
+
+%if(model.Member.Minimum)%
+min="%model.Member.Minimum%"
+%endif%
+
+%if(model.Member.Minimum)%
+max="%model.Member.Maximum%"
+%endif%
+
+step="%model.Member.Step%"
+
+%if(model.Member.IsRequired)%
+required
+%endif%
+>
+</nord-number-control>
+%>
+
+textControl(model, parentObjectName) ::= <%
+
+%>
