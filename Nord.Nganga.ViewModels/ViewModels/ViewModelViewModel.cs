@@ -35,6 +35,11 @@ namespace Nord.Nganga.Models.ViewModels
     {
       public MemberDiscriminator Discriminator { get; set; }
       public IMember Member { get; set; }
+      public string Section { get; set; }
+      public int Width { get; set; }
+      public NgangaControlType ControlType { get; set; }
+      public string ViewOnlyExpression { get; set; }
+      public bool IsHidden { get; set; }
     }
 
     public class SubordinateViewModelWrapper : IMember
@@ -52,13 +57,6 @@ namespace Nord.Nganga.Models.ViewModels
       }
 
       public string FieldName { get; set; }
-    }
-
-    public class FormFieldWrapper
-    {
-      public FieldViewModel Model { get; set; }
-      public string Section { get; set; }
-      public bool IsCollection { get; set; }
     }
 
     public class FieldViewModel : IMember

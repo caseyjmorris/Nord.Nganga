@@ -27,6 +27,15 @@ namespace Nord.Nganga.Mappers
         typeof(DateTime), typeof(DateTime?),
       });
 
+    private static readonly ICollection<Type> Numerics = new HashSet<Type>(new[]
+    {
+      typeof(long), typeof(long?),
+      typeof(int), typeof(int?),
+      typeof(decimal), typeof(decimal?),
+      typeof(float), typeof(float?),
+      typeof(double), typeof(double?),
+    });
+
     #region type detectors
 
     private static bool IsScalar(PropertyInfo info)
@@ -121,14 +130,87 @@ namespace Nord.Nganga.Mappers
       return wrapper;
     }
 
+    private NgangaControlType DetermineControlType(ViewModelViewModel.MemberDiscriminator discriminator,
+      PropertyInfo info)
+    {
+      if (discriminator == ViewModelViewModel.MemberDiscriminator.PrimitiveCollection)
+      {
+        return NgangaControlType.MultipleSimpleEditorForPrimitive;
+      }
+      if (discriminator == ViewModelViewModel.MemberDiscriminator.ComplexCollection)
+      {
+        if (info.HasAttribute<SelectCommonAttribute>())
+        {
+          return NgangaControlType.CommonSelect;
+        }
+
+        if (info.HasAttribute<CollectionEditorAttribute>() &&
+            info.GetAttribute<CollectionEditorAttribute>().Editor == CollectionEditorAttribute.EditorType.Complex)
+        {
+          return NgangaControlType.MultipleComplexEditor;
+        }
+        return NgangaControlType.MultipleSimpleEditorForComplex;
+      }
+      var underlyingType = info.PropertyType.GetNonNullableType();
+
+      if (underlyingType == typeof(bool))
+      {
+        return NgangaControlType.BoolControl;
+      }
+      if (underlyingType == typeof(DateTime))
+      {
+        return NgangaControlType.DateControl;
+      }
+      if (Numerics.Contains(underlyingType))
+      {
+        return NgangaControlType.NumberControl;
+      }
+      if (underlyingType == typeof(string))
+      {
+        return NgangaControlType.TextControl;
+      }
+
+      var msg = string.Format("Couldn't find control for type {0} (property {1} of {2})", underlyingType, info.Name,
+        info.DeclaringType);
+
+      throw new KeyNotFoundException(msg);
+    }
+
+    private int GetMemberWidth(PropertyInfo info, NgangaControlType controlType)
+    {
+      var specified = info.GetAttributePropertyValueOrDefault<FieldWidthAttribute, int>(a => a.Twelfths);
+
+      if (specified != 0)
+      {
+        return specified;
+      }
+
+      if (controlType == NgangaControlType.MultipleComplexEditor)
+      {
+        return 12;
+      }
+      return 3;
+    }
+
     private ViewModelViewModel.MemberWrapper GetWrappedMember(ViewModelViewModel.MemberDiscriminator discriminator,
       PropertyInfo info)
     {
-      var result = new ViewModelViewModel.MemberWrapper {Discriminator = discriminator};
+      var result = new ViewModelViewModel.MemberWrapper
+      {
+        Discriminator = discriminator,
+        ControlType = this.DetermineControlType(discriminator, info),
+        Section =
+          info.GetAttributePropertyValueOrDefault<UiSectionAttribute, string>(a => a.SectionName) ?? string.Empty,
+      };
+
+      result.Width = this.GetMemberWidth(info, result.ControlType);
+
       switch (discriminator)
       {
         case ViewModelViewModel.MemberDiscriminator.Scalar:
           result.Member = this.GetFieldViewModel(info);
+          var field = (ViewModelViewModel.FieldViewModel) result.Member;
+          result.IsHidden = field.IsHidden;
           break;
         case ViewModelViewModel.MemberDiscriminator.PrimitiveCollection:
           result.Member = this.GetSubordinateViewModelWrapper(info);
