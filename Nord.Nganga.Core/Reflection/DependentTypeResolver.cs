@@ -75,7 +75,14 @@ namespace Nord.Nganga.Core.Reflection
 
         // attempt to load the type 
         // note this call (and not the LoadFile call above) triggers loading of assembly dependencies by Fusion... 
-        type = referencedWebAssy.GetTypes().FirstOrDefault(t => t.Name.Equals(typeName));
+        try
+        {
+          type = referencedWebAssy.GetTypes().FirstOrDefault(t => t.Name.Equals(typeName));
+        }
+        catch (ReflectionTypeLoadException reflectionTypeLoadException)
+        {
+          throw reflectionTypeLoadException.LoaderExceptions.First();
+        }
       }
       // de-register the assembly resolution handler 
       AppDomain.CurrentDomain.AssemblyResolve -= assemblyResolutionHandler;

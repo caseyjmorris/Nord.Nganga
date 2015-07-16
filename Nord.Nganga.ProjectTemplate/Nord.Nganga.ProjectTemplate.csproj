@@ -1069,6 +1069,7 @@
     <Folder Include="Client\app\js\ui\directives\" />
     <Folder Include="Client\app\js\ui\templates\" />
     <Folder Include="Client\app\js\ui\views\" />
+    <Folder Include="Controllers\Api\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nord.Nganga.Annotations\Nord.Nganga.Annotations.csproj">

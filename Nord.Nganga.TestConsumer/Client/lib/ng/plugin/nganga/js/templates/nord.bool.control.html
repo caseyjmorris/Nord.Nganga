@@ -1,0 +1,14 @@
+<div class="col-md-{{twelfths}}">
+  <label ng-class="{'required-field-label': isRequired}">
+    {{fieldLabelText}}
+  </label>
+
+  <div class="radio-yes-no">
+    <input data-ng-model="ngModel" data-ng-value="true"
+           id="{{uid}}-true" type="radio">
+    <label for="{{uid}}-true">{{yesLabelText}}</label>
+    <input data-ng-model="ngModel" data-ng-value="false"
+           id="{{uid}}-false" type="radio">
+    <label for="{{uid}}-false">{{noLabelText}}</label>
+  </div>
+</div>

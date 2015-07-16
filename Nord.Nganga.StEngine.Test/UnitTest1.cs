@@ -24,10 +24,7 @@ namespace Nord.Nganga.StEngine.Test
       var endpointMapper = new EndpointMapper(wasp);
       var controllerCoordinatedInfoMapper = new ControllerCoordinationMapper(endpointMapper, new ViewModelMapper());
 
-      var subjectType =
-        typeof(
-          NORD.RareCare.Presentation.Web.Controllers.Api.Programs.ProgramPeriods.AssociatesAndProviders.
-            SponsorsController);
+      var subjectType = typeof(Nganga.TestConsumer.Controllers.Api.SponsorsController);
 
       var model = controllerCoordinatedInfoMapper.GetControllerCoordinatedInformationViewModel(subjectType);
       t.Add("model", model);
@@ -46,10 +43,7 @@ namespace Nord.Nganga.StEngine.Test
       var endpointMapper = new EndpointMapper(wasp);
       var resourceCoordMapper = new ResourceCoordinationMapper(endpointMapper);
 
-      var subjectType =
-        typeof(
-          NORD.RareCare.Presentation.Web.Controllers.Api.Programs.ProgramPeriods.AssociatesAndProviders.
-            SponsorsController);
+      var subjectType = typeof(Nganga.TestConsumer.Controllers.Api.SponsorsController);
 
       var model = resourceCoordMapper.GetResourceCoordinationInformationViewModel(subjectType);
       model.UseCustomCache = true;

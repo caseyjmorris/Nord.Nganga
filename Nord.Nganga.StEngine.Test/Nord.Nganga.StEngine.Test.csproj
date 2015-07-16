@@ -39,9 +39,6 @@
     <Reference Include="Antlr4.StringTemplate">
       <HintPath>..\packages\Antlr4.StringTemplate.4.0.6.9004\lib\net35\Antlr4.StringTemplate.dll</HintPath>
     </Reference>
-    <Reference Include="NORD.RareCare.Presentation.Web">
-      <HintPath>..\..\..\..\Source\Repos\Nord.RareCare\NORD.RareCare.Presentation.Web\bin\NORD.RareCare.Presentation.Web.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Web.Http, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -76,6 +73,10 @@
     <ProjectReference Include="..\Nord.Nganga.StEngine\Nord.Nganga.StEngine.csproj">
       <Project>{b4bcbb48-b413-4d29-9f74-21c24ece18cc}</Project>
       <Name>Nord.Nganga.StEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nord.Nganga.TestConsumer\Nord.Nganga.TestConsumer.csproj">
+      <Project>{85f06a32-cc64-4f5a-b03f-aa11c8f48c85}</Project>
+      <Name>Nord.Nganga.TestConsumer</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nord.Nganga.ViewModels\Nord.Nganga.Models.csproj">
       <Project>{7ccea467-e8b3-4c22-8420-cf1851c96824}</Project>
