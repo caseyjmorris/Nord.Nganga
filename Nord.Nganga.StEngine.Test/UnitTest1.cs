@@ -5,10 +5,12 @@ using System.Linq;
 using System.Text;
 using Antlr4.StringTemplate;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nord.Nganga.Annotations;
 using Nord.Nganga.Core.Reflection;
 using Nord.Nganga.Mappers;
 using Nord.Nganga.Mappers.Controllers;
 using Nord.Nganga.Mappers.Resources;
+using Nord.Nganga.Models;
 using Nord.Nganga.Models.Configuration;
 using Nord.Nganga.Models.ViewModels;
 
@@ -17,6 +19,20 @@ namespace Nord.Nganga.StEngine.Test
   [TestClass]
   public class UnitTest1
   {
+
+    [TestMethod]
+    public void TestAssyOptions()
+    {
+      var subjectType = typeof(Nganga.TestConsumer.Controllers.Api.SponsorsController);
+      var ao = new AssemblyOptionsModel(subjectType);
+      Console.WriteLine(ao.CsProjectPath);
+      Console.WriteLine(ao.NgControllersPath);
+      Console.WriteLine(ao.NgResourcesPath);
+      Console.WriteLine(ao.NgViewsPath);
+      Console.WriteLine(ao.GetOption(CasingOptionContext.Field));
+    }
+
+
     [TestMethod]
     public void TestControllerGeneration()
     {
