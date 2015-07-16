@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
+using Antlr4.StringTemplate;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nord.Nganga.Core.Reflection;
 using Nord.Nganga.Mappers;
@@ -29,8 +32,14 @@ namespace Nord.Nganga.StEngine.Test
       var model = controllerCoordinatedInfoMapper.GetControllerCoordinatedInformationViewModel(subjectType);
       t.Add("model", model);
 
-      var s = t.Render();
-      Console.WriteLine(s);
+      var sb = new StringBuilder();
+
+      var aiw = new AutoIndentWriter(new StringWriter(sb));
+
+      var s = t.Write(aiw);
+
+      //var s = sb.ToString(); //t.Render();
+      Console.WriteLine(sb.ToString());
     }
 
     [TestMethod]
@@ -51,7 +60,13 @@ namespace Nord.Nganga.StEngine.Test
       model.ServiceName = "service";
       t.Add("model", model);
 
-      var s = t.Render();
+      var sb = new StringBuilder();
+
+      var aiw = new AutoIndentWriter(new StringWriter(sb));
+
+      t.Write(aiw);
+
+      var s = sb.ToString();
       Console.WriteLine(s);
     }
   }

@@ -23,8 +23,7 @@
 >>
 
 primeRouteId(rid) ::= <<
-    var <rid> = $stateParams.<rid>;
-
+var <rid> = $stateParams.<rid>;
 >>
 
 authorizationInformation(model) ::= <%
@@ -33,7 +32,7 @@ $scope.canEdit = <model.EditRestrictedToRoles: {role |userInfoService.userIsInRo
 
 commonRecordsSetup(model) ::= <<
 <model.CommonRecordsWithResolvers.keys: {cr|
-      $scope.<cr> = <model.CommonRecordsWithResolvers.(cr)>}>
+$scope.<cr> = <model.CommonRecordsWithResolvers.(cr)>}>
 >>
 
 controllerRetrievals(model) ::= <<
