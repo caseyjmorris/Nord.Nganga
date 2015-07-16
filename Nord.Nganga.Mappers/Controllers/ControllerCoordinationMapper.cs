@@ -50,7 +50,7 @@ namespace Nord.Nganga.Mappers.Controllers
         GetEndpoints = getEndpoints,
         PostEndpoints = postEndpoints,
         RetrievalTargetGetEndpoints = getEndpoints.Where(ge => ge.HasReturnValue),
-        EditRestrictedToRoles = privilegedRoles.ToList(),
+        EditRestrictedToRoles = privilegedRoles == null ? null : privilegedRoles.ToList(),
         ForViewOnlyData = controller.HasAttribute<PresentAsViewOnlyDataAttribute>(),
         ServiceName = controller.Name.Replace("Controller", "Service").ToCamelCase(),
         AdditionalNgServices =
@@ -59,7 +59,7 @@ namespace Nord.Nganga.Mappers.Controllers
         CommonRecordsWithResolvers = this.GetCommonRecordsWithResolvers(complexTypes.ToList())
       };
 
-      model.EditRestricted = model.EditRestrictedToRoles.Any();
+      model.EditRestricted = model.EditRestrictedToRoles != null && model.EditRestrictedToRoles.Any();
 
       model.HasCommonRecords = model.CommonRecordsWithResolvers.Any();
 
