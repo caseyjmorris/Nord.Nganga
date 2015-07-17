@@ -191,11 +191,6 @@ namespace Nord.Nganga.Mappers
       }
       if (discriminator == ViewModelViewModel.MemberDiscriminator.ComplexCollection)
       {
-        if (info.HasAttribute<SelectCommonAttribute>())
-        {
-          return NgangaControlType.CommonSelect;
-        }
-
         if (info.HasAttribute<CollectionEditorAttribute>() &&
             info.GetAttribute<CollectionEditorAttribute>().Editor == CollectionEditorAttribute.EditorType.Complex)
         {
@@ -203,6 +198,12 @@ namespace Nord.Nganga.Mappers
         }
         return NgangaControlType.MultipleSimpleEditorForComplex;
       }
+
+      if (info.HasAttribute<SelectCommonAttribute>())
+      {
+        return NgangaControlType.CommonSelect;
+      }
+
       var underlyingType = info.PropertyType.GetNonNullableType();
 
       if (underlyingType == typeof(string))
