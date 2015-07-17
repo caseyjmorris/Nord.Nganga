@@ -92,6 +92,13 @@ namespace Nord.Nganga.Models.ViewModels
       public object Step { get; set; } //1, .01, "any" are the most likely values here
       public Type DataType { get; set; }
 
+      public NgangaControlType ControlType { get; set; }
+
+      public string NgangaControlTypeSt
+      {
+        get { return this.ControlType.ToString(); }
+      }
+
 
       public override string ToString()
       {

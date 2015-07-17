@@ -122,6 +122,8 @@ namespace Nord.Nganga.Mappers
         Step = this.GetStep(info),
       };
 
+      fieldModel.ControlType = this.DetermineControlType(ViewModelViewModel.MemberDiscriminator.Scalar, info);
+
       return fieldModel;
     }
 
@@ -177,6 +179,11 @@ namespace Nord.Nganga.Mappers
       }
       var underlyingType = info.PropertyType.GetNonNullableType();
 
+      if (underlyingType == typeof(string))
+      {
+        return NgangaControlType.TextControl;
+      }
+
       if (underlyingType == typeof(bool))
       {
         return NgangaControlType.BoolControl;
@@ -188,10 +195,6 @@ namespace Nord.Nganga.Mappers
       if (Numerics.Contains(underlyingType))
       {
         return NgangaControlType.NumberControl;
-      }
-      if (underlyingType == typeof(string))
-      {
-        return NgangaControlType.TextControl;
       }
 
       var msg = string.Format("Couldn't find control for type {0} (property {1} of {2})", underlyingType, info.Name,
@@ -248,6 +251,10 @@ namespace Nord.Nganga.Mappers
 
     public ViewModelViewModel GetViewModelViewModel(Type type)
     {
+      if (!type.Name.EndsWith("ViewModel"))
+      {
+        throw new Exception(string.Format("{0} is not a view model", type.FullName));
+      }
       // get the properties 
       var viewModelProperties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
 

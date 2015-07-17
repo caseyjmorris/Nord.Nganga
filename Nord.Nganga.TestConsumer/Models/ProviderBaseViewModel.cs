@@ -8,6 +8,22 @@ namespace Nord.Nganga.TestConsumer.Models
     [DoNotShow]
     public int Id { get; set; }
 
+    public string SomeString { get; set; }
+
+    public int SomeInt { get; set; }
+
+    public decimal SomeDec { get; set; }
+
+    public float SomeFloat { get; set; }
+
+    [SelectCommon("someCommonRecord")]
+    public int SelectCommonValue { get; set; }
+
+    public IEnumerable<string> CollectionOfStrings { get; set; }
+
+    [SelectCommon("someOtherCommonRec")]
+    public IEnumerable<int> MultiSelectCommon { get; set; }
+
     [UiSection("Contacts")]
     public IEnumerable<ContactViewModel> Contacts { get; set; }
 

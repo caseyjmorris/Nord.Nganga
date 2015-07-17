@@ -20,15 +20,15 @@ childView(model) ::= <<
 </nord-row>
 
 <nord-row>
-  <form name="%model.NgFormName%" id="%model.NgFormName%Form" ng-submit="%model.NgSubmitAction%" class="user-edit-form form-horizontal">
-    %model.Sections:{s|%section(s)%}%
+  <form name="%model.NgFormName%" id="%model.NgFormName%" ng-submit="%model.NgSubmitAction%" class="user-edit-form form-horizontal">
+    %model.Sections:{s|%section(s, model.ParentObjectName)%}%
   </form>
 </nord-row>
 >>
 
-section(model) ::= <<
+section(model, parentObjectName) ::= <<
  %(sectionHeaderMap.(model.Title))(model)% 
-%model.Rows:{r|%row(r)%}%
+%model.Rows:{r|%row(r, parentObjectName)%}%
 >>
 
 sectionTitle(model) ::= <<
@@ -46,14 +46,14 @@ sectionHeaderMap ::= [
     default: "sectionTitle"
 ]
 
-row(model) ::= <<
+row(model, parentObjectName) ::= <<
 <div class="row"> %! would like to replace with <nord-row-simple> directive !%
-  %model.Members:{m|%member(m)%}%
+  %model.Members:{m|%member(m, parentObjectName)%}%
 </div>
 >>
 
-member(model) ::= <<
- %(controlTypeTemplateMap.(model.NgangaControlTypeSt))(model,true)% 
+member(model, parentObjectName) ::= <<
+ %(controlTypeTemplateMap.(model.NgangaControlTypeSt))(model,parentObjectName)% 
 >>
 
 controlTypeTemplateMap ::= [
@@ -120,7 +120,12 @@ multipleSimpleEditorForComplex(model, parentObjectName) ::= <%
 %>
 
 multipleSimpleEditorForPrimitive(model, parentObjectName) ::= <%
+<nord-multiple-simple-editor 
+parent-ojbect="%parentObjectName%" 
+child-field-name="%model.Model.FieldName%" 
+collection-name="%model.FieldName%">
 
+</nord-multiple-simple-editor>
 %>
 
 numberControl(model, parentObjectName) ::= <%

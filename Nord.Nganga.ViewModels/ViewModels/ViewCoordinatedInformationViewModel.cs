@@ -22,6 +22,8 @@ namespace Nord.Nganga.Models.ViewModels
 
     public string NgSubmitAction { get; set; }
 
+    public string ParentObjectName { get; set; }
+
     public class RowViewModel
     {
       public ICollection<ViewModelViewModel.MemberWrapper> Members { get; set; }
