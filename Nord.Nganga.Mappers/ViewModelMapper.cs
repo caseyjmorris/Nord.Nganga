@@ -73,6 +73,29 @@ namespace Nord.Nganga.Mappers
 
     #endregion
 
+    private object GetStep(PropertyInfo info)
+    {
+      var propType = info.PropertyType.GetNonNullableType();
+
+      var numeric = Numerics.Contains(propType);
+
+      var isInt = numeric && propType == typeof(int) || propType == typeof(long);
+
+      if (!numeric)
+      {
+        return null;
+      }
+      if (isInt)
+      {
+        return 1;
+      }
+      if (propType == typeof(decimal))
+      {
+        return ".01";
+      }
+      return "any";
+    }
+
     private ViewModelViewModel.FieldViewModel GetFieldViewModel(PropertyInfo info)
     {
       var isSelectCommon = info.HasAttribute<SelectCommonAttribute>();
@@ -96,6 +119,7 @@ namespace Nord.Nganga.Mappers
         InputMask = info.HasAttribute<InputMaskAttribute>() ? info.GetAttribute<InputMaskAttribute>().Mask : null,
         Minimum = info.HasAttribute<RangeAttribute>() ? info.GetAttribute<RangeAttribute>().Minimum : null,
         Maximum = info.HasAttribute<RangeAttribute>() ? info.GetAttribute<RangeAttribute>().Maximum : null,
+        Step = this.GetStep(info),
       };
 
       return fieldModel;
