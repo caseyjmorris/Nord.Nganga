@@ -32,6 +32,7 @@ section(model, parentObjectName) ::= <<
 >>
 
 sectionTitle(model) ::= <<
+
 <nord-row>
   <h4>
     %model.Title%
@@ -85,13 +86,12 @@ required
 
 commonSelect(model, parentObjectName) ::= <%
 <nord-common-select 
-%! waitResolve not set !%
+%if(!model.Member.SelectCommon.RestrictUntilResolved)%wait-resolve="false" %endif%
 %! Need to fill in startcap, endcap (but no attrs exist ATM) !%
 ng-model="%parentObjectName%.%model.Member.FieldName%" 
 twelfths="%model.Width%" 
 field-label-text="%model.Member.DisplayName%" 
-
-%! need to get common-select-source !%
+common-select-source="%model.Member.SelectCommon.ObjectName%.%model.Member.SelectCommon.CommonInformationName%%if(model.Member.SelectCommon.Index)%model.Member.SelectCommon.Index%endif%"
 
 %if(model.Member.IsRequired)%
 required

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Humanizer;
-using Nord.Nganga.Core.Text;
 using Nord.Nganga.Models.Configuration;
 using Nord.Nganga.Models.ViewModels;
 
@@ -47,9 +46,9 @@ namespace Nord.Nganga.Mappers.Views
 
       return new ViewCoordinationInformationCollectionViewModel
       {
-        NgControllerName = controller.Name.Replace("Controller", string.Empty).ToCamelCase(),
+        NgControllerName = controller.Name.Replace("Controller", "Ctrl").Camelize(),
         ViewCoordinatedInfo = coordinatedInfo,
-        Header = controller.Name.Replace("Controller", string.Empty).ToSpaced(), //TODO:  casing
+        Header = controller.Name.Replace("Controller", string.Empty).Humanize(LetterCasing.Sentence), //TODO:  casing
       };
     }
 
