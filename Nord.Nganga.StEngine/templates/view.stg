@@ -61,7 +61,20 @@ required
 %>
 
 commonSelect(model, parentObjectName) ::= <%
+<nord-common-select
+%! waitResolve not set !%
+%! Need to fill in startcap, endcap (but no attrs exist ATM) !%
+ng-model="%parentObjectName%.%model.Member.FieldName%"
+twelfths="%model.Width%"
+field-label-text="%model.Member.DisplayName%"
 
+%! need to get common-select-source !%
+
+%if(model.Member.IsRequired)%
+required
+%endif%
+>
+</nord-common-select>
 %>
 
 dateControl(model, parentObjectName) ::= <%
@@ -115,5 +128,14 @@ required
 %>
 
 textControl(model, parentObjectName) ::= <%
-
+<nord-text-control
+%! Need to fill in startcap, endcap (but no attrs exist ATM) !%
+ng-model="%parentObjectName%.%model.Member.FieldName%"
+twelfths="%model.Width%"
+field-label-text="%model.Member.DisplayName%"
+%if(model.Member.IsRequired)%
+required
+%endif%
+>
+</nord-text-control>
 %>
