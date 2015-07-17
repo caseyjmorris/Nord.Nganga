@@ -24,11 +24,5 @@ namespace Nord.Nganga.TestConsumer.Controllers.Api
     {
       return new SponsorProgramPeriodDetailCollectionViewModel();
     }
-
-    [HttpGet]
-    public SponsorViewModel GetSingleSponsor()
-    {
-      throw new Exception();
-    }
   }
 }

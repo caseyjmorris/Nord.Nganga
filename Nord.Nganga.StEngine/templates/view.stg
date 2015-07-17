@@ -115,20 +115,33 @@ required
 %>
 
 multipleComplexEditor(model, parentObjectName) ::= <%
-
+<nord-multiple-complex-editor 
+parentObject="%parentObjectName%" 
+collection-name="%model.FieldName%"
+child-field-name="%model.Member.CoordinatedInfo.ParentObjectName%"
+panel-top-label="%model.DisplayName%"
+>
+%childView(model.Member.CoordinatedInfo)%
+</nord-multiple-complex-editor>
 %>
 
 multipleSimpleEditorForComplex(model, parentObjectName) ::= <%
-
+<nord-multiple-simple-editor 
+parent-object="%parentObjectName%" 
+collection-name="%model.FieldName%" 
+child-field-name="%model.Member.CoordinatedInfo.ParentObjectName%"
+>
+%childView(model.Member.CoordinatedInfo)%
+</nord-multiple-simple-editor>
 %>
 
 multipleSimpleEditorForPrimitive(model, parentObjectName) ::= <%
 
 <nord-multiple-simple-editor 
 parent-object="%parentObjectName%" 
-child-field-name="%model.Model.FieldName%" 
+child-field-name="%model.Member.FieldName%" 
 collection-name="%model.FieldName%">
-  %model.Model.NgangaControlTypeSt%
+  %model.Member.NgangaControlTypeSt%
 </nord-multiple-simple-editor>
 %>
 
