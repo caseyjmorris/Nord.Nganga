@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net.Configuration;
 using System.Reflection;
 using Nord.Nganga.Annotations.Attributes.Html;
 using Nord.Nganga.Annotations.Attributes.ViewModels;
@@ -96,14 +97,14 @@ namespace Nord.Nganga.Mappers
       return "any";
     }
 
-    private ViewModelViewModel.FieldViewModel GetFieldViewModel(PropertyInfo info)
+    private ViewModelViewModel.FieldViewModel GetFieldViewModel(PropertyInfo info, bool isCollection = false )
     {
       var isSelectCommon = info.HasAttribute<SelectCommonAttribute>();
       var selectCommonAttribute = isSelectCommon ? info.GetAttribute<SelectCommonAttribute>() : null;
 
       var fieldModel = new ViewModelViewModel.FieldViewModel
       {
-        DataType = info.PropertyType,
+        DataType = isCollection ? info.PropertyType.GetGenericArguments()[0] : info.PropertyType,
         DisplayName =
           info.HasAttribute<DisplayAttribute>()
             ? info.GetAttribute<DisplayAttribute>().Name
@@ -129,7 +130,7 @@ namespace Nord.Nganga.Mappers
 
     private IEnumerable<ViewModelViewModel.FieldViewModel> GetFieldViewModelCollection(IEnumerable<PropertyInfo> t)
     {
-      var pfi = t.Select(this.GetFieldViewModel);
+      var pfi = t.Select(p=>this.GetFieldViewModel(p,false));
       return pfi;
     }
 
@@ -240,10 +241,12 @@ namespace Nord.Nganga.Mappers
           result.IsHidden = field.IsHidden;
           break;
         case ViewModelViewModel.MemberDiscriminator.PrimitiveCollection:
-          result.Member = this.GetSubordinateViewModelWrapper(info);
+          result.Member = this.GetFieldViewModel(info, true);;
           break;
         case ViewModelViewModel.MemberDiscriminator.ComplexCollection:
           result.Member = this.GetSubordinateViewModelWrapper(info);
+          break;
+          default:
           break;
       }
       return result;
