@@ -39,6 +39,12 @@ namespace Nord.Nganga.Models.ViewModels
       public string Section { get; set; }
       public int Width { get; set; }
       public NgangaControlType ControlType { get; set; }
+
+      public string NgangaControlTypeSt
+      {
+        get { return this.ControlType.ToString(); }
+      }
+
       public string ViewOnlyExpression { get; set; }
       public bool IsHidden { get; set; }
 

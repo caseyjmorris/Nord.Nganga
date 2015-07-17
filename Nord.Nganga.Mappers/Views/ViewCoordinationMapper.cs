@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Humanizer;
 using Nord.Nganga.Core.Text;
 using Nord.Nganga.Models.ViewModels;
 
@@ -35,6 +36,7 @@ namespace Nord.Nganga.Mappers.Views
       {
         NgControllerName = controller.Name.Replace("Controller", string.Empty).ToCamelCase(),
         ViewCoordinatedInfo = coordinatedInfo,
+        Header = controller.Name.Replace("Controller", string.Empty).ToSpaced() //TODO:  casing
       };
     }
 
@@ -50,8 +52,11 @@ namespace Nord.Nganga.Mappers.Views
       var coord = new ViewCoordinatedInformationViewModel
       {
         //TODO:  case pref
-        SaveButtonText = "Save changes to " + vmVm.Name.ToSpaced().ToLower(),
+        SaveButtonText = "Save changes to " + vmVm.Name.Humanize(LetterCasing.LowerCase),
         Sections = this.SplitSections(vmVm),
+        Title = vmVm.Name.Humanize(LetterCasing.Sentence), //TODO:  CASING
+        NgFormName = vmVm.Name.Camelize(),
+        NgSubmitAction = string.Format("saveChangesTo{0}()", vmVm.Name.Camelize())
       };
 
       return coord;
@@ -80,7 +85,7 @@ namespace Nord.Nganga.Mappers.Views
 
       var currentRowWidth = 0;
 
-      foreach (var member in vmVm.Members)
+      foreach (var member in vmVm.Members.Where(m => !m.IsHidden))
       {
         if (member.Section != currentSection.Title)
         {

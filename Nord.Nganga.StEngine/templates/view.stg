@@ -39,11 +39,11 @@ sectionTitle(model) ::= <<
 </nord-row>
 >>
 
-nullTemplate() ::= << >> 
+nullTemplate(model) ::= <% %> 
 
 sectionHeaderMap ::= [
-	"":"nullTemplate",
-	default: "sectionTitle"
+    "":"nullTemplate",
+    default: "sectionTitle"
 ]
 
 row(model) ::= <<
@@ -53,23 +53,23 @@ row(model) ::= <<
 >>
 
 member(model) ::= <<
- %! This should switch on the model.NgangaControlType property somehow.  Don't know how to do that. !%
- %(controlTypeTemplateMap.(model.NgangaControlType))(model,true)% 
+ %(controlTypeTemplateMap.(model.NgangaControlTypeSt))(model,true)% 
 >>
 
 controlTypeTemplateMap ::= [
     "BoolControl" : "boolControl",
-	"CommonSelect" : "commonSelect",
-	"DateControl" : "dateControl",
-	"MultipleComplexEditor" : "multipleComplexEditor",
-	"MultipleSimpleEditorForComplex" : "multipleSimpleEditorForComplex",
-	"MultipleSimpleEditorForPrimitive" : "multipleSimpleEditorForPrimitive",
-	"NumberControl" : "numberControl",
-	default : "textControl"	
+    "CommonSelect" : "commonSelect",
+    "DateControl" : "dateControl",
+    "MultipleComplexEditor" : "multipleComplexEditor",
+    "MultipleSimpleEditorForComplex" : "multipleSimpleEditorForComplex",
+    "MultipleSimpleEditorForPrimitive" : "multipleSimpleEditorForPrimitive",
+    "NumberControl" : "numberControl",
+    "TextControl": "textControl",
+    default : "THROWANEXCEPTION"	
 ]
 
 boolControl(model, parentObjectName) ::= <%
-<nord-bool-control 
+<nord-bool-control  
 ng-model="%parentObjectName%.%model.Member.FieldName%" 
 twelfths="%model.Width%" 
 field-label-text="%model.Member.DisplayName%" 
@@ -81,12 +81,12 @@ required
 %>
 
 commonSelect(model, parentObjectName) ::= <%
-<nord-common-select
+<nord-common-select 
 %! waitResolve not set !%
 %! Need to fill in startcap, endcap (but no attrs exist ATM) !%
-ng-model="%parentObjectName%.%model.Member.FieldName%"
-twelfths="%model.Width%"
-field-label-text="%model.Member.DisplayName%"
+ng-model="%parentObjectName%.%model.Member.FieldName%" 
+twelfths="%model.Width%" 
+field-label-text="%model.Member.DisplayName%" 
 
 %! need to get common-select-source !%
 
@@ -98,11 +98,11 @@ required
 %>
 
 dateControl(model, parentObjectName) ::= <%
-<nord-date-control
+<nord-date-control 
 %! Need to fill in startcap, endcap (but no attrs exist ATM) !%
-ng-model="%parentObjectName%.%model.Member.FieldName%"
-twelfths="%model.Width%"
-field-label-text="%model.Member.DisplayName%" 
+ng-model="%parentObjectName%.%model.Member.FieldName%" 
+twelfths="%model.Width%" 
+field-label-text="%model.Member.DisplayName%"  
 
 %if(model.Member.IsRequired)%
 required
@@ -124,21 +124,21 @@ multipleSimpleEditorForPrimitive(model, parentObjectName) ::= <%
 %>
 
 numberControl(model, parentObjectName) ::= <%
-<nord-number-control
+<nord-number-control 
 %! Need to fill in startcap, endcap (but no attrs exist ATM) !%
-ng-model="%parentObjectName%.%model.Member.FieldName%"
-twelfths="%model.Width%"
-field-label-text="%model.Member.DisplayName%"
+ng-model="%parentObjectName%.%model.Member.FieldName%" 
+twelfths="%model.Width%" 
+field-label-text="%model.Member.DisplayName%" 
 
 %if(model.Member.Minimum)%
-min="%model.Member.Minimum%"
+min="%model.Member.Minimum%" 
 %endif%
 
 %if(model.Member.Minimum)%
-max="%model.Member.Maximum%"
+max="%model.Member.Maximum%" 
 %endif%
 
-step="%model.Member.Step%"
+step="%model.Member.Step%" 
 
 %if(model.Member.IsRequired)%
 required
