@@ -9,12 +9,15 @@ using Nord.Nganga.Annotations.Attributes.Html;
 using Nord.Nganga.Annotations.Attributes.ViewModels;
 using Nord.Nganga.Core.Reflection;
 using Nord.Nganga.Core.Text;
+using Nord.Nganga.Mappers.Views;
 using Nord.Nganga.Models.ViewModels;
 
 namespace Nord.Nganga.Mappers
 {
   public class ViewModelMapper
   {
+    private readonly ViewCoordinationMapper viewCoordinationMapper;
+
     private static readonly ICollection<Type> PrimitiveTypes =
       new HashSet<Type>(new[]
       {
@@ -72,6 +75,11 @@ namespace Nord.Nganga.Mappers
         {IsComplexCollection, ViewModelViewModel.MemberDiscriminator.ComplexCollection}
       };
 
+    public ViewModelMapper(ViewCoordinationMapper viewCoordinationMapper = null)
+    {
+      this.viewCoordinationMapper = viewCoordinationMapper;
+    }
+
     #endregion
 
     private object GetStep(PropertyInfo info)
@@ -97,7 +105,7 @@ namespace Nord.Nganga.Mappers
       return "any";
     }
 
-    private ViewModelViewModel.FieldViewModel GetFieldViewModel(PropertyInfo info, bool isCollection = false )
+    private ViewModelViewModel.FieldViewModel GetFieldViewModel(PropertyInfo info, bool isCollection = false)
     {
       var isSelectCommon = info.HasAttribute<SelectCommonAttribute>();
       var selectCommonAttribute = isSelectCommon ? info.GetAttribute<SelectCommonAttribute>() : null;
@@ -123,14 +131,18 @@ namespace Nord.Nganga.Mappers
         Step = this.GetStep(info),
       };
 
-      fieldModel.ControlType = this.DetermineControlType(ViewModelViewModel.MemberDiscriminator.Scalar, info);
+      fieldModel.ControlType =
+        this.DetermineControlType(
+          isCollection
+            ? ViewModelViewModel.MemberDiscriminator.PrimitiveCollection
+            : ViewModelViewModel.MemberDiscriminator.Scalar, info);
 
       return fieldModel;
     }
 
     private IEnumerable<ViewModelViewModel.FieldViewModel> GetFieldViewModelCollection(IEnumerable<PropertyInfo> t)
     {
-      var pfi = t.Select(p=>this.GetFieldViewModel(p,false));
+      var pfi = t.Select(p => this.GetFieldViewModel(p, false));
       return pfi;
     }
 
@@ -154,6 +166,19 @@ namespace Nord.Nganga.Mappers
           info.GetAttributePropertyValueOrDefault<LedgerAttribute, string>(a => a.SumPropertyName),
         ItemActionAttribute = itemActionAttribute,
       };
+
+      if (this.viewCoordinationMapper != null)
+      {
+        var depthMultiplier = info.HasAttribute<CollectionEditorAttribute>() &&
+                              info.GetAttribute<CollectionEditorAttribute>().Editor ==
+                              CollectionEditorAttribute.EditorType.Simple
+          ? 2
+          : 1;
+        wrapper.CoordinatedInfo =
+          this.viewCoordinationMapper.GetViewCoordinatedInformationSingle(info.PropertyType.GetGenericArguments()[0],
+            depthMultiplier);
+      }
+
       return wrapper;
     }
 
@@ -241,12 +266,13 @@ namespace Nord.Nganga.Mappers
           result.IsHidden = field.IsHidden;
           break;
         case ViewModelViewModel.MemberDiscriminator.PrimitiveCollection:
-          result.Member = this.GetFieldViewModel(info, true);;
+          result.Member = this.GetFieldViewModel(info, true);
+          ;
           break;
         case ViewModelViewModel.MemberDiscriminator.ComplexCollection:
           result.Member = this.GetSubordinateViewModelWrapper(info);
           break;
-          default:
+        default:
           break;
       }
       return result;

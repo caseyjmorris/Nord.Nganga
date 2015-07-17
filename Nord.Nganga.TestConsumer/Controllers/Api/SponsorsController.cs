@@ -1,4 +1,5 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.Web.Http;
 using Nord.Nganga.Annotations.Attributes.Angular;
 using Nord.Nganga.TestConsumer.Models;
 
@@ -7,10 +8,8 @@ namespace Nord.Nganga.TestConsumer.Controllers.Api
   [AngularRouteIdParameter("programPeriodId")]
   public class SponsorsController : BaseApiController
   {
-
     public SponsorsController() : base()
     {
-      
     }
 
     [HttpGet]
@@ -20,11 +19,16 @@ namespace Nord.Nganga.TestConsumer.Controllers.Api
     }
 
     [HttpPost]
-    public SponsorProgramPeriodDetailCollectionViewModel SaveChangesToProgramPeriodSponsors(SponsorProgramPeriodDetailCollectionViewModel model)
+    public SponsorProgramPeriodDetailCollectionViewModel SaveChangesToProgramPeriodSponsors(
+      SponsorProgramPeriodDetailCollectionViewModel model)
     {
-      
-
       return new SponsorProgramPeriodDetailCollectionViewModel();
+    }
+
+    [HttpGet]
+    public SponsorViewModel GetSingleSponsor()
+    {
+      throw new Exception();
     }
   }
 }

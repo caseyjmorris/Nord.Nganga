@@ -24,6 +24,11 @@ namespace Nord.Nganga.Models.ViewModels
 
     public string ParentObjectName { get; set; }
 
+    public override string ToString()
+    {
+      return this.ParentObjectName;
+    }
+
     public class RowViewModel
     {
       public ICollection<ViewModelViewModel.MemberWrapper> Members { get; set; }

@@ -109,10 +109,8 @@ namespace Nord.Nganga.StEngine.Test
 
       var wasp = new WebApiSettingsPackage();
       wasp.SetPropertiesToDefault();
-      var endpointMapper = new EndpointMapper(wasp);
-      var viewModelMapper = new ViewModelMapper();
-      var endPointFilter = new EndpointFilter(viewModelMapper);
-      var vcMapper = new ViewCoordinationMapper(viewModelMapper, endPointFilter, endpointMapper);
+
+      var vcMapper = new ViewCoordinationMapper(wasp);
 
       var subjectType = typeof(Nganga.TestConsumer.Controllers.Api.SponsorsController);
 

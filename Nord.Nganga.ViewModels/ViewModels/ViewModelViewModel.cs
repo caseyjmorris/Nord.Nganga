@@ -67,6 +67,7 @@ namespace Nord.Nganga.Models.ViewModels
       public bool IsLedger { get; set; }
       public string LedgerSumProperty { get; set; }
       public SubordinateItemActionAttribute ItemActionAttribute { get; set; }
+      public ViewCoordinatedInformationViewModel CoordinatedInfo { get; set; }
 
       public override string ToString()
       {

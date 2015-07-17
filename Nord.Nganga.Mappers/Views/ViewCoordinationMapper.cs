@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Humanizer;
 using Nord.Nganga.Core.Text;
+using Nord.Nganga.Models.Configuration;
 using Nord.Nganga.Models.ViewModels;
 
 namespace Nord.Nganga.Mappers.Views
@@ -23,6 +24,18 @@ namespace Nord.Nganga.Mappers.Views
       this.endpointMapper = endpointMapper;
     }
 
+    public ViewCoordinationMapper(WebApiSettingsPackage settings)
+    {
+      var vmMapper = new ViewModelMapper(this);
+      var filter = new EndpointFilter(vmMapper);
+
+      this.viewModelMapper = vmMapper;
+
+      this.endpointFilter = filter;
+
+      this.endpointMapper = new EndpointMapper(settings);
+    }
+
     public ViewCoordinationInformationCollectionViewModel GetViewCoordinatedInformationCollection(Type controller)
     {
       var endpoints = this.endpointMapper.GetEnpoints(controller);
@@ -40,20 +53,21 @@ namespace Nord.Nganga.Mappers.Views
       };
     }
 
-    public ViewCoordinatedInformationViewModel GetViewCoordinatedInformationSingle(Type vmType)
+    public ViewCoordinatedInformationViewModel GetViewCoordinatedInformationSingle(Type vmType, int depthMultiplier = 1)
     {
       var vmVm = this.viewModelMapper.GetViewModelViewModel(vmType);
 
-      return this.GetViewCoordinatedInformationSingleInternal(vmVm);
+      return this.GetViewCoordinatedInformationSingleInternal(vmVm, depthMultiplier);
     }
 
-    private ViewCoordinatedInformationViewModel GetViewCoordinatedInformationSingleInternal(ViewModelViewModel vmVm)
+    private ViewCoordinatedInformationViewModel GetViewCoordinatedInformationSingleInternal(ViewModelViewModel vmVm,
+      int depthMultipler)
     {
       var coord = new ViewCoordinatedInformationViewModel
       {
         //TODO:  case pref
         SaveButtonText = "Save changes to " + vmVm.Name.Humanize(LetterCasing.LowerCase),
-        Sections = this.SplitSections(vmVm),
+        Sections = this.SplitSections(vmVm, depthMultipler),
         Title = vmVm.Name.Humanize(LetterCasing.Sentence), //TODO:  CASING
         NgFormName = vmVm.Name.Camelize() + "Form",
         NgSubmitAction = string.Format("saveChangesTo{0}()", vmVm.Name.Pascalize()),
@@ -63,7 +77,8 @@ namespace Nord.Nganga.Mappers.Views
       return coord;
     }
 
-    private IEnumerable<ViewCoordinatedInformationViewModel.SectionViewModel> SplitSections(ViewModelViewModel vmVm)
+    private IEnumerable<ViewCoordinatedInformationViewModel.SectionViewModel> SplitSections(ViewModelViewModel vmVm,
+      int depthMultipler)
     {
       var sections = new List<ViewCoordinatedInformationViewModel.SectionViewModel>();
 
@@ -108,7 +123,14 @@ namespace Nord.Nganga.Mappers.Views
           sections.Add(currentSection);
         }
 
-        currentRowWidth += member.Width;
+        var memberWidth = member.Width*depthMultipler;
+
+        if (memberWidth > 12)
+        {
+          memberWidth = 12;
+        }
+
+        currentRowWidth += memberWidth;
 
         if (currentRowWidth > rowMax)
         {
@@ -119,7 +141,7 @@ namespace Nord.Nganga.Mappers.Views
 
           currentSection.Rows.Add(currentRow);
 
-          currentRowWidth = member.Width;
+          currentRowWidth = memberWidth;
         }
 
         currentRow.Members.Add(member);
