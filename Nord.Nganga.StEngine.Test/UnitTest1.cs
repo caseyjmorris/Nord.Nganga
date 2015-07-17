@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using Antlr4.StringTemplate;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -89,6 +90,34 @@ namespace Nord.Nganga.StEngine.Test
       model.UseCustomCache = true;
       model.CustomCacheFactory = "test";
       model.ServiceName = "service";
+      t.Add("model", model);
+
+      var sb = new StringBuilder();
+
+      var aiw = new AutoIndentWriter(new StringWriter(sb));
+
+      t.Write(aiw);
+
+      var s = sb.ToString();
+      Console.WriteLine(s);
+    }
+
+    [TestMethod]
+    public void TestViewCoordination()
+    {
+      var t = TemplateFactory.GetTemplate(TemplateFactory.Context.View, "view", false);
+
+      var wasp = new WebApiSettingsPackage();
+      wasp.SetPropertiesToDefault();
+      var endpointMapper = new EndpointMapper(wasp);
+      var viewModelMapper = new ViewModelMapper();
+      var endPointFilter = new EndpointFilter(viewModelMapper);
+      var vcMapper = new ViewCoordinationMapper(viewModelMapper, endPointFilter, endpointMapper);
+
+      var subjectType = typeof(Nganga.TestConsumer.Controllers.Api.SponsorsController);
+
+      var model = vcMapper.GetViewCoordinatedInformationCollection(subjectType);
+
       t.Add("model", model);
 
       var sb = new StringBuilder();

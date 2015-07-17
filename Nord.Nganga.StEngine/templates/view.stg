@@ -27,16 +27,24 @@ childView(model) ::= <<
 >>
 
 section(model) ::= <<
-%if(model.Title)%
+ %(sectionHeaderMap.(model.Title))(model)% 
+%model.Rows:{r|%row(r)%}%
+>>
+
+sectionTitle(model) ::= <<
 <nord-row>
   <h4>
     %model.Title%
   </h4>
 </nord-row>
-%endif%
-
-%model.Rows:{r|%row(r)%}%
 >>
+
+nullTemplate() ::= << >> 
+
+sectionHeaderMap ::= [
+	"":"nullTemplate",
+	default: "sectionTitle"
+]
 
 row(model) ::= <<
 <div class="row"> %! would like to replace with <nord-row-simple> directive !%
@@ -45,8 +53,20 @@ row(model) ::= <<
 >>
 
 member(model) ::= <<
-%! This should switch on the model.NgangaControlType property somehow.  Don't know how to do that. !%
+ %! This should switch on the model.NgangaControlType property somehow.  Don't know how to do that. !%
+ %(controlTypeTemplateMap.(model.NgangaControlType))(model,true)% 
 >>
+
+controlTypeTemplateMap ::= [
+    "BoolControl" : "boolControl",
+	"CommonSelect" : "commonSelect",
+	"DateControl" : "dateControl",
+	"MultipleComplexEditor" : "multipleComplexEditor",
+	"MultipleSimpleEditorForComplex" : "multipleSimpleEditorForComplex",
+	"MultipleSimpleEditorForPrimitive" : "multipleSimpleEditorForPrimitive",
+	"NumberControl" : "numberControl",
+	default : "textControl"	
+]
 
 boolControl(model, parentObjectName) ::= <%
 <nord-bool-control 
@@ -128,13 +148,13 @@ required
 %>
 
 textControl(model, parentObjectName) ::= <%
-<nord-text-control
+<nord-text-control 
 %! Need to fill in startcap, endcap (but no attrs exist ATM) !%
-ng-model="%parentObjectName%.%model.Member.FieldName%"
-twelfths="%model.Width%"
-field-label-text="%model.Member.DisplayName%"
+ng-model="%parentObjectName%.%model.Member.FieldName%" 
+twelfths="%model.Width%" 
+field-label-text="%model.Member.DisplayName%" 
 %if(model.Member.IsRequired)%
-required
+required 
 %endif%
 >
 </nord-text-control>
