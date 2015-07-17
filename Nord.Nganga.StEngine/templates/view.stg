@@ -47,8 +47,11 @@ sectionHeaderMap ::= [
 ]
 
 row(model, parentObjectName) ::= <<
+
 <div class="row"> %! would like to replace with <nord-row-simple> directive !%
-  %model.Members:{m|%member(m, parentObjectName)%}%
+  %model.Members:{m|
+  %member(m, parentObjectName)%
+  }%
 </div>
 >>
 
@@ -120,11 +123,12 @@ multipleSimpleEditorForComplex(model, parentObjectName) ::= <%
 %>
 
 multipleSimpleEditorForPrimitive(model, parentObjectName) ::= <%
+
 <nord-multiple-simple-editor 
-parent-ojbect="%parentObjectName%" 
+parent-object="%parentObjectName%" 
 child-field-name="%model.Model.FieldName%" 
 collection-name="%model.FieldName%">
-
+  %model.Model.NgangaControlTypeSt%
 </nord-multiple-simple-editor>
 %>
 
