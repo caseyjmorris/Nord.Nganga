@@ -46,46 +46,5 @@ namespace Nord.Nganga.Core.Text
       }
       return null;
     }
-
-    public static string ToCamelCase(this string val)
-    {
-      if (string.IsNullOrEmpty(val))
-      {
-        throw new ArgumentException("val");
-      }
-      var charArr = val.ToCharArray();
-      charArr[0] = char.ToLowerInvariant(charArr[0]);
-      return new string(charArr);
-    }
-
-    public static string ToSpaced(this string val)
-    {
-      if (string.IsNullOrWhiteSpace(val))
-      {
-        throw new ArgumentException("val");
-      }
-
-      var cArr = val.ToCharArray();
-
-      var sb = new StringBuilder();
-
-      sb.Append(cArr[0]);
-
-      var previousWasNumeral = numerals.Contains(cArr[0]);
-
-      for (var i = 1; i < cArr.Length; i++)
-      {
-        var currentIsNumeral = numerals.Contains(cArr[i]);
-        var lc = char.ToLowerInvariant(cArr[i]);
-        if (lc != cArr[i] || (currentIsNumeral ^ previousWasNumeral))
-        {
-          sb.Append(' ');
-        }
-        sb.Append(lc);
-        previousWasNumeral = currentIsNumeral;
-      }
-
-      return sb.ToString();
-    }
   }
 }

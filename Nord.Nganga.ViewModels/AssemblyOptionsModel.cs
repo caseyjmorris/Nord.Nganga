@@ -22,14 +22,17 @@ namespace Nord.Nganga.Models
       return this.textCaseOptions.ContainsKey(context) ? this.textCaseOptions[context] : this.textCaseOptions[CasingOptionContext.Default];
     }
 
-    public AssemblyOptionsModel(Type type)
+    public AssemblyOptionsModel()
     {
-      var assy = type.Assembly;
-
       this.textCaseOptions = new Dictionary<CasingOptionContext, CasingOption>
       {
           {CasingOptionContext.Default,CasingOption.Sentence}
       };
+    }
+
+    public AssemblyOptionsModel(Type type):this()
+    {
+      var assy = type.Assembly;
 
       var tcpaList = assy.GetCustomAttributes(typeof(TextCasePreferencesAttribute), true);
 

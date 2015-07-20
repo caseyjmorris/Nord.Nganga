@@ -3,19 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Net.Configuration;
 using System.Reflection;
+using Humanizer;
+using Nord.Nganga.Annotations;
 using Nord.Nganga.Annotations.Attributes.Html;
 using Nord.Nganga.Annotations.Attributes.ViewModels;
 using Nord.Nganga.Core.Reflection;
-using Nord.Nganga.Core.Text;
 using Nord.Nganga.Mappers.Views;
+using Nord.Nganga.Models;
 using Nord.Nganga.Models.ViewModels;
 
 namespace Nord.Nganga.Mappers
 {
   public class ViewModelMapper
   {
+    public AssemblyOptionsModel AssemblyOptions { get; set; }
+
     private readonly ViewCoordinationMapper viewCoordinationMapper;
 
     private static readonly ICollection<Type> PrimitiveTypes =
@@ -78,6 +81,7 @@ namespace Nord.Nganga.Mappers
     public ViewModelMapper(ViewCoordinationMapper viewCoordinationMapper = null)
     {
       this.viewCoordinationMapper = viewCoordinationMapper;
+      this.AssemblyOptions = new AssemblyOptionsModel(); 
     }
 
     #endregion
@@ -116,8 +120,8 @@ namespace Nord.Nganga.Mappers
         DisplayName =
           info.HasAttribute<DisplayAttribute>()
             ? info.GetAttribute<DisplayAttribute>().Name
-            : info.Name.ToSpaced() + (info.PropertyType.GetNonNullableType() == typeof(bool) ? "?" : String.Empty),
-        FieldName = info.Name.ToCamelCase(),
+            : info.Name.Humanize(CasingEnumMap.Instance[this.AssemblyOptions.GetOption(CasingOptionContext.Field)]) + (info.PropertyType.GetNonNullableType() == typeof(bool) ? "?" : String.Empty),
+        FieldName = info.Name.Camelize(),
         IsHidden = info.HasAttribute<DoNotShowAttribute>(),
         IsRequired = info.HasAttribute<RequiredAttribute>(),
         IsViewOnly = info.HasAttribute<NotUserEditableAttribute>(),
@@ -154,13 +158,13 @@ namespace Nord.Nganga.Mappers
         : null;
       var wrapper = new ViewModelViewModel.SubordinateViewModelWrapper
       {
-        FieldName = info.Name.ToCamelCase(),
+        FieldName = info.Name.Camelize(),
         Model =
           this.GetViewModelViewModel(info.PropertyType.GetGenericArguments().First()),
         Section =
           info.GetAttributePropertyValueOrDefault<UiSectionAttribute, string>(s => s.SectionName) ?? string.Empty,
         DisplayName =
-          info.GetAttributePropertyValueOrDefault<DisplayAttribute, string>(a => a.Name) ?? info.Name.ToSpaced(),
+          info.GetAttributePropertyValueOrDefault<DisplayAttribute, string>(a => a.Name) ?? info.Name.Humanize(CasingEnumMap.Instance[this.AssemblyOptions.GetOption(CasingOptionContext.Field)]),
         IsLedger = info.HasAttribute<LedgerAttribute>(),
         LedgerSumProperty =
           info.GetAttributePropertyValueOrDefault<LedgerAttribute, string>(a => a.SumPropertyName),
@@ -296,7 +300,7 @@ namespace Nord.Nganga.Mappers
 
       var vm = new ViewModelViewModel
       {
-        Name = type.Name.Replace("ViewModel", string.Empty).ToCamelCase(),
+        Name = type.Name.Replace("ViewModel", string.Empty).Camelize(),
         Scalars = this.GetFieldViewModelCollection(
           decoratedProperties.Where(p => p.discriminator == ViewModelViewModel.MemberDiscriminator.Scalar)
             .Select(p => p.pi), false ),

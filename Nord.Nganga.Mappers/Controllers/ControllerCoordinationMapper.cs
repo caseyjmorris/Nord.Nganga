@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Humanizer;
 using Nord.Nganga.Annotations.Attributes.Angular;
 using Nord.Nganga.Core.Reflection;
 using Nord.Nganga.Core.Text;
@@ -43,13 +44,13 @@ namespace Nord.Nganga.Mappers.Controllers
         RouteIdParameterIsNullable =
           controller.GetAttributePropertyValueOrDefault<AngularRouteIdParameterAttribute, bool>(a => a.IsNullable),
         NgModuleName = controller.GetAttribute<AngularModuleNameAttribute>().ModuleName,
-        NgControllerName = controller.Name.Replace("Controller", "Ctrl").ToCamelCase(),
+        NgControllerName = controller.Name.Replace("Controller", "Ctrl").Camelize(),
         GetEndpoints = filteredInfo.GetEndpoints,
         PostEndpoints = filteredInfo.PostEndpoints,
         RetrievalTargetGetEndpoints = filteredInfo.GetEndpoints.Where(ge => ge.HasReturnValue),
         EditRestrictedToRoles = filteredInfo.PrivilegedRoles == null ? null : filteredInfo.PrivilegedRoles.ToList(),
         ForViewOnlyData = controller.HasAttribute<PresentAsViewOnlyDataAttribute>(),
-        ServiceName = controller.Name.Replace("Controller", "Service").ToCamelCase(),
+        ServiceName = controller.Name.Replace("Controller", "Service").Camelize(),
         AdditionalNgServices =
           controller.GetAttributePropertyValueOrDefault<InjectAngularServicesAttribute, IEnumerable<string>>(
             a => a.Services),

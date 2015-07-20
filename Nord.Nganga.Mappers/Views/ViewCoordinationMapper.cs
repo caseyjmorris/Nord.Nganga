@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Humanizer;
+using Nord.Nganga.Models;
 using Nord.Nganga.Models.Configuration;
 using Nord.Nganga.Models.ViewModels;
 
@@ -37,6 +38,8 @@ namespace Nord.Nganga.Mappers.Views
 
     public ViewCoordinationInformationCollectionViewModel GetViewCoordinatedInformationCollection(Type controller)
     {
+      this.viewModelMapper.AssemblyOptions = new AssemblyOptionsModel(controller);
+
       var endpoints = this.endpointMapper.GetEnpoints(controller);
 
       var filteredInfo = this.endpointFilter.ExamineEndpoints(endpoints);

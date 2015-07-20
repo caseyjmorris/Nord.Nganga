@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Humanizer;
 using Nord.Nganga.Annotations.Attributes.Angular;
 using Nord.Nganga.Core.Reflection;
 using Nord.Nganga.Core.Text;
@@ -29,7 +30,7 @@ namespace Nord.Nganga.Mappers.Resources
         UseCustomCache = controller.HasAttribute<UseAngularLocalCacheAttribute>(),
         CustomCacheFactory =
           controller.HasAttribute<UseAngularLocalCacheAttribute>()
-            ? controller.Name.Replace("Controller", string.Empty).ToCamelCase()
+            ? controller.Name.Replace("Controller", string.Empty).Camelize()
             : null
         ,
         GetEndpoints = endpoints.Where(e => e.HttpMethod == EndpointViewModel.HttpMethodType.Get),

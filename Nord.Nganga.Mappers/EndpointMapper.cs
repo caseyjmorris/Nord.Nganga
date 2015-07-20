@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Humanizer;
 using Nord.Nganga.Annotations.Attributes.Angular;
 using Nord.Nganga.Annotations.Attributes.Html;
 using Nord.Nganga.Core.Reflection;
@@ -103,7 +104,7 @@ namespace Nord.Nganga.Mappers
       {
         HttpMethod = m.httpMethod,
         UrlDisplayName = m.methodInfo.Name,
-        MethodName = m.methodInfo.Name.ToCamelCase(),
+        MethodName = m.methodInfo.Name.Camelize(),
         ArgumentNames = m.methodInfo.GetParameters().Select(p => p.Name).ToList(),
         ArgumentQueryString = this.FormatArgsForQueryString(m.methodInfo.GetParameters().Select(p => p.Name)),
         ArgumentTypes = m.methodInfo.GetParameters().Select(p => p.ParameterType).ToList(),
@@ -123,10 +124,10 @@ namespace Nord.Nganga.Mappers
             .Where(a => a.Context == JavaScriptOnPostCompleteAttribute.ContextType.Success)
             .Select(a => a.Expression),
         ResourceOnly = m.methodInfo.HasAttribute<GenerateResourceOnlyAttribute>(),
-        ReturnPropertyCamelCase = m.hasReturnType ? m.returnType.GetFriendlyName().ToCamelCase() : null,
+        ReturnPropertyCamelCase = m.hasReturnType ? m.returnType.GetFriendlyName().Camelize() : null,
         ReturnPropertyPascalCase = m.hasReturnType ? m.returnType.GetFriendlyName() : null,
         FirstArgDisplayNameCamelCase =
-          m.firstArg == null ? null : m.firstArg.ParameterType.GetFriendlyName().ToCamelCase(),
+          m.firstArg == null ? null : m.firstArg.ParameterType.GetFriendlyName().Camelize(),
         FirstArgDisplayNamePascalCase = m.firstArg == null ? null : m.firstArg.ParameterType.GetFriendlyName(),
       }).ToList();
 

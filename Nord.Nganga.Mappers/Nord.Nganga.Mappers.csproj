@@ -44,7 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CasingEnumMap.cs" />
     <Compile Include="EndpointFilter.cs" />
+    <Compile Include="Naming\NameSuggester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\ControllerCoordinationMapper.cs" />
     <Compile Include="EndpointMapper.cs" />
