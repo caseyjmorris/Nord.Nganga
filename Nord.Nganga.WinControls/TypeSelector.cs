@@ -12,6 +12,7 @@ namespace Nord.Nganga.WinControls
     public event EventHandler<EventArgs> SelectionChanged;
     public IEnumerable<TypeSelectorFilter> Filters { private get; set; }
 
+    public string BaseApiControllerName { get; set; }
     private Assembly sourceAssembly;
 
     public Assembly SourceAssembly
@@ -25,13 +26,13 @@ namespace Nord.Nganga.WinControls
           this.TypeList = new List<Type>();
           return;
         }
-        var controllerName = "unknown"; //TODO NEED TO RESOLVE THIS !!! 
+        
         var assertWebApi = this.Filters.Any(f => f.IsActive && f.FilterDescription.Contains("Api"));
         var assertModule = this.Filters.Any(f => f.IsActive && f.FilterDescription.Contains("Module"));
         var assertRoute = this.Filters.Any(f => f.IsActive && f.FilterDescription.Contains("Route"));
 
         var types = this.sourceAssembly.FindWebApiControllers(
-          controllerName,
+          this.BaseApiControllerName,
           assertWebApi,
           assertModule,
           assertRoute).ToList();

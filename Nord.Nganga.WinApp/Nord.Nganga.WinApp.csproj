@@ -33,8 +33,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,6 +51,10 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.0.6\lib\net40\WebActivatorEx.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DirectoryExtensions.cs" />
@@ -51,6 +63,12 @@
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NgangaMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NgangaMain.Designer.cs">
+      <DependentUpon>NgangaMain.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -68,6 +86,9 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="NgangaMain.resx">
+      <DependentUpon>NgangaMain.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -81,6 +102,7 @@
     <EmbeddedResource Include="ResourceOnlyParmsDialog.resx">
       <DependentUpon>ResourceOnlyParmsDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -99,6 +121,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nord.Nganga.Annotations\Nord.Nganga.Annotations.csproj">
+      <Project>{d77415e5-25a4-4ceb-8e08-a2d7b82eb1a9}</Project>
+      <Name>Nord.Nganga.Annotations</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nord.Nganga.Core\Nord.Nganga.Core.csproj">
       <Project>{d57b30bf-6e21-4c47-a06c-2155f6c2c8ca}</Project>
       <Name>Nord.Nganga.Core</Name>
@@ -110,6 +136,10 @@
     <ProjectReference Include="..\Nord.Nganga.Mappers\Nord.Nganga.Mappers.csproj">
       <Project>{8aa252ad-ce48-421d-bf83-4a5a7367f968}</Project>
       <Name>Nord.Nganga.Mappers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nord.Nganga.StEngine\Nord.Nganga.StEngine.csproj">
+      <Project>{b4bcbb48-b413-4d29-9f74-21c24ece18cc}</Project>
+      <Name>Nord.Nganga.StEngine</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nord.Nganga.ViewModels\Nord.Nganga.Models.csproj">
       <Project>{7ccea467-e8b3-4c22-8420-cf1851c96824}</Project>

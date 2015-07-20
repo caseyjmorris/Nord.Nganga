@@ -10,14 +10,14 @@ namespace Nord.Nganga.Core.Reflection
   {
     public static IEnumerable<Type> FindWebApiControllers(
       this Assembly assembly,
-      string apiControllerName,
+      string baseApiControllerName,
       bool assertApiController = true,
       bool assertAngularModuleNameAttribute = true,
       bool assertAngularRouteIdParmAttribute = true)
     {
       var result = new List<Type>();
 
-      var apiControllerType = DependentTypeResolver.GetTypeByName(assembly, apiControllerName);
+      var apiControllerType = DependentTypeResolver.GetTypeByName(assembly, baseApiControllerName);
 
       // if we cannot find  the ApiController type, then we're not going to find any controllers either 
       if (apiControllerType == null) return result;

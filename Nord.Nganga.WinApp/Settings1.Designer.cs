@@ -8,255 +8,206 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Nord.Nganga.WinApp
-{
-
-
-  [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-  [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "12.0.0.0")]
-  internal sealed partial class Settings1 : global::System.Configuration.ApplicationSettingsBase
-  {
-
-    private static Settings1 defaultInstance = ((Settings1)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings1())));
-
-    public static Settings1 Default
-    {
-      get
-      {
-        return defaultInstance;
-      }
+namespace Nord.Nganga.WinApp {
+    
+    
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "12.0.0.0")]
+    internal sealed partial class Settings1 : global::System.Configuration.ApplicationSettingsBase {
+        
+        private static Settings1 defaultInstance = ((Settings1)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings1())));
+        
+        public static Settings1 Default {
+            get {
+                return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SelectedAssemblyFileName {
+            get {
+                return ((string)(this["SelectedAssemblyFileName"]));
+            }
+            set {
+                this["SelectedAssemblyFileName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" />")]
+        public global::System.Collections.Specialized.StringCollection AssemblyFileNameHistory {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["AssemblyFileNameHistory"]));
+            }
+            set {
+                this["AssemblyFileNameHistory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ApiController")]
+        public string BaseApiControllerName {
+            get {
+                return ((string)(this["BaseApiControllerName"]));
+            }
+            set {
+                this["BaseApiControllerName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" />")]
+        public global::System.Collections.Specialized.StringCollection ResourcePathHistory {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["ResourcePathHistory"]));
+            }
+            set {
+                this["ResourcePathHistory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" />")]
+        public global::System.Collections.Specialized.StringCollection ControllerDirHistory {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["ControllerDirHistory"]));
+            }
+            set {
+                this["ControllerDirHistory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" />")]
+        public global::System.Collections.Specialized.StringCollection ViewDirHistory {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["ViewDirHistory"]));
+            }
+            set {
+                this["ViewDirHistory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SelectedViewDir {
+            get {
+                return ((string)(this["SelectedViewDir"]));
+            }
+            set {
+                this["SelectedViewDir"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SelectedControllerDir {
+            get {
+                return ((string)(this["SelectedControllerDir"]));
+            }
+            set {
+                this["SelectedControllerDir"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SelectedResourceDir {
+            get {
+                return ((string)(this["SelectedResourceDir"]));
+            }
+            set {
+                this["SelectedResourceDir"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SelectedVSFile {
+            get {
+                return ((string)(this["SelectedVSFile"]));
+            }
+            set {
+                this["SelectedVSFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" />")]
+        public global::System.Collections.Specialized.StringCollection VSFileHistory {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["VSFileHistory"]));
+            }
+            set {
+                this["VSFileHistory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseCustomOutputMapping {
+            get {
+                return ((bool)(this["UseCustomOutputMapping"]));
+            }
+            set {
+                this["UseCustomOutputMapping"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
+            "tring />\r\n</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection CustomOutputMap {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["CustomOutputMap"]));
+            }
+            set {
+                this["CustomOutputMap"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AutoVSIntegration {
+            get {
+                return ((bool)(this["AutoVSIntegration"]));
+            }
+            set {
+                this["AutoVSIntegration"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool LogFusionResolutionEvents {
+            get {
+                return ((bool)(this["LogFusionResolutionEvents"]));
+            }
+            set {
+                this["LogFusionResolutionEvents"] = value;
+            }
+        }
     }
-
-    [global::System.Configuration.UserScopedSettingAttribute()]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    [global::System.Configuration.DefaultSettingValueAttribute("")]
-    public string SelectedAssemblyFileName
-    {
-      get
-      {
-        return ((string)(this["SelectedAssemblyFileName"]));
-      }
-      set
-      {
-        this["SelectedAssemblyFileName"] = value;
-      }
-    }
-
-    [global::System.Configuration.UserScopedSettingAttribute()]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
-        "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" />")]
-    public global::System.Collections.Specialized.StringCollection AssemblyFileNameHistory
-    {
-      get
-      {
-        return ((global::System.Collections.Specialized.StringCollection)(this["AssemblyFileNameHistory"]));
-      }
-      set
-      {
-        this["AssemblyFileNameHistory"] = value;
-      }
-    }
-
-    [global::System.Configuration.UserScopedSettingAttribute()]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    [global::System.Configuration.DefaultSettingValueAttribute("ApiController")]
-    public string ApiControllerName
-    {
-      get
-      {
-        return ((string)(this["ApiControllerName"]));
-      }
-      set
-      {
-        this["ApiControllerName"] = value;
-      }
-    }
-
-    [global::System.Configuration.UserScopedSettingAttribute()]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
-        "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" />")]
-    public global::System.Collections.Specialized.StringCollection ResourcePathHistory
-    {
-      get
-      {
-        return ((global::System.Collections.Specialized.StringCollection)(this["ResourcePathHistory"]));
-      }
-      set
-      {
-        this["ResourcePathHistory"] = value;
-      }
-    }
-
-    [global::System.Configuration.UserScopedSettingAttribute()]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
-        "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" />")]
-    public global::System.Collections.Specialized.StringCollection ControllerDirHistory
-    {
-      get
-      {
-        return ((global::System.Collections.Specialized.StringCollection)(this["ControllerDirHistory"]));
-      }
-      set
-      {
-        this["ControllerDirHistory"] = value;
-      }
-    }
-
-    [global::System.Configuration.UserScopedSettingAttribute()]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
-        "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" />")]
-    public global::System.Collections.Specialized.StringCollection ViewDirHistory
-    {
-      get
-      {
-        return ((global::System.Collections.Specialized.StringCollection)(this["ViewDirHistory"]));
-      }
-      set
-      {
-        this["ViewDirHistory"] = value;
-      }
-    }
-
-    [global::System.Configuration.UserScopedSettingAttribute()]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    [global::System.Configuration.DefaultSettingValueAttribute("")]
-    public string SelectedViewDir
-    {
-      get
-      {
-        return ((string)(this["SelectedViewDir"]));
-      }
-      set
-      {
-        this["SelectedViewDir"] = value;
-      }
-    }
-
-    [global::System.Configuration.UserScopedSettingAttribute()]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    [global::System.Configuration.DefaultSettingValueAttribute("")]
-    public string SelectedControllerDir
-    {
-      get
-      {
-        return ((string)(this["SelectedControllerDir"]));
-      }
-      set
-      {
-        this["SelectedControllerDir"] = value;
-      }
-    }
-
-    [global::System.Configuration.UserScopedSettingAttribute()]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    [global::System.Configuration.DefaultSettingValueAttribute("")]
-    public string SelectedResourceDir
-    {
-      get
-      {
-        return ((string)(this["SelectedResourceDir"]));
-      }
-      set
-      {
-        this["SelectedResourceDir"] = value;
-      }
-    }
-
-    [global::System.Configuration.UserScopedSettingAttribute()]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    [global::System.Configuration.DefaultSettingValueAttribute("")]
-    public string SelectedVSFile
-    {
-      get
-      {
-        return ((string)(this["SelectedVSFile"]));
-      }
-      set
-      {
-        this["SelectedVSFile"] = value;
-      }
-    }
-
-    [global::System.Configuration.UserScopedSettingAttribute()]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
-        "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" />")]
-    public global::System.Collections.Specialized.StringCollection VSFileHistory
-    {
-      get
-      {
-        return ((global::System.Collections.Specialized.StringCollection)(this["VSFileHistory"]));
-      }
-      set
-      {
-        this["VSFileHistory"] = value;
-      }
-    }
-
-    [global::System.Configuration.UserScopedSettingAttribute()]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    [global::System.Configuration.DefaultSettingValueAttribute("False")]
-    public bool UseCustomOutputMapping
-    {
-      get
-      {
-        return ((bool)(this["UseCustomOutputMapping"]));
-      }
-      set
-      {
-        this["UseCustomOutputMapping"] = value;
-      }
-    }
-
-    [global::System.Configuration.UserScopedSettingAttribute()]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
-        "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
-        "tring />\r\n</ArrayOfString>")]
-    public global::System.Collections.Specialized.StringCollection CustomOutputMap
-    {
-      get
-      {
-        return ((global::System.Collections.Specialized.StringCollection)(this["CustomOutputMap"]));
-      }
-      set
-      {
-        this["CustomOutputMap"] = value;
-      }
-    }
-
-    [global::System.Configuration.UserScopedSettingAttribute()]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    [global::System.Configuration.DefaultSettingValueAttribute("True")]
-    public bool AutoVSIntegration
-    {
-      get
-      {
-        return ((bool)(this["AutoVSIntegration"]));
-      }
-      set
-      {
-        this["AutoVSIntegration"] = value;
-      }
-    }
-
-    [global::System.Configuration.UserScopedSettingAttribute()]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    [global::System.Configuration.DefaultSettingValueAttribute("True")]
-    public bool LogFusionResolutionEvents
-    {
-      get
-      {
-        return ((bool)(this["LogFusionResolutionEvents"]));
-      }
-      set
-      {
-        this["LogFusionResolutionEvents"] = value;
-      }
-    }
-  }
 }
