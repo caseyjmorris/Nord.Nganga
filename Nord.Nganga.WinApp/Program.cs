@@ -16,7 +16,7 @@ namespace Nord.Nganga.WinApp
     {
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
-      Application.Run(new NgangaMain());
+      Application.Run(new Form1());
     }
   }
 }

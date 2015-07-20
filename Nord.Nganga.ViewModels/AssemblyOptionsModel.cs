@@ -33,6 +33,17 @@ namespace Nord.Nganga.Models
     public AssemblyOptionsModel(Type type):this()
     {
       var assy = type.Assembly;
+      this.InitFromAssy(assy);
+    }
+
+    public AssemblyOptionsModel(Assembly assy)
+      : this()
+    {
+      this.InitFromAssy(assy);
+    }
+
+    private void InitFromAssy(Assembly assy)
+    {
 
       var tcpaList = assy.GetCustomAttributes(typeof(TextCasePreferencesAttribute), true);
 

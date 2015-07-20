@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Nord.Nganga.Core.Reflection;
 using Nord.Nganga.Fs.Coordination;
+using Nord.Nganga.Models;
 using Nord.Nganga.Models.Configuration;
 using Nord.Nganga.WinControls;
 
@@ -18,12 +19,15 @@ namespace Nord.Nganga.WinApp
 {
   public partial class NgangaMain : Form
   {
+    private AssemblyOptionsModel selectedAssemblyOptionsModel;
+
     public NgangaMain()
     {
       this.InitializeComponent();
 
       this.assemblySelector.DialogFilter = "Assemblies|*.dll";
       this.assemblySelector.SelectionChanged += this.assemblySelector_SelectionChanged;
+      this.assemblySelector.HistoryChanged += this.assemblySelector_HistoryChanged;
       this.typeSelector1.BaseApiControllerName = Settings1.Default.BaseApiControllerName;
       this.typeSelector1.SelectionChanged += this.typeSelector1_SelectionChanged;
       this.typeSelector1.Filters = new List<TypeSelectorFilter>
@@ -42,6 +46,11 @@ namespace Nord.Nganga.WinApp
           IsActive = true
         },
       };
+    }
+
+    void assemblySelector_HistoryChanged(object sender, EventArgs e)
+    {
+      Settings1.Default.AssemblyFileNameHistory = this.assemblySelector.History;
     }
 
     void typeSelector1_SelectionChanged(object sender, EventArgs e)
@@ -76,6 +85,13 @@ namespace Nord.Nganga.WinApp
         Settings1.Default.LogFusionResolutionEvents ? resolveEventVisitor : null);
 
       var assy = assyTypes[0].Assembly;
+
+      this.selectedAssemblyOptionsModel = new AssemblyOptionsModel(assy);
+      this.resourceDirSelector.SelectedPath = avm.NgResourcesPath;
+      this.viewDirSelector.SelectedPath = avm.NgViewsPath;
+      this.controllersDirSelector.SelectedPath = avm.NgControllersPath;
+      this.vsProjectFileSelector.SelectedFile = avm.CsProjectPath;
+
       this.typeSelector1.SourceAssembly = assy;
     }
 

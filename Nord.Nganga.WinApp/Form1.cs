@@ -10,6 +10,7 @@ using Nord.Nganga.Core.Text;
 using Nord.Nganga.Fs.Coordination;
 using Nord.Nganga.Fs.Naming;
 using Nord.Nganga.Fs.VsIntegration;
+using Nord.Nganga.Models;
 using Nord.Nganga.Models.Configuration;
 using Nord.Nganga.WinApp.Properties;
 using Nord.Nganga.WinControls;
@@ -21,9 +22,7 @@ namespace Nord.Nganga.WinApp
     private readonly Dictionary<Type, CoordinationResult> coordinationResults =
       new Dictionary<Type, CoordinationResult>();
 
-    private readonly CsProjEditor csProjEditor = new CsProjEditor();
-    private Dictionary<string, string> customOutputMappingDictionary = new Dictionary<string, string>();
-    private readonly Dictionary<string, string> vsIntegrationDictionary = new Dictionary<string, string>();
+    private readonly VsIntegrator vsIntegrator = new VsIntegrator();
 
     public Form1()
     {
@@ -53,14 +52,7 @@ namespace Nord.Nganga.WinApp
 
       this.autoVSIntegration.Checked = Settings1.Default.AutoVSIntegration;
       this.useCustomOutputMappingToolStripMenuItem.Checked = Settings1.Default.UseCustomOutputMapping;
-      if (Settings1.Default.UseCustomOutputMapping)
-      {
-        this.customOutputMappingDictionary = (from string mapEntry in Settings1.Default.CustomOutputMap
-                                              let toks = mapEntry.Split('=')
-                                              let key = toks[0]
-                                              let value = toks[1]
-                                              select new { key, value }).ToDictionary(r => r.key, r => r.value);
-      }
+
 
       this.assemblySelector.DialogFilter = "Assemblies|*.dll";
       this.assemblySelector.SelectionChanged += this.assemblySelector_SelectionChanged;
@@ -158,6 +150,7 @@ namespace Nord.Nganga.WinApp
     private void assemblySelector_SelectionChanged(object sender, EventArgs e)
     {
       if (string.IsNullOrEmpty(this.assemblySelector.SelectedFile)) return;
+
       Settings1.Default.SelectedAssemblyFileName = this.assemblySelector.SelectedFile;
 
       Action<ResolveEventArgs, DirectoryInfo, FileInfo, Assembly> resolveEventVisitor = (resolveEventArgs, dirInfo, fileInfo, resolvedAssy) =>
@@ -182,10 +175,17 @@ namespace Nord.Nganga.WinApp
         Settings1.Default.LogFusionResolutionEvents ? resolveEventVisitor : null);
 
       var assy = assyTypes[0].Assembly;
+      this.selectedAssemblyOptionsModel = new AssemblyOptionsModel(assy);
+      this.resourceDirSelector.SelectedPath = this.selectedAssemblyOptionsModel.NgResourcesPath;
+      this.viewDirSelector.SelectedPath = this.selectedAssemblyOptionsModel.NgViewsPath;
+      this.controllersDirSelector.SelectedPath = this.selectedAssemblyOptionsModel.NgControllersPath;
+      this.vsProjectFileSelector.SelectedFile = this.selectedAssemblyOptionsModel.CsProjectPath;
       this.controllerTypeSelector.SourceAssembly = assy;
       //var types = assy.FindWebApiControllers().ToList();
       //controllerTypeSelector.TypeList = types;
     }
+
+    private AssemblyOptionsModel selectedAssemblyOptionsModel; 
 
     private void exitToolStripMenuItem_Click(object sender, EventArgs e)
     {
@@ -239,132 +239,42 @@ namespace Nord.Nganga.WinApp
         return;
       }
 
-      this.vsIntegrationDictionary.Clear();
+      this.vsIntegrator.Reset();
 
-      this.SaveResult(this.coordinationResults[targetType]);
+      this.vsIntegrator.SaveResult(this.coordinationResults[targetType], this.selectedAssemblyOptionsModel, this.Log);
 
-      this.IntegrateFiles();
+      this.vsIntegrator.IntegrateFiles();
 
       this.Log("{0}", Resources._The_generated_files_have_been_saved_to_the_output_paths);
     }
 
-    private void SaveResult(CoordinationResult coordinationResult)
-    {
-      this.SaveFile(() => this.viewDirSelector.SelectedPath, () => coordinationResult.ViewPath, () => coordinationResult.ViewBody);
-      this.SaveFile(() => this.controllersDirSelector.SelectedPath, () => coordinationResult.ControllerPath,
-        () => coordinationResult.ControllerBody);
-      this.SaveFile(() => this.resourceDirSelector.SelectedPath, () => coordinationResult.ResourcePath,
-        () => coordinationResult.ResourceBody);
-    }
-
-    private void SaveFile(Func<string> rootProvider, Func<string> nameProvider, Func<string> dataProvider)
-    {
-      var relativeName = nameProvider();
-      var targetFileName = Path.Combine(rootProvider(), relativeName);
-      this.CreatePathTree(targetFileName);
-      if (!Settings1.Default.UseCustomOutputMapping)
-      {
-        File.WriteAllText(targetFileName, dataProvider());
-        this.Log("{0} written to disk.", targetFileName);
-        this.vsIntegrationDictionary[targetFileName] = relativeName;
-        return;
-      }
-
-      // attempt to find a file with the target name under the VS integraiton directory 
-      var searchRoot = Path.GetDirectoryName(Path.GetDirectoryName(this.vsProjectFileSelector.SelectedFile));
-
-      var f = searchRoot.SearchDirectory(Path.GetFileName(targetFileName));
-      if (f == null)
-      {
-        var d = new SaveFileDialog();
-        if (!this.customOutputMappingDictionary.ContainsKey(targetFileName))
-        {
-          d.FileName = targetFileName;
-          d.Filter = this.saveFileFiltersDictionary[Path.GetExtension(targetFileName)];
-          var dr = d.ShowDialog();
-          if (dr == DialogResult.OK)
-          {
-            this.customOutputMappingDictionary[targetFileName] = d.FileName;
-          }
-          else
-          {
-            return;
-          }
-        }
-      }
-      else
-      {
-        this.customOutputMappingDictionary[targetFileName] = f;
-      }
-      File.WriteAllText(this.customOutputMappingDictionary[targetFileName], dataProvider());
-      this.Log("{0} written to disk.", this.customOutputMappingDictionary[targetFileName]);
-      this.vsIntegrationDictionary[targetFileName] = relativeName;
-    }
 
     private readonly Dictionary<string, string> saveFileFiltersDictionary = new Dictionary<string, string>
     {
       {".html","HTML | *.html"},
       {".js","JavaScript| *.js"}
     };
-    private void CreatePathTree(string path)
-    {
-      var dir = Path.GetDirectoryName(path);
-      if (string.IsNullOrEmpty(dir)) return;
-      Directory.CreateDirectory(dir);
-    }
+
 
     private void Form1_FormClosing(object sender, FormClosingEventArgs e)
     {
-      var sc = new StringCollection();
-      foreach (var kvp in this.customOutputMappingDictionary)
-      {
-        sc.Add(kvp.Key + "=" + kvp.Value);
-      }
-      Settings1.Default.CustomOutputMap = sc;
-      Settings1.Default.Save();
+      this.vsIntegrator.SaveCustomMap();
     }
 
     private void allToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      this.vsIntegrationDictionary.Clear();
+      this.vsIntegrator.Reset();
+      
       foreach (var target in this.controllerTypeSelector.TypeList)
       {
         this.GenerateTarget(target);
         if (!this.coordinationResults.ContainsKey(target)) continue;
-        this.SaveResult(this.coordinationResults[target]);
+        this.vsIntegrator.SaveResult(this.coordinationResults[target], this.selectedAssemblyOptionsModel, this.Log);
       }
-      this.IntegrateFiles();
+      this.vsIntegrator.IntegrateFiles();
     }
 
-    private void IntegrateFiles()
-    {
-      var vsProjectFile = this.vsProjectFileSelector.SelectedFile;
-      if (string.IsNullOrEmpty(vsProjectFile) || !File.Exists(vsProjectFile)) return;
 
-      this.Log("VS integration target is {0}", vsProjectFile);
-
-      this.vsIntegrationDictionary.Keys.ToList().ForEach(fileName => this.Log("{0}{1}", '\t', fileName));
-      if (!Settings1.Default.AutoVSIntegration)
-      {
-        this.Log("Integration disabled.");
-        return;
-      }
-      try
-      {
-        this.Log("Integration starting.");
-
-        this.csProjEditor.AddFileToCsProj(
-          vsProjectFile, this.vsIntegrationDictionary.Keys.ToList(),
-          (p) => this.Log("{0}{1}", '\t', p));
-
-        this.Log("Integration complete.");
-      }
-      catch (Exception ie)
-      {
-        this.Log("VS Integration failed due to {0}", ie.Message);
-        this.Log(string.Format("{0}", ie));
-      }
-    }
 
     private void resourceOnlyToolStripMenuItem_Click(object sender, EventArgs e)
     {
@@ -404,9 +314,12 @@ namespace Nord.Nganga.WinApp
 
     private void saveResourceOnlyToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      this.SaveFile(() => this.resourceDirSelector.SelectedPath,
+      this.vsIntegrator.SaveFile(
+        () => this.resourceDirSelector.SelectedPath,
         () => new NameSuggester().SuggestResourceFileName(this.controllerTypeSelector.SelectedType),
-        () => this.resourceRTB.Text);
+        () => this.resourceRTB.Text,
+         this.selectedAssemblyOptionsModel, 
+         this.Log);
     }
 
     private void tabControl1_Selected(object sender, TabControlEventArgs e)
