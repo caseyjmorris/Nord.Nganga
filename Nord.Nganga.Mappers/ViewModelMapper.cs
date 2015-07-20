@@ -105,7 +105,7 @@ namespace Nord.Nganga.Mappers
       return "any";
     }
 
-    private ViewModelViewModel.FieldViewModel GetFieldViewModel(PropertyInfo info, bool isCollection = false)
+    private ViewModelViewModel.FieldViewModel GetFieldViewModel(PropertyInfo info, bool isCollection)
     {
       var isSelectCommon = info.HasAttribute<SelectCommonAttribute>();
       var selectCommonAttribute = isSelectCommon ? info.GetAttribute<SelectCommonAttribute>() : null;
@@ -140,9 +140,9 @@ namespace Nord.Nganga.Mappers
       return fieldModel;
     }
 
-    private IEnumerable<ViewModelViewModel.FieldViewModel> GetFieldViewModelCollection(IEnumerable<PropertyInfo> t)
+    private IEnumerable<ViewModelViewModel.FieldViewModel> GetFieldViewModelCollection(IEnumerable<PropertyInfo> t, Boolean isCollection)
     {
-      var pfi = t.Select(p => this.GetFieldViewModel(p, false));
+      var pfi = t.Select(p => this.GetFieldViewModel(p, isCollection));
       return pfi;
     }
 
@@ -262,7 +262,7 @@ namespace Nord.Nganga.Mappers
       switch (discriminator)
       {
         case ViewModelViewModel.MemberDiscriminator.Scalar:
-          result.Member = this.GetFieldViewModel(info);
+          result.Member = this.GetFieldViewModel(info, false);
           var field = (ViewModelViewModel.FieldViewModel) result.Member;
           result.IsHidden = field.IsHidden;
           break;
@@ -299,7 +299,7 @@ namespace Nord.Nganga.Mappers
         Name = type.Name.Replace("ViewModel", string.Empty).ToCamelCase(),
         Scalars = this.GetFieldViewModelCollection(
           decoratedProperties.Where(p => p.discriminator == ViewModelViewModel.MemberDiscriminator.Scalar)
-            .Select(p => p.pi)),
+            .Select(p => p.pi), false ),
         IsViewOnly = type.HasAttribute<NotUserEditableAttribute>(),
         ComplexCollections =
           decoratedProperties.Where(p => p.discriminator == ViewModelViewModel.MemberDiscriminator.ComplexCollection)
@@ -307,7 +307,7 @@ namespace Nord.Nganga.Mappers
             .Select(this.GetSubordinateViewModelWrapper),
         PrimitiveCollections = this.GetFieldViewModelCollection(
           decoratedProperties.Where(p => p.discriminator == ViewModelViewModel.MemberDiscriminator.PrimitiveCollection)
-            .Select(p => p.pi)),
+            .Select(p => p.pi), true ),
         Members = decoratedProperties.Select(dp => dp.memberWrapper).ToList()
       };
 
