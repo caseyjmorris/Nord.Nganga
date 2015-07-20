@@ -25,10 +25,14 @@ childView(model) ::= <<
 
 <nord-row>
   <form name="%model.NgFormName%" id="%model.NgFormName%" ng-submit="%model.NgSubmitAction%" class="user-edit-form form-horizontal">
-    %model.Sections:{s|%section(s, model.ParentObjectName)%}%
+    %childViewNested(model)%
   </form>
 </nord-row>
 >>
+
+childViewNested(model) ::= <%
+%model.Sections:{s|%section(s, model.ParentObjectName)%}%
+%>
 
 section(model, parentObjectName) ::= <<
  %(sectionHeaderMap.(model.Title))(model)% 
@@ -121,21 +125,25 @@ required
 multipleComplexEditor(model, parentObjectName) ::= <%
 <nord-multiple-complex-editor 
 parentObject="%parentObjectName%" 
-collection-name="%model.FieldName%"
+collection-name="%model.Member.FieldName%" 
 child-field-name="%model.Member.CoordinatedInfo.ParentObjectName%"
 panel-top-label="%model.DisplayName%"
 >
-%childView(model.Member.CoordinatedInfo)%
+%\n%
+%childViewNested(model.Member.CoordinatedInfo)%
+%\n%
 </nord-multiple-complex-editor>
 %>
 
 multipleSimpleEditorForComplex(model, parentObjectName) ::= <%
 <nord-multiple-simple-editor 
 parent-object="%parentObjectName%" 
-collection-name="%model.FieldName%" 
+collection-name="%model.Member.FieldName%" 
 child-field-name="%model.Member.CoordinatedInfo.ParentObjectName%"
 >
-%childView(model.Member.CoordinatedInfo)%
+%\n%
+%childViewNested(model.Member.CoordinatedInfo)%
+%\n%
 </nord-multiple-simple-editor>
 %>
 
@@ -144,15 +152,15 @@ multipleSimpleEditorForPrimitive(model, parentObjectName) ::= <%
 parent-object="%parentObjectName%" 
 child-field-name="%model.Member.FieldName%" 
 collection-name="%model.Member.FieldName%">
-	%\r%%\n% %if(model.Member.SelectCommon)% %commonSelect(model)% %else% %(clrTypeMap.(model.Member.DataType.Name))(model)% %endif% %\r%%\n%
+    %\n% %if(model.Member.SelectCommon)% %commonSelect(model)% %else% %(clrTypeMap.(model.Member.DataType.Name))(model)% %endif% %\n%
 </nord-multiple-simple-editor>
 %>
 
 clrTypeMap ::= [
-	"Boolean":"boolControl",
-	"String":"textControl",
-	"DateTime":"dateControl",
-	default:"numberControl"
+    "Boolean":"boolControl",
+    "String":"textControl",
+    "DateTime":"dateControl",
+    default:"numberControl"
 ]
 
 numberControl(model, parentObjectName) ::= <%

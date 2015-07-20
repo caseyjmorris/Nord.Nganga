@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using Antlr4.StringTemplate;
+using Antlr4.StringTemplate.Misc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nord.Nganga.Annotations;
 using Nord.Nganga.Core.Reflection;
@@ -26,7 +27,7 @@ namespace Nord.Nganga.StEngine.Test
     [TestMethod]
     public void TestAssyOptions()
     {
-      var subjectType = typeof(Nganga.TestConsumer.Controllers.Api.SponsorsController);
+      var subjectType = typeof (Nganga.TestConsumer.Controllers.Api.SponsorsController);
       var ao = new AssemblyOptionsModel(subjectType);
       Console.WriteLine(ao.CsProjectPath);
       Console.WriteLine(ao.NgControllersPath);
@@ -44,7 +45,7 @@ namespace Nord.Nganga.StEngine.Test
       var coord = new ViewCoordinationMapper(new ViewModelMapper(), new EndpointFilter(new ViewModelMapper()),
         new EndpointMapper(wasp));
 
-      var coordinated = coord.GetViewCoordinatedInformationCollection(typeof(SponsorsController));
+      var coordinated = coord.GetViewCoordinatedInformationCollection(typeof (SponsorsController));
     }
 
 
@@ -59,7 +60,7 @@ namespace Nord.Nganga.StEngine.Test
       var controllerCoordinatedInfoMapper = new ControllerCoordinationMapper(endpointMapper,
         new EndpointFilter(new ViewModelMapper()));
 
-      var subjectType = typeof(Nganga.TestConsumer.Controllers.Api.SponsorsController);
+      var subjectType = typeof (Nganga.TestConsumer.Controllers.Api.SponsorsController);
 
       var model = controllerCoordinatedInfoMapper.GetControllerCoordinatedInformationViewModel(subjectType);
       t.Add("model", model);
@@ -84,7 +85,7 @@ namespace Nord.Nganga.StEngine.Test
       var endpointMapper = new EndpointMapper(wasp);
       var resourceCoordMapper = new ResourceCoordinationMapper(endpointMapper);
 
-      var subjectType = typeof(Nganga.TestConsumer.Controllers.Api.SponsorsController);
+      var subjectType = typeof (Nganga.TestConsumer.Controllers.Api.SponsorsController);
 
       var model = resourceCoordMapper.GetResourceCoordinationInformationViewModel(subjectType);
       model.UseCustomCache = true;
@@ -112,7 +113,7 @@ namespace Nord.Nganga.StEngine.Test
 
       var vcMapper = new ViewCoordinationMapper(wasp);
 
-      var subjectType = typeof(Nganga.TestConsumer.Controllers.Api.SponsorsController);
+      var subjectType = typeof (Nganga.TestConsumer.Controllers.Api.SponsorsController);
 
       var model = vcMapper.GetViewCoordinatedInformationCollection(subjectType);
 
