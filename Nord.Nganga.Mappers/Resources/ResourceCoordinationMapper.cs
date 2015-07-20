@@ -36,6 +36,7 @@ namespace Nord.Nganga.Mappers.Resources
         GetEndpoints = endpoints.Where(e => e.HttpMethod == EndpointViewModel.HttpMethodType.Get),
         PostEndpoints = endpoints.Where(e => e.HttpMethod == EndpointViewModel.HttpMethodType.Post),
         ControllerName = controller.Name.Replace("Controller", string.Empty),
+        ServiceName = controller.Name.Replace("Controller", "Service").Camelize(),
       };
     }
   }
