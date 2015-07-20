@@ -5,15 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
-using Nord.Nganga.Engine.Coordination;
-using Nord.Nganga.Engine.CsProj;
-using Nord.Nganga.Engine.Extensions.Text;
-using Nord.Nganga.Engine.Html;
-using Nord.Nganga.Engine.JavaScript;
-using Nord.Nganga.Engine.Reflection;
-using Nord.Nganga.Engine.Support;
-using Nord.Nganga.Engine.Io;
+using Nord.Nganga.Core.Reflection;
+using Nord.Nganga.Core.Text;
+using Nord.Nganga.Fs.Coordination;
+using Nord.Nganga.Fs.Naming;
+using Nord.Nganga.Fs.VsIntegration;
+using Nord.Nganga.Models.Configuration;
 using Nord.Nganga.WinApp.Properties;
 using Nord.Nganga.WinControls;
 
@@ -213,11 +210,12 @@ namespace Nord.Nganga.WinApp
     {
       try
       {
+        //TODO FIX THIS !!!! 
+        var wasp = new WebApiSettingsPackage();
+        wasp.SetPropertiesToDefault();
+
         this.Log("Generating {0}.", targetControllerType.Name);
-        var coordinator = new GenerationCoordinator(
-          new HtmlGenerator(new OccurrenceCounter<string>()),
-          new ResourceGenerator(),
-          new ControllerGenerator(), new NameSuggester());
+        var coordinator = new GenerationCoordinator(wasp);
         this.coordinationResults[targetControllerType] = coordinator.CoordinateUiGeneration(targetControllerType);
         this.Log("{0} - generated.", targetControllerType.Name);
       }
@@ -375,8 +373,14 @@ namespace Nord.Nganga.WinApp
 
     private void GenerateResource(Type controllerType)
     {
+
+      //TODO FIX THIS !!!! 
+      var wasp = new WebApiSettingsPackage();
+      wasp.SetPropertiesToDefault();
+
       this.Log("Generating resource for {0}", controllerType.Name);
-      var resourceGenerator = new ResourceGenerator();
+      var resourceGenerator = new SourceGenerator(wasp);
+
       this.resourceRTB.Text = resourceGenerator.GenerateResource(
         controllerType);
 

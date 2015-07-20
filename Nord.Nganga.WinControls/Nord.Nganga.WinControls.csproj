@@ -97,9 +97,9 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nord.Nganga.Engine\Nord.Nganga.Engine.csproj">
-      <Project>{2fb7b45d-96f2-444f-99c5-a977910b2535}</Project>
-      <Name>Nord.Nganga.Engine</Name>
+    <ProjectReference Include="..\Nord.Nganga.Core\Nord.Nganga.Core.csproj">
+      <Project>{d57b30bf-6e21-4c47-a06c-2155f6c2c8ca}</Project>
+      <Name>Nord.Nganga.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

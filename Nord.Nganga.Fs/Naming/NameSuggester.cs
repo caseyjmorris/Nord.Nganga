@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using Humanizer;
 
-namespace Nord.Nganga.Mappers.Naming
+namespace Nord.Nganga.Fs.Naming
 {
   public class NameSuggester
   {

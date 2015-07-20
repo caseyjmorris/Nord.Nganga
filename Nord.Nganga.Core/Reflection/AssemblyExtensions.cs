@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Nord.Nganga.Annotations.Attributes.Angular;
-using Nord.Nganga.Core.Reflection;
 
 namespace Nord.Nganga.Core.Reflection
 {

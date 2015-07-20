@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using Nord.Nganga.Engine.Extensions.Reflection;
+using Nord.Nganga.Core.Reflection;
 
 namespace Nord.Nganga.WinControls
 {
@@ -25,12 +25,13 @@ namespace Nord.Nganga.WinControls
           this.TypeList = new List<Type>();
           return;
         }
-
+        var controllerName = "unknown"; //TODO NEED TO RESOLVE THIS !!! 
         var assertWebApi = this.Filters.Any(f => f.IsActive && f.FilterDescription.Contains("Api"));
         var assertModule = this.Filters.Any(f => f.IsActive && f.FilterDescription.Contains("Module"));
         var assertRoute = this.Filters.Any(f => f.IsActive && f.FilterDescription.Contains("Route"));
 
         var types = this.sourceAssembly.FindWebApiControllers(
+          controllerName,
           assertWebApi,
           assertModule,
           assertRoute).ToList();
