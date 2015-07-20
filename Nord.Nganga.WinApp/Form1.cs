@@ -28,6 +28,7 @@ namespace Nord.Nganga.WinApp
     {
       this.InitializeComponent();
 
+      this.controllerTypeSelector.BaseApiControllerName = Settings1.Default.BaseApiControllerName;
       this.controllerTypeSelector.Filters = new List<TypeSelectorFilter>
       {
         new TypeSelectorFilter {FilterDescription = "Api Controller", FilterProvider = t => true, IsActive = true},
