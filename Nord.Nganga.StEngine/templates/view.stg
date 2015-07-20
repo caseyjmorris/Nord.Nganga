@@ -12,6 +12,10 @@ view(model) ::= <<
 </div>
 >>
 
+ngModel(model, parentObjectName) ::= <<
+%if(parentObjectName)% ng-model="%parentObjectName%.%model.Member.FieldName%" %else% ng-model="%model.Member.FieldName%" %endif%
+>>
+
 childView(model) ::= <<
 <nord-row>
   <h3>
@@ -74,7 +78,7 @@ controlTypeTemplateMap ::= [
 
 boolControl(model, parentObjectName) ::= <%
 <nord-bool-control  
-ng-model="%parentObjectName%.%model.Member.FieldName%" 
+%ngModel(model, parentObjectName)% 
 twelfths="%model.Width%" 
 field-label-text="%model.Member.DisplayName%" 
 %if(model.Member.IsRequired)%
@@ -88,7 +92,7 @@ commonSelect(model, parentObjectName) ::= <%
 <nord-common-select 
 %if(!model.Member.SelectCommon.RestrictUntilResolved)%wait-resolve="false" %endif%
 %! Need to fill in startcap, endcap (but no attrs exist ATM) !%
-ng-model="%parentObjectName%.%model.Member.FieldName%" 
+%ngModel(model, parentObjectName)% 
 twelfths="%model.Width%" 
 field-label-text="%model.Member.DisplayName%" 
 common-select-source="%model.Member.SelectCommon.ObjectName%.%model.Member.SelectCommon.CommonInformationName%%if(model.Member.SelectCommon.Index)%model.Member.SelectCommon.Index%endif%"
@@ -103,7 +107,7 @@ required
 dateControl(model, parentObjectName) ::= <%
 <nord-date-control 
 %! Need to fill in startcap, endcap (but no attrs exist ATM) !%
-ng-model="%parentObjectName%.%model.Member.FieldName%" 
+%ngModel(model, parentObjectName)% 
 twelfths="%model.Width%" 
 field-label-text="%model.Member.DisplayName%"  
 
@@ -136,19 +140,25 @@ child-field-name="%model.Member.CoordinatedInfo.ParentObjectName%"
 %>
 
 multipleSimpleEditorForPrimitive(model, parentObjectName) ::= <%
-
 <nord-multiple-simple-editor 
 parent-object="%parentObjectName%" 
 child-field-name="%model.Member.FieldName%" 
-collection-name="%model.FieldName%">
-  %model.Member.NgangaControlTypeSt%
+collection-name="%model.Member.FieldName%">
+	%\r%%\n% %if(model.Member.SelectCommon)% %commonSelect(model)% %else% %(clrTypeMap.(model.Member.DataType.Name))(model)% %endif% %\r%%\n%
 </nord-multiple-simple-editor>
 %>
+
+clrTypeMap ::= [
+	"Boolean":"boolControl",
+	"String":"textControl",
+	"DateTime":"dateControl",
+	default:"numberControl"
+]
 
 numberControl(model, parentObjectName) ::= <%
 <nord-number-control 
 %! Need to fill in startcap, endcap (but no attrs exist ATM) !%
-ng-model="%parentObjectName%.%model.Member.FieldName%" 
+%ngModel(model, parentObjectName)% 
 twelfths="%model.Width%" 
 field-label-text="%model.Member.DisplayName%" 
 
@@ -172,7 +182,7 @@ required
 textControl(model, parentObjectName) ::= <%
 <nord-text-control 
 %! Need to fill in startcap, endcap (but no attrs exist ATM) !%
-ng-model="%parentObjectName%.%model.Member.FieldName%" 
+%ngModel(model, parentObjectName)% 
 twelfths="%model.Width%" 
 field-label-text="%model.Member.DisplayName%" 
 %if(model.Member.IsRequired)%
