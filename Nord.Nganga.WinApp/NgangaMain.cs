@@ -87,10 +87,6 @@ namespace Nord.Nganga.WinApp
       var assy = assyTypes[0].Assembly;
 
       this.selectedAssemblyOptionsModel = new AssemblyOptionsModel(assy);
-      this.resourceDirSelector.SelectedPath = avm.NgResourcesPath;
-      this.viewDirSelector.SelectedPath = avm.NgViewsPath;
-      this.controllersDirSelector.SelectedPath = avm.NgControllersPath;
-      this.vsProjectFileSelector.SelectedFile = avm.CsProjectPath;
 
       this.typeSelector1.SourceAssembly = assy;
     }

@@ -243,7 +243,7 @@ namespace Nord.Nganga.WinApp
 
       this.vsIntegrator.SaveResult(this.coordinationResults[targetType], this.selectedAssemblyOptionsModel, this.Log);
 
-      this.vsIntegrator.IntegrateFiles();
+      this.vsIntegrator.IntegrateFiles(this.selectedAssemblyOptionsModel, this.Log);
 
       this.Log("{0}", Resources._The_generated_files_have_been_saved_to_the_output_paths);
     }
@@ -271,7 +271,7 @@ namespace Nord.Nganga.WinApp
         if (!this.coordinationResults.ContainsKey(target)) continue;
         this.vsIntegrator.SaveResult(this.coordinationResults[target], this.selectedAssemblyOptionsModel, this.Log);
       }
-      this.vsIntegrator.IntegrateFiles();
+      this.vsIntegrator.IntegrateFiles(this.selectedAssemblyOptionsModel, this.Log);
     }
 
 

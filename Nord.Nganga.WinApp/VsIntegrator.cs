@@ -140,7 +140,7 @@ namespace Nord.Nganga.WinApp
       }
 
       // attempt to find a file with the target name under the VS integraiton directory 
-      var searchRoot = Path.GetDirectoryName(Path.GetDirectoryName(optionsModel.CsProjectPath)));
+      var searchRoot = Path.GetDirectoryName(Path.GetDirectoryName(optionsModel.CsProjectPath));
 
       var f = searchRoot.SearchDirectory(Path.GetFileName(targetFileName));
       if (f == null)
