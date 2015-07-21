@@ -61,18 +61,13 @@ namespace Nord.Nganga.WinApp
     {
       this.vsIntegrationDictionary.Clear();
     }
-
-    private void LogKeys()
-    {
-      this.vsIntegrationDictionary.Keys.ToList().ForEach(fileName => this.logHandler("{0}{1}", '\t', fileName));
-    }
-
+    
 
     public bool IntegrateFiles()
     {
       this.logHandler("VS integration target is {0}", this.vsProjectFileName);
-
-      this.LogKeys();
+      
+      this.vsIntegrationDictionary.Values.ToList().ForEach(fileName => this.logHandler("{0}{1}", '\t', fileName));
 
       if (!Settings1.Default.AutoVSIntegration)
       {
@@ -84,7 +79,7 @@ namespace Nord.Nganga.WinApp
         this.logHandler("Integration starting.");
 
         this.csProjEditor.AddFileToCsProj(
-          this.vsProjectFileName, this.vsIntegrationDictionary.Keys.ToList(),
+          this.vsProjectFileName, this.vsIntegrationDictionary.Values.ToList(),
           (p) => this.logHandler("{0}{1}", '\t', p));
 
         this.logHandler("Integration complete.");
