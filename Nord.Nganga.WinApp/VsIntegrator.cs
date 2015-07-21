@@ -25,14 +25,13 @@ namespace Nord.Nganga.WinApp
     private readonly string vsProjectFileName;
     private readonly LogHandler logHandler;
     private readonly AssemblyOptionsModel optionsModel;
+    private readonly string vsProjectPath;
     public VsIntegrator(string projectPath, AssemblyOptionsModel optionsModel, LogHandler logHandler)
     {
       if (logHandler == null)
       {
         throw new ArgumentNullException("logHandler");
       }
-
-      this.logHandler = logHandler;
 
       if (optionsModel == null)
       {
@@ -45,15 +44,18 @@ namespace Nord.Nganga.WinApp
         logHandler("Assembly attribute ProjectStructure.CsProjectName cannot be null.");
         return;
       }
-
-      this.optionsModel = optionsModel;
       
       var vsProjectFile = Path.Combine(projectPath, optionsModel.CsProjectName);
 
       if (string.IsNullOrEmpty(vsProjectFile) || !File.Exists(vsProjectFile))
       {
         logHandler("Cannot find " + vsProjectFile + ".  Are you sure the specified path is correct?");
+        return;
       }
+
+      this.logHandler = logHandler;
+      this.optionsModel = optionsModel;
+      this.vsProjectPath = projectPath;
       this.vsProjectFileName = vsProjectFile;
     }
 
@@ -110,7 +112,7 @@ namespace Nord.Nganga.WinApp
       () => coordinationResult.ResourcePath,
         () => coordinationResult.ResourceBody);
     }
-    private void CreatePathTree(string path)
+    private static void CreatePathTree(string path)
     {
       var dir = Path.GetDirectoryName(path);
       if (string.IsNullOrEmpty(dir)) return;
@@ -122,9 +124,9 @@ namespace Nord.Nganga.WinApp
       Func<string> nameProvider, 
       Func<string> dataProvider)
     {
-      var relativeName = nameProvider();
-      var targetFileName = Path.Combine(this.optionsModel.CsProjectName,Path.Combine(rootProvider(), relativeName));
-      this.CreatePathTree(targetFileName);
+      var relativeName = Path.Combine(rootProvider(), nameProvider());
+      var targetFileName = Path.Combine(this.vsProjectPath, relativeName);
+      CreatePathTree(targetFileName);
       File.WriteAllText(targetFileName, dataProvider());
       this.logHandler("{0} written to disk.", targetFileName);
       this.vsIntegrationDictionary[targetFileName] = relativeName;
