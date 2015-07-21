@@ -70,7 +70,7 @@ namespace Nord.Nganga.WinApp
       this.label5 = new System.Windows.Forms.Label();
       this.label6 = new System.Windows.Forms.Label();
       this.controllerTypeSelector = new Nord.Nganga.WinControls.TypeSelector();
-      this.assemblySelector = new Nord.Nganga.WinControls.FileSelector();
+      this.assemblySelector = new Nord.Nganga.WinControls.AssemblySelector();
       this.label7 = new System.Windows.Forms.Label();
       this.tabControl1 = new System.Windows.Forms.TabControl();
       this.logFusionResolutionEventsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -610,7 +610,7 @@ namespace Nord.Nganga.WinApp
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.Label label6;
     private TypeSelector controllerTypeSelector;
-    private FileSelector assemblySelector;
+    private AssemblySelector assemblySelector;
     private System.Windows.Forms.Label label7;
     private System.Windows.Forms.TabControl tabControl1;
     private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
