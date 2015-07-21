@@ -22,7 +22,7 @@ namespace Nord.Nganga.WinApp
     private readonly Dictionary<Type, CoordinationResult> coordinationResults =
       new Dictionary<Type, CoordinationResult>();
 
-    private readonly VsIntegrator vsIntegrator = new VsIntegrator();
+    private VsIntegrator vsIntegrator ;
 
     public Form1()
     {
@@ -86,6 +86,8 @@ namespace Nord.Nganga.WinApp
     void VsProjectFileSelectorSelectionChanged(object sender, EventArgs e)
     {
       Settings1.Default.SelectedVSPath = this.vsProjectPathSelector.SelectedPath;
+
+      this.InitVsIntegrator(this.vsProjectPathSelector.SelectedPath, this.selectedAssemblyOptionsModel);
     }
 
     private void AssertOutputDirsUnique()
@@ -150,9 +152,13 @@ namespace Nord.Nganga.WinApp
     {
       if (string.IsNullOrEmpty(this.assemblySelector.SelectedFile) || this.assemblySelector.SelectedAssembly == null ) return;
 
+      
       Settings1.Default.SelectedAssemblyFileName = this.assemblySelector.SelectedFile;
 
       this.selectedAssemblyOptionsModel = new AssemblyOptionsModel(this.assemblySelector.SelectedAssembly );
+
+      this.InitVsIntegrator(this.vsProjectPathSelector.SelectedPath, this.selectedAssemblyOptionsModel);
+
       this.controllerTypeSelector.SourceAssembly = this.assemblySelector.SelectedAssembly;
 
       this.resourceDirSelector.SelectedPath = this.selectedAssemblyOptionsModel.NgResourcesPath;
@@ -160,6 +166,13 @@ namespace Nord.Nganga.WinApp
       this.controllersDirSelector.SelectedPath = this.selectedAssemblyOptionsModel.NgControllersPath;
       this.vsProjectFileName.Text = this.selectedAssemblyOptionsModel.CsProjectName;
       
+    }
+
+    private void InitVsIntegrator(string path, AssemblyOptionsModel model)
+    {
+      if (string.IsNullOrEmpty(path) || model == null) return;
+
+      this.vsIntegrator = new VsIntegrator(path, model,this.Log);
     }
 
     private AssemblyOptionsModel selectedAssemblyOptionsModel; 
@@ -218,11 +231,11 @@ namespace Nord.Nganga.WinApp
 
       this.vsIntegrator.Reset();
 
-      this.vsIntegrator.SaveResult(this.coordinationResults[targetType], this.vsProjectPathSelector.SelectedPath, this.selectedAssemblyOptionsModel, this.Log);
-
-      this.vsIntegrator.IntegrateFiles(this.vsProjectPathSelector.SelectedPath, this.selectedAssemblyOptionsModel, this.Log);
-
-      this.Log("{0}", Resources._The_generated_files_have_been_saved_to_the_output_paths);
+      this.vsIntegrator.SaveResult(this.coordinationResults[targetType] );
+      if (this.vsIntegrator.IntegrateFiles())
+      {
+        this.Log("{0}", Resources._The_generated_files_have_been_saved_to_the_output_paths);
+      }
     }
 
 
@@ -240,9 +253,9 @@ namespace Nord.Nganga.WinApp
       {
         this.GenerateTarget(target);
         if (!this.coordinationResults.ContainsKey(target)) continue;
-        this.vsIntegrator.SaveResult(this.coordinationResults[target], this.vsProjectPathSelector.SelectedPath, this.selectedAssemblyOptionsModel, this.Log);
+        this.vsIntegrator.SaveResult(this.coordinationResults[target]);
       }
-      this.vsIntegrator.IntegrateFiles(this.vsProjectPathSelector.SelectedPath, this.selectedAssemblyOptionsModel, this.Log);
+      this.vsIntegrator.IntegrateFiles();
     }
 
 
@@ -288,9 +301,7 @@ namespace Nord.Nganga.WinApp
       this.vsIntegrator.SaveFile(
         () => this.resourceDirSelector.SelectedPath,
         () => new NameSuggester().SuggestResourceFileName(this.controllerTypeSelector.SelectedType),
-        () => this.resourceRTB.Text,
-        this.vsProjectPathSelector.SelectedPath,
-         this.Log);
+        () => this.resourceRTB.Text);
     }
 
     private void tabControl1_Selected(object sender, TabControlEventArgs e)

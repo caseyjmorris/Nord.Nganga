@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
-using Nord.Nganga.Core.Text;
 using Nord.Nganga.Fs.Coordination;
 using Nord.Nganga.Fs.VsIntegration;
 using Nord.Nganga.Models;
@@ -25,72 +22,98 @@ namespace Nord.Nganga.WinApp
       {".js","JavaScript| *.js"}
     };
 
+    private readonly string vsProjectFileName;
+    private readonly LogHandler logHandler;
+    private readonly AssemblyOptionsModel optionsModel;
+    public VsIntegrator(string projectPath, AssemblyOptionsModel optionsModel, LogHandler logHandler)
+    {
+      if (logHandler == null)
+      {
+        throw new ArgumentNullException("logHandler");
+      }
+
+      this.logHandler = logHandler;
+
+      if (optionsModel == null)
+      {
+        logHandler("Assembly attribute ProjectStructure cannot be null.");
+        return;
+      }
+
+      if (string.IsNullOrEmpty(optionsModel.CsProjectName))
+      {
+        logHandler("Assembly attribute ProjectStructure.CsProjectName cannot be null.");
+        return;
+      }
+
+      this.optionsModel = optionsModel;
+      
+      var vsProjectFile = Path.Combine(projectPath, optionsModel.CsProjectName);
+
+      if (string.IsNullOrEmpty(vsProjectFile) || !File.Exists(vsProjectFile))
+      {
+        logHandler("Cannot find " + vsProjectFile + ".  Are you sure the specified path is correct?");
+      }
+      this.vsProjectFileName = vsProjectFile;
+    }
 
     public void Reset()
     {
       this.vsIntegrationDictionary.Clear();
     }
 
-    private void LogKeys(LogHandler logHandler)
+    private void LogKeys()
     {
-      this.vsIntegrationDictionary.Keys.ToList().ForEach(fileName => logHandler("{0}{1}", '\t', fileName));
+      this.vsIntegrationDictionary.Keys.ToList().ForEach(fileName => this.logHandler("{0}{1}", '\t', fileName));
     }
 
 
-    public void IntegrateFiles(string projectPath, AssemblyOptionsModel optionsModel, LogHandler logHandler)
+    public bool IntegrateFiles()
     {
-      var vsProjectFile = Path.Combine(projectPath, optionsModel.CsProjectName);
+      this.logHandler("VS integration target is {0}", this.vsProjectFileName);
 
-      if (string.IsNullOrEmpty(vsProjectFile) || !File.Exists(vsProjectFile)) return;
-
-      logHandler("VS integration target is {0}", vsProjectFile);
-
-      this.LogKeys(logHandler);
+      this.LogKeys();
 
       if (!Settings1.Default.AutoVSIntegration)
       {
-        logHandler("Integration disabled.");
-        return;
+        this.logHandler("Integration disabled.");
+        return false;
       }
       try
       {
-        logHandler("Integration starting.");
+        this.logHandler("Integration starting.");
 
         this.csProjEditor.AddFileToCsProj(
-          vsProjectFile, this.vsIntegrationDictionary.Keys.ToList(),
-          (p) => logHandler("{0}{1}", '\t', p));
+          this.vsProjectFileName, this.vsIntegrationDictionary.Keys.ToList(),
+          (p) => this.logHandler("{0}{1}", '\t', p));
 
-        logHandler("Integration complete.");
+        this.logHandler("Integration complete.");
       }
       catch (Exception ie)
       {
-        logHandler("VS Integration failed due to {0}", ie.Message);
-        logHandler(string.Format("{0}", ie));
+        this.logHandler("VS Integration failed due to {0}", ie.Message);
+        this.logHandler(string.Format("{0}", ie));
+        return false;
       }
+      return true;
     }
 
-    public void SaveResult(CoordinationResult coordinationResult, string projectPath, AssemblyOptionsModel optionsModel, LogHandler logHandler)
+    public void SaveResult(CoordinationResult coordinationResult)
     {
       this.SaveFile(
-        () => optionsModel.NgViewsPath,
+        () => this.optionsModel.NgViewsPath,
         () => coordinationResult.ViewPath,
-        () => coordinationResult.ViewBody,
-        projectPath,
-        logHandler);
+        () => coordinationResult.ViewBody);
 
       this.SaveFile(
-        () => optionsModel.NgControllersPath,
+        () => this.optionsModel.NgControllersPath,
         () => coordinationResult.ControllerPath,
-        () => coordinationResult.ControllerBody,
-        projectPath,
-        logHandler);
+        () => coordinationResult.ControllerBody);
 
       this.SaveFile(
-      () => optionsModel.NgResourcesPath,
+      () => this.optionsModel.NgResourcesPath,
       () => coordinationResult.ResourcePath,
-        () => coordinationResult.ResourceBody,
-        projectPath,
-        logHandler);
+        () => coordinationResult.ResourceBody);
     }
     private void CreatePathTree(string path)
     {
@@ -102,15 +125,13 @@ namespace Nord.Nganga.WinApp
     public  void SaveFile(
       Func<string> rootProvider, 
       Func<string> nameProvider, 
-      Func<string> dataProvider, 
-      string projectPath,
-      LogHandler logHandler )
+      Func<string> dataProvider)
     {
       var relativeName = nameProvider();
-      var targetFileName = Path.Combine(projectPath,Path.Combine(rootProvider(), relativeName));
+      var targetFileName = Path.Combine(this.optionsModel.CsProjectName,Path.Combine(rootProvider(), relativeName));
       this.CreatePathTree(targetFileName);
       File.WriteAllText(targetFileName, dataProvider());
-      logHandler("{0} written to disk.", targetFileName);
+      this.logHandler("{0} written to disk.", targetFileName);
       this.vsIntegrationDictionary[targetFileName] = relativeName;
     }
 
