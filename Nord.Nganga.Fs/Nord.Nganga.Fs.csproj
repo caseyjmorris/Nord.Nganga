@@ -41,9 +41,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -53,19 +50,12 @@
     <Compile Include="Naming\NameSuggester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VsIntegration\CsProjEditor.cs" />
+    <Compile Include="VsIntegration\VsIntegrator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nord.Nganga.Annotations\Nord.Nganga.Annotations.csproj">
-      <Project>{d77415e5-25a4-4ceb-8e08-a2d7b82eb1a9}</Project>
-      <Name>Nord.Nganga.Annotations</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Nord.Nganga.Core\Nord.Nganga.Core.csproj">
-      <Project>{d57b30bf-6e21-4c47-a06c-2155f6c2c8ca}</Project>
-      <Name>Nord.Nganga.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Nord.Nganga.Mappers\Nord.Nganga.Mappers.csproj">
       <Project>{8aa252ad-ce48-421d-bf83-4a5a7367f968}</Project>
       <Name>Nord.Nganga.Mappers</Name>

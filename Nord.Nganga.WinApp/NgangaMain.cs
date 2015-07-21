@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
-using Nord.Nganga.Core.Reflection;
-using Nord.Nganga.Core.Text;
 using Nord.Nganga.Fs.Coordination;
 using Nord.Nganga.Fs.Naming;
 using Nord.Nganga.Fs.VsIntegration;
@@ -45,12 +39,12 @@ namespace Nord.Nganga.WinApp
           IsActive = true
         },
       };
-
-      this.Text = string.Format("{0} - [{1}]", typeof(NgangaMain).Assembly.GetName().Name, typeof(NgangaMain).Assembly.GetName().Version);
     }
 
     private void Form1_Load(object sender, EventArgs e)
     {
+      this.Text = string.Format("{0} - [{1}]", typeof(NgangaMain).Assembly.GetName().Name, typeof(NgangaMain).Assembly.GetName().Version);
+
       this.logFusionResolutionEventsToolStripMenuItem.Checked = Settings1.Default.LogFusionResolutionEvents;
 
       this.autoVSIntegration.Checked = Settings1.Default.AutoVSIntegration;
@@ -132,7 +126,6 @@ namespace Nord.Nganga.WinApp
     {
       try
       {
-        //TODO FIX THIS !!!! 
         var wasp = new WebApiSettingsPackage();
         wasp.SetPropertiesToDefault();
 
@@ -164,18 +157,11 @@ namespace Nord.Nganga.WinApp
       this.vsIntegrator.Reset();
 
       this.vsIntegrator.SaveResult(this.coordinationResults[targetType] );
-      if (this.vsIntegrator.IntegrateFiles())
+      if (this.autoVSIntegration.Checked && this.vsIntegrator.IntegrateFiles())
       {
         this.Log("{0}", Resources._The_generated_files_have_been_saved_to_the_output_paths);
       }
     }
-
-
-    private readonly Dictionary<string, string> saveFileFiltersDictionary = new Dictionary<string, string>
-    {
-      {".html","HTML | *.html"},
-      {".js","JavaScript| *.js"}
-    };
 
     private void allToolStripMenuItem_Click(object sender, EventArgs e)
     {
@@ -187,10 +173,11 @@ namespace Nord.Nganga.WinApp
         if (!this.coordinationResults.ContainsKey(target)) continue;
         this.vsIntegrator.SaveResult(this.coordinationResults[target]);
       }
-      this.vsIntegrator.IntegrateFiles();
+      if (this.autoVSIntegration.Checked)
+      {
+        this.vsIntegrator.IntegrateFiles();
+      }
     }
-
-
 
     private void resourceOnlyToolStripMenuItem_Click(object sender, EventArgs e)
     {
@@ -199,8 +186,6 @@ namespace Nord.Nganga.WinApp
 
     private void GenerateResource(Type controllerType)
     {
-
-      //TODO FIX THIS !!!! 
       var wasp = new WebApiSettingsPackage();
       wasp.SetPropertiesToDefault();
 
@@ -210,12 +195,7 @@ namespace Nord.Nganga.WinApp
       this.resourceRTB.Text = resourceGenerator.GenerateResource(
         controllerType);
 
-
       this.saveResourceOnlyToolStripMenuItem.Enabled = true;
-    }
-
-    private void generateToolStripMenuItem_Click(object sender, EventArgs e)
-    {
     }
 
     private void generateToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
