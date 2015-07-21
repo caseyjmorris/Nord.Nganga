@@ -126,7 +126,6 @@ namespace Nord.Nganga.WinApp
     {
       try
       {
-        //TODO FIX THIS !!!! 
         var wasp = new WebApiSettingsPackage();
         wasp.SetPropertiesToDefault();
 
@@ -180,8 +179,6 @@ namespace Nord.Nganga.WinApp
       }
     }
 
-
-
     private void resourceOnlyToolStripMenuItem_Click(object sender, EventArgs e)
     {
       this.GenerateResource(this.controllerTypeSelector.SelectedType);
@@ -189,8 +186,6 @@ namespace Nord.Nganga.WinApp
 
     private void GenerateResource(Type controllerType)
     {
-
-      //TODO FIX THIS !!!! 
       var wasp = new WebApiSettingsPackage();
       wasp.SetPropertiesToDefault();
 
@@ -200,12 +195,7 @@ namespace Nord.Nganga.WinApp
       this.resourceRTB.Text = resourceGenerator.GenerateResource(
         controllerType);
 
-
       this.saveResourceOnlyToolStripMenuItem.Enabled = true;
-    }
-
-    private void generateToolStripMenuItem_Click(object sender, EventArgs e)
-    {
     }
 
     private void generateToolStripMenuItem_DropDownOpening(object sender, EventArgs e)

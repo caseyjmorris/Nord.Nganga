@@ -150,7 +150,6 @@ namespace Nord.Nganga.WinApp
       this.generateToolStripMenuItem.Size = new System.Drawing.Size(66, 20);
       this.generateToolStripMenuItem.Text = "Generate";
       this.generateToolStripMenuItem.DropDownOpening += new System.EventHandler(this.generateToolStripMenuItem_DropDownOpening);
-      this.generateToolStripMenuItem.Click += new System.EventHandler(this.generateToolStripMenuItem_Click);
       // 
       // allToolStripMenuItem
       // 
