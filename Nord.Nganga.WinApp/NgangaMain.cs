@@ -164,7 +164,7 @@ namespace Nord.Nganga.WinApp
       this.vsIntegrator.Reset();
 
       this.vsIntegrator.SaveResult(this.coordinationResults[targetType] );
-      if (this.vsIntegrator.IntegrateFiles())
+      if (this.autoVSIntegration.Checked && this.vsIntegrator.IntegrateFiles())
       {
         this.Log("{0}", Resources._The_generated_files_have_been_saved_to_the_output_paths);
       }
@@ -187,7 +187,10 @@ namespace Nord.Nganga.WinApp
         if (!this.coordinationResults.ContainsKey(target)) continue;
         this.vsIntegrator.SaveResult(this.coordinationResults[target]);
       }
-      this.vsIntegrator.IntegrateFiles();
+      if (this.autoVSIntegration.Checked)
+      {
+        this.vsIntegrator.IntegrateFiles();
+      }
     }
 
 
