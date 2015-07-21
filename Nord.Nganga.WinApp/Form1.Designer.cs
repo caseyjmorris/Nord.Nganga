@@ -44,8 +44,8 @@ namespace Nord.Nganga.WinApp
       this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
       this.resourceOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.useCustomOutputMappingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.autoVSIntegration = new System.Windows.Forms.ToolStripMenuItem();
+      this.logFusionResolutionEventsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.controllerPage = new System.Windows.Forms.TabPage();
       this.contorllerRTB = new System.Windows.Forms.RichTextBox();
       this.viewPage = new System.Windows.Forms.TabPage();
@@ -60,12 +60,14 @@ namespace Nord.Nganga.WinApp
       this.resourceDirSelector = new Nord.Nganga.WinControls.DirectorySelector();
       this.label2 = new System.Windows.Forms.Label();
       this.viewDirSelector = new Nord.Nganga.WinControls.DirectorySelector();
-      this.vsProjectFileSelector = new Nord.Nganga.WinControls.FileSelector();
+      this.vsProjectPathSelector = new Nord.Nganga.WinControls.DirectorySelector();
       this.label8 = new System.Windows.Forms.Label();
       this.label3 = new System.Windows.Forms.Label();
       this.controllersDirSelector = new Nord.Nganga.WinControls.DirectorySelector();
       this.messageLabel = new System.Windows.Forms.Label();
       this.rtbLog = new System.Windows.Forms.RichTextBox();
+      this.label9 = new System.Windows.Forms.Label();
+      this.vsProjectFileName = new System.Windows.Forms.Label();
       this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
       this.label5 = new System.Windows.Forms.Label();
       this.label6 = new System.Windows.Forms.Label();
@@ -73,7 +75,6 @@ namespace Nord.Nganga.WinApp
       this.assemblySelector = new Nord.Nganga.WinControls.AssemblySelector();
       this.label7 = new System.Windows.Forms.Label();
       this.tabControl1 = new System.Windows.Forms.TabControl();
-      this.logFusionResolutionEventsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.menuStrip1.SuspendLayout();
       this.controllerPage.SuspendLayout();
       this.viewPage.SuspendLayout();
@@ -185,20 +186,11 @@ namespace Nord.Nganga.WinApp
       // optionsToolStripMenuItem
       // 
       this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.useCustomOutputMappingToolStripMenuItem,
             this.autoVSIntegration,
             this.logFusionResolutionEventsToolStripMenuItem});
       this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
       this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
       this.optionsToolStripMenuItem.Text = "Options";
-      // 
-      // useCustomOutputMappingToolStripMenuItem
-      // 
-      this.useCustomOutputMappingToolStripMenuItem.CheckOnClick = true;
-      this.useCustomOutputMappingToolStripMenuItem.Name = "useCustomOutputMappingToolStripMenuItem";
-      this.useCustomOutputMappingToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
-      this.useCustomOutputMappingToolStripMenuItem.Text = "Use Custom Output Mapping";
-      this.useCustomOutputMappingToolStripMenuItem.Click += new System.EventHandler(this.useCustomOutputMappingToolStripMenuItem_Click);
       // 
       // autoVSIntegration
       // 
@@ -209,6 +201,14 @@ namespace Nord.Nganga.WinApp
       this.autoVSIntegration.Size = new System.Drawing.Size(247, 22);
       this.autoVSIntegration.Text = "Automatic VS Project Integration";
       this.autoVSIntegration.Click += new System.EventHandler(this.autoVSIntegration_Click);
+      // 
+      // logFusionResolutionEventsToolStripMenuItem
+      // 
+      this.logFusionResolutionEventsToolStripMenuItem.CheckOnClick = true;
+      this.logFusionResolutionEventsToolStripMenuItem.Name = "logFusionResolutionEventsToolStripMenuItem";
+      this.logFusionResolutionEventsToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+      this.logFusionResolutionEventsToolStripMenuItem.Text = "Log Fusion Resolution Events";
+      this.logFusionResolutionEventsToolStripMenuItem.Click += new System.EventHandler(this.logFusionResolutionEventsToolStripMenuItem_Click);
       // 
       // controllerPage
       // 
@@ -321,21 +321,24 @@ namespace Nord.Nganga.WinApp
       this.outputControlGroupTabPanel.Controls.Add(this.resourceDirSelector, 1, 0);
       this.outputControlGroupTabPanel.Controls.Add(this.label2, 0, 1);
       this.outputControlGroupTabPanel.Controls.Add(this.viewDirSelector, 1, 1);
-      this.outputControlGroupTabPanel.Controls.Add(this.vsProjectFileSelector, 1, 3);
+      this.outputControlGroupTabPanel.Controls.Add(this.vsProjectPathSelector, 1, 3);
       this.outputControlGroupTabPanel.Controls.Add(this.label8, 0, 3);
       this.outputControlGroupTabPanel.Controls.Add(this.label3, 0, 2);
       this.outputControlGroupTabPanel.Controls.Add(this.controllersDirSelector, 1, 2);
-      this.outputControlGroupTabPanel.Controls.Add(this.messageLabel, 0, 4);
-      this.outputControlGroupTabPanel.Controls.Add(this.rtbLog, 1, 4);
+      this.outputControlGroupTabPanel.Controls.Add(this.messageLabel, 0, 5);
+      this.outputControlGroupTabPanel.Controls.Add(this.rtbLog, 1, 5);
+      this.outputControlGroupTabPanel.Controls.Add(this.label9, 0, 4);
+      this.outputControlGroupTabPanel.Controls.Add(this.vsProjectFileName, 1, 4);
       this.outputControlGroupTabPanel.Dock = System.Windows.Forms.DockStyle.Fill;
       this.outputControlGroupTabPanel.Location = new System.Drawing.Point(3, 175);
       this.outputControlGroupTabPanel.Name = "outputControlGroupTabPanel";
-      this.outputControlGroupTabPanel.RowCount = 5;
-      this.outputControlGroupTabPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.523809F));
-      this.outputControlGroupTabPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.74026F));
-      this.outputControlGroupTabPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.30736F));
-      this.outputControlGroupTabPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.874459F));
-      this.outputControlGroupTabPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 63.20346F));
+      this.outputControlGroupTabPanel.RowCount = 6;
+      this.outputControlGroupTabPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+      this.outputControlGroupTabPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+      this.outputControlGroupTabPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+      this.outputControlGroupTabPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+      this.outputControlGroupTabPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+      this.outputControlGroupTabPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
       this.outputControlGroupTabPanel.Size = new System.Drawing.Size(927, 462);
       this.outputControlGroupTabPanel.TabIndex = 0;
       // 
@@ -345,7 +348,7 @@ namespace Nord.Nganga.WinApp
       this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.label1.Location = new System.Drawing.Point(3, 0);
       this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(148, 43);
+      this.label1.Size = new System.Drawing.Size(148, 46);
       this.label1.TabIndex = 0;
       this.label1.Text = "Resources Directory";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -358,16 +361,16 @@ namespace Nord.Nganga.WinApp
       this.resourceDirSelector.Location = new System.Drawing.Point(157, 3);
       this.resourceDirSelector.Name = "resourceDirSelector";
       this.resourceDirSelector.SelectedPath = "C:\\Users\\mlloyd\\Desktop";
-      this.resourceDirSelector.Size = new System.Drawing.Size(767, 37);
+      this.resourceDirSelector.Size = new System.Drawing.Size(767, 40);
       this.resourceDirSelector.TabIndex = 1;
       // 
       // label2
       // 
       this.label2.AutoSize = true;
       this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.label2.Location = new System.Drawing.Point(3, 43);
+      this.label2.Location = new System.Drawing.Point(3, 46);
       this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(148, 44);
+      this.label2.Size = new System.Drawing.Size(148, 46);
       this.label2.TabIndex = 2;
       this.label2.Text = "View Directory";
       this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -377,40 +380,40 @@ namespace Nord.Nganga.WinApp
       this.viewDirSelector.Description = "View Output Directory";
       this.viewDirSelector.Dock = System.Windows.Forms.DockStyle.Fill;
       this.viewDirSelector.History = ((System.Collections.Specialized.StringCollection)(resources.GetObject("viewDirSelector.History")));
-      this.viewDirSelector.Location = new System.Drawing.Point(157, 46);
+      this.viewDirSelector.Location = new System.Drawing.Point(157, 49);
       this.viewDirSelector.Name = "viewDirSelector";
       this.viewDirSelector.SelectedPath = "C:\\Users\\mlloyd\\Desktop";
-      this.viewDirSelector.Size = new System.Drawing.Size(767, 38);
+      this.viewDirSelector.Size = new System.Drawing.Size(767, 40);
       this.viewDirSelector.TabIndex = 3;
       // 
-      // vsProjectFileSelector
+      // vsProjectPathSelector
       // 
-      this.vsProjectFileSelector.DialogFilter = "All Files | *.*";
-      this.vsProjectFileSelector.History = ((System.Collections.Specialized.StringCollection)(resources.GetObject("vsProjectFileSelector.History")));
-      this.vsProjectFileSelector.Location = new System.Drawing.Point(157, 132);
-      this.vsProjectFileSelector.Name = "vsProjectFileSelector";
-      this.vsProjectFileSelector.SelectedFile = "";
-      this.vsProjectFileSelector.Size = new System.Drawing.Size(767, 34);
-      this.vsProjectFileSelector.TabIndex = 6;
+      this.vsProjectPathSelector.Description = null;
+      this.vsProjectPathSelector.History = ((System.Collections.Specialized.StringCollection)(resources.GetObject("vsProjectPathSelector.History")));
+      this.vsProjectPathSelector.Location = new System.Drawing.Point(157, 141);
+      this.vsProjectPathSelector.Name = "vsProjectPathSelector";
+      this.vsProjectPathSelector.SelectedPath = "";
+      this.vsProjectPathSelector.Size = new System.Drawing.Size(767, 34);
+      this.vsProjectPathSelector.TabIndex = 6;
       // 
       // label8
       // 
       this.label8.AutoSize = true;
       this.label8.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.label8.Location = new System.Drawing.Point(3, 129);
+      this.label8.Location = new System.Drawing.Point(3, 138);
       this.label8.Name = "label8";
-      this.label8.Size = new System.Drawing.Size(148, 40);
+      this.label8.Size = new System.Drawing.Size(148, 46);
       this.label8.TabIndex = 5;
-      this.label8.Text = "Visual Studio Project File";
+      this.label8.Text = "Visual Studio Project Path";
       this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
       // 
       // label3
       // 
       this.label3.AutoSize = true;
       this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.label3.Location = new System.Drawing.Point(3, 87);
+      this.label3.Location = new System.Drawing.Point(3, 92);
       this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(148, 42);
+      this.label3.Size = new System.Drawing.Size(148, 46);
       this.label3.TabIndex = 4;
       this.label3.Text = "Controllers Directory";
       this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -420,19 +423,19 @@ namespace Nord.Nganga.WinApp
       this.controllersDirSelector.Description = "Controller Output Directory";
       this.controllersDirSelector.Dock = System.Windows.Forms.DockStyle.Fill;
       this.controllersDirSelector.History = ((System.Collections.Specialized.StringCollection)(resources.GetObject("controllersDirSelector.History")));
-      this.controllersDirSelector.Location = new System.Drawing.Point(157, 90);
+      this.controllersDirSelector.Location = new System.Drawing.Point(157, 95);
       this.controllersDirSelector.Name = "controllersDirSelector";
       this.controllersDirSelector.SelectedPath = "C:\\Users\\mlloyd\\Desktop";
-      this.controllersDirSelector.Size = new System.Drawing.Size(767, 36);
+      this.controllersDirSelector.Size = new System.Drawing.Size(767, 40);
       this.controllersDirSelector.TabIndex = 5;
       // 
       // messageLabel
       // 
       this.messageLabel.AutoSize = true;
       this.messageLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.messageLabel.Location = new System.Drawing.Point(3, 169);
+      this.messageLabel.Location = new System.Drawing.Point(3, 230);
       this.messageLabel.Name = "messageLabel";
-      this.messageLabel.Size = new System.Drawing.Size(148, 293);
+      this.messageLabel.Size = new System.Drawing.Size(148, 232);
       this.messageLabel.TabIndex = 7;
       this.messageLabel.Text = "Messages";
       this.messageLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -440,11 +443,33 @@ namespace Nord.Nganga.WinApp
       // rtbLog
       // 
       this.rtbLog.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.rtbLog.Location = new System.Drawing.Point(157, 172);
+      this.rtbLog.Location = new System.Drawing.Point(157, 233);
       this.rtbLog.Name = "rtbLog";
-      this.rtbLog.Size = new System.Drawing.Size(767, 287);
+      this.rtbLog.Size = new System.Drawing.Size(767, 226);
       this.rtbLog.TabIndex = 8;
       this.rtbLog.Text = "";
+      // 
+      // label9
+      // 
+      this.label9.AutoSize = true;
+      this.label9.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.label9.Location = new System.Drawing.Point(3, 184);
+      this.label9.Name = "label9";
+      this.label9.Size = new System.Drawing.Size(148, 46);
+      this.label9.TabIndex = 9;
+      this.label9.Text = "Visual Studio Project File Name";
+      this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+      // 
+      // vsProjectFileName
+      // 
+      this.vsProjectFileName.AutoSize = true;
+      this.vsProjectFileName.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.vsProjectFileName.Location = new System.Drawing.Point(157, 184);
+      this.vsProjectFileName.Name = "vsProjectFileName";
+      this.vsProjectFileName.Size = new System.Drawing.Size(767, 46);
+      this.vsProjectFileName.TabIndex = 10;
+      this.vsProjectFileName.Text = "label10";
+      this.vsProjectFileName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // tableLayoutPanel3
       // 
@@ -490,6 +515,7 @@ namespace Nord.Nganga.WinApp
       // 
       // controllerTypeSelector
       // 
+      this.controllerTypeSelector.BaseApiControllerName = null;
       this.controllerTypeSelector.Dock = System.Windows.Forms.DockStyle.Fill;
       this.controllerTypeSelector.Location = new System.Drawing.Point(157, 40);
       this.controllerTypeSelector.Name = "controllerTypeSelector";
@@ -504,6 +530,8 @@ namespace Nord.Nganga.WinApp
       this.assemblySelector.Dock = System.Windows.Forms.DockStyle.Fill;
       this.assemblySelector.History = ((System.Collections.Specialized.StringCollection)(resources.GetObject("assemblySelector.History")));
       this.assemblySelector.Location = new System.Drawing.Point(157, 3);
+      this.assemblySelector.LogFusionResolutionEvents = false;
+      this.assemblySelector.LogHandler = null;
       this.assemblySelector.Name = "assemblySelector";
       this.assemblySelector.SelectedFile = "";
       this.assemblySelector.Size = new System.Drawing.Size(767, 31);
@@ -534,14 +562,6 @@ namespace Nord.Nganga.WinApp
       this.tabControl1.TabIndex = 1;
       this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
       // 
-      // logFusionResolutionEventsToolStripMenuItem
-      // 
-      this.logFusionResolutionEventsToolStripMenuItem.CheckOnClick = true;
-      this.logFusionResolutionEventsToolStripMenuItem.Name = "logFusionResolutionEventsToolStripMenuItem";
-      this.logFusionResolutionEventsToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
-      this.logFusionResolutionEventsToolStripMenuItem.Text = "Log Fusion Resolution Events";
-      this.logFusionResolutionEventsToolStripMenuItem.Click += new System.EventHandler(this.logFusionResolutionEventsToolStripMenuItem_Click);
-      // 
       // Form1
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -552,7 +572,6 @@ namespace Nord.Nganga.WinApp
       this.MainMenuStrip = this.menuStrip1;
       this.Name = "Form1";
       this.Text = "NORD ng-generator";
-      this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
       this.Load += new System.EventHandler(this.Form1_Load);
       this.menuStrip1.ResumeLayout(false);
       this.menuStrip1.PerformLayout();
@@ -600,7 +619,7 @@ namespace Nord.Nganga.WinApp
     private DirectorySelector resourceDirSelector;
     private System.Windows.Forms.Label label2;
     private DirectorySelector viewDirSelector;
-    private FileSelector vsProjectFileSelector;
+    private DirectorySelector vsProjectPathSelector;
     private System.Windows.Forms.Label label8;
     private System.Windows.Forms.Label label3;
     private DirectorySelector controllersDirSelector;
@@ -614,9 +633,10 @@ namespace Nord.Nganga.WinApp
     private System.Windows.Forms.Label label7;
     private System.Windows.Forms.TabControl tabControl1;
     private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem useCustomOutputMappingToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem autoVSIntegration;
     private System.Windows.Forms.ToolStripMenuItem logFusionResolutionEventsToolStripMenuItem;
+    private System.Windows.Forms.Label label9;
+    private System.Windows.Forms.Label vsProjectFileName;
   }
 }
 

@@ -17,7 +17,6 @@ namespace Nord.Nganga.WinApp
   {
 
     private readonly CsProjEditor csProjEditor = new CsProjEditor();
-    private readonly Dictionary<string, string> customOutputMappingDictionary = new Dictionary<string, string>();
     private readonly Dictionary<string, string> vsIntegrationDictionary = new Dictionary<string, string>();
 
     private readonly Dictionary<string, string> saveFileFiltersDictionary = new Dictionary<string, string>
@@ -26,43 +25,22 @@ namespace Nord.Nganga.WinApp
       {".js","JavaScript| *.js"}
     };
 
-    public VsIntegrator()
-    {
-      if (Settings1.Default.UseCustomOutputMapping)
-      {
-        this.customOutputMappingDictionary = (from string mapEntry in Settings1.Default.CustomOutputMap
-                                              let toks = mapEntry.Split('=')
-                                              let key = toks[0]
-                                              let value = toks[1]
-                                              select new { key, value }).ToDictionary(r => r.key, r => r.value);
-      }
-    }
 
     public void Reset()
     {
       this.vsIntegrationDictionary.Clear();
     }
 
-    public void SaveCustomMap()
-    {
-      var sc = new StringCollection();
-      foreach (var kvp in this.customOutputMappingDictionary)
-      {
-        sc.Add(kvp.Key + "=" + kvp.Value);
-      }
-      Settings1.Default.CustomOutputMap = sc;
-      Settings1.Default.Save();
-    }
-
-    public void LogKeys(LogHandler logHandler)
+    private void LogKeys(LogHandler logHandler)
     {
       this.vsIntegrationDictionary.Keys.ToList().ForEach(fileName => logHandler("{0}{1}", '\t', fileName));
     }
 
 
-    public void IntegrateFiles(AssemblyOptionsModel optionsModel, LogHandler logHandler)
+    public void IntegrateFiles(string projectPath, AssemblyOptionsModel optionsModel, LogHandler logHandler)
     {
-      var vsProjectFile = optionsModel.CsProjectPath;
+      var vsProjectFile = Path.Combine(projectPath, optionsModel.CsProjectPath);
+
       if (string.IsNullOrEmpty(vsProjectFile) || !File.Exists(vsProjectFile)) return;
 
       logHandler("VS integration target is {0}", vsProjectFile);
@@ -91,27 +69,27 @@ namespace Nord.Nganga.WinApp
       }
     }
 
-    public void SaveResult(CoordinationResult coordinationResult, AssemblyOptionsModel optionsModel, LogHandler logHandler)
+    public void SaveResult(CoordinationResult coordinationResult, string projectPath, AssemblyOptionsModel optionsModel, LogHandler logHandler)
     {
       this.SaveFile(
         () => optionsModel.NgViewsPath,
         () => coordinationResult.ViewPath,
         () => coordinationResult.ViewBody,
-        optionsModel,
+        projectPath,
         logHandler);
 
       this.SaveFile(
         () => optionsModel.NgControllersPath,
         () => coordinationResult.ControllerPath,
         () => coordinationResult.ControllerBody,
-        optionsModel,
+        projectPath,
         logHandler);
 
       this.SaveFile(
       () => optionsModel.NgResourcesPath,
       () => coordinationResult.ResourcePath,
         () => coordinationResult.ResourceBody,
-        optionsModel,
+        projectPath,
         logHandler);
     }
     private void CreatePathTree(string path)
@@ -125,48 +103,14 @@ namespace Nord.Nganga.WinApp
       Func<string> rootProvider, 
       Func<string> nameProvider, 
       Func<string> dataProvider, 
-      AssemblyOptionsModel optionsModel,
+      string projectPath,
       LogHandler logHandler )
     {
       var relativeName = nameProvider();
-      var targetFileName = Path.Combine(rootProvider(), relativeName);
+      var targetFileName = Path.Combine(projectPath,Path.Combine(rootProvider(), relativeName));
       this.CreatePathTree(targetFileName);
-      if (!Settings1.Default.UseCustomOutputMapping)
-      {
-        File.WriteAllText(targetFileName, dataProvider());
-        logHandler("{0} written to disk.", targetFileName );
-        this.vsIntegrationDictionary[targetFileName] = relativeName;
-        return;
-      }
-
-      // attempt to find a file with the target name under the VS integraiton directory 
-      var searchRoot = Path.GetDirectoryName(Path.GetDirectoryName(optionsModel.CsProjectPath));
-
-      var f = searchRoot.SearchDirectory(Path.GetFileName(targetFileName));
-      if (f == null)
-      {
-        var d = new SaveFileDialog();
-        if (!this.customOutputMappingDictionary.ContainsKey(targetFileName))
-        {
-          d.FileName = targetFileName;
-          d.Filter = this.saveFileFiltersDictionary[Path.GetExtension(targetFileName)];
-          var dr = d.ShowDialog();
-          if (dr == DialogResult.OK)
-          {
-            this.customOutputMappingDictionary[targetFileName] = d.FileName;
-          }
-          else
-          {
-            return;
-          }
-        }
-      }
-      else
-      {
-        this.customOutputMappingDictionary[targetFileName] = f;
-      }
-      File.WriteAllText(this.customOutputMappingDictionary[targetFileName], dataProvider());
-      logHandler("{0} written to disk.", this.customOutputMappingDictionary[targetFileName]);
+      File.WriteAllText(targetFileName, dataProvider());
+      logHandler("{0} written to disk.", targetFileName);
       this.vsIntegrationDictionary[targetFileName] = relativeName;
     }
 

@@ -52,7 +52,6 @@ namespace Nord.Nganga.WinApp
       this.logFusionResolutionEventsToolStripMenuItem.Checked = Settings1.Default.LogFusionResolutionEvents;
 
       this.autoVSIntegration.Checked = Settings1.Default.AutoVSIntegration;
-      this.useCustomOutputMappingToolStripMenuItem.Checked = Settings1.Default.UseCustomOutputMapping;
 
       this.assemblySelector.SelectionChanged += this.assemblySelector_SelectionChanged;
       this.assemblySelector.LogHandler = this.Log;
@@ -73,21 +72,20 @@ namespace Nord.Nganga.WinApp
       this.viewDirSelector.SelectionChanged += this.viewDirSelector_SelectionChanged;
       this.viewDirSelector.HistoryChanged += this.viewDirSelector_HistoryChanged;
 
-      this.vsProjectFileSelector.DialogFilter = "VS Project|*.csproj";
-      this.vsProjectFileSelector.SelectionChanged += this.VsProjectFileSelectorSelectionChanged;
-      this.vsProjectFileSelector.History = Settings1.Default.VSFileHistory;
-      this.vsProjectFileSelector.SelectedFile = Settings1.Default.SelectedVSFile;
-      this.vsProjectFileSelector.HistoryChanged += this.VsProjectFileSelectorHistoryChanged;
+      this.vsProjectPathSelector.SelectionChanged += this.VsProjectFileSelectorSelectionChanged;
+      this.vsProjectPathSelector.History = Settings1.Default.VSFileHistory;
+      this.vsProjectPathSelector.SelectedPath = Settings1.Default.SelectedVSPath;
+      this.vsProjectPathSelector.HistoryChanged += this.VsProjectFileSelectorHistoryChanged;
     }
 
     void VsProjectFileSelectorHistoryChanged(object sender, EventArgs e)
     {
-      Settings1.Default.VSFileHistory = this.vsProjectFileSelector.History;
+      Settings1.Default.VSFileHistory = this.vsProjectPathSelector.History;
     }
 
     void VsProjectFileSelectorSelectionChanged(object sender, EventArgs e)
     {
-      Settings1.Default.SelectedVSFile = this.vsProjectFileSelector.SelectedFile;
+      Settings1.Default.SelectedVSPath = this.vsProjectPathSelector.SelectedPath;
     }
 
     private void AssertOutputDirsUnique()
@@ -160,7 +158,7 @@ namespace Nord.Nganga.WinApp
       this.resourceDirSelector.SelectedPath = this.selectedAssemblyOptionsModel.NgResourcesPath;
       this.viewDirSelector.SelectedPath = this.selectedAssemblyOptionsModel.NgViewsPath;
       this.controllersDirSelector.SelectedPath = this.selectedAssemblyOptionsModel.NgControllersPath;
-      this.vsProjectFileSelector.SelectedFile = this.selectedAssemblyOptionsModel.CsProjectPath;
+      this.vsProjectFileName.Text = this.selectedAssemblyOptionsModel.CsProjectPath;
       
     }
 
@@ -220,9 +218,9 @@ namespace Nord.Nganga.WinApp
 
       this.vsIntegrator.Reset();
 
-      this.vsIntegrator.SaveResult(this.coordinationResults[targetType], this.selectedAssemblyOptionsModel, this.Log);
+      this.vsIntegrator.SaveResult(this.coordinationResults[targetType], this.vsProjectPathSelector.SelectedPath, this.selectedAssemblyOptionsModel, this.Log);
 
-      this.vsIntegrator.IntegrateFiles(this.selectedAssemblyOptionsModel, this.Log);
+      this.vsIntegrator.IntegrateFiles(this.vsProjectPathSelector.SelectedPath, this.selectedAssemblyOptionsModel, this.Log);
 
       this.Log("{0}", Resources._The_generated_files_have_been_saved_to_the_output_paths);
     }
@@ -234,12 +232,6 @@ namespace Nord.Nganga.WinApp
       {".js","JavaScript| *.js"}
     };
 
-
-    private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-    {
-      this.vsIntegrator.SaveCustomMap();
-    }
-
     private void allToolStripMenuItem_Click(object sender, EventArgs e)
     {
       this.vsIntegrator.Reset();
@@ -248,9 +240,9 @@ namespace Nord.Nganga.WinApp
       {
         this.GenerateTarget(target);
         if (!this.coordinationResults.ContainsKey(target)) continue;
-        this.vsIntegrator.SaveResult(this.coordinationResults[target], this.selectedAssemblyOptionsModel, this.Log);
+        this.vsIntegrator.SaveResult(this.coordinationResults[target], this.vsProjectPathSelector.SelectedPath, this.selectedAssemblyOptionsModel, this.Log);
       }
-      this.vsIntegrator.IntegrateFiles(this.selectedAssemblyOptionsModel, this.Log);
+      this.vsIntegrator.IntegrateFiles(this.vsProjectPathSelector.SelectedPath, this.selectedAssemblyOptionsModel, this.Log);
     }
 
 
@@ -297,7 +289,7 @@ namespace Nord.Nganga.WinApp
         () => this.resourceDirSelector.SelectedPath,
         () => new NameSuggester().SuggestResourceFileName(this.controllerTypeSelector.SelectedType),
         () => this.resourceRTB.Text,
-         this.selectedAssemblyOptionsModel, 
+        this.vsProjectPathSelector.SelectedPath,
          this.Log);
     }
 
@@ -315,11 +307,6 @@ namespace Nord.Nganga.WinApp
       if (string.IsNullOrEmpty(txt)) return;
 
       Clipboard.SetText(rtb.Text);
-    }
-
-    private void useCustomOutputMappingToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      Settings1.Default.UseCustomOutputMapping = this.useCustomOutputMappingToolStripMenuItem.Checked;
     }
 
     private void autoVSIntegration_Click(object sender, EventArgs e)
