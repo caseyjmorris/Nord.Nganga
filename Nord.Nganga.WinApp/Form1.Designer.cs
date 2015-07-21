@@ -57,13 +57,10 @@ namespace Nord.Nganga.WinApp
       this.label4 = new System.Windows.Forms.Label();
       this.outputControlGroupTabPanel = new System.Windows.Forms.TableLayoutPanel();
       this.label1 = new System.Windows.Forms.Label();
-      this.resourceDirSelector = new Nord.Nganga.WinControls.DirectorySelector();
       this.label2 = new System.Windows.Forms.Label();
-      this.viewDirSelector = new Nord.Nganga.WinControls.DirectorySelector();
       this.vsProjectPathSelector = new Nord.Nganga.WinControls.DirectorySelector();
       this.label8 = new System.Windows.Forms.Label();
       this.label3 = new System.Windows.Forms.Label();
-      this.controllersDirSelector = new Nord.Nganga.WinControls.DirectorySelector();
       this.messageLabel = new System.Windows.Forms.Label();
       this.rtbLog = new System.Windows.Forms.RichTextBox();
       this.label9 = new System.Windows.Forms.Label();
@@ -75,6 +72,9 @@ namespace Nord.Nganga.WinApp
       this.assemblySelector = new Nord.Nganga.WinControls.AssemblySelector();
       this.label7 = new System.Windows.Forms.Label();
       this.tabControl1 = new System.Windows.Forms.TabControl();
+      this.resourcesDir = new System.Windows.Forms.Label();
+      this.viewsDir = new System.Windows.Forms.Label();
+      this.controllersDir = new System.Windows.Forms.Label();
       this.menuStrip1.SuspendLayout();
       this.controllerPage.SuspendLayout();
       this.viewPage.SuspendLayout();
@@ -318,17 +318,17 @@ namespace Nord.Nganga.WinApp
       this.outputControlGroupTabPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
       this.outputControlGroupTabPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 83.33333F));
       this.outputControlGroupTabPanel.Controls.Add(this.label1, 0, 0);
-      this.outputControlGroupTabPanel.Controls.Add(this.resourceDirSelector, 1, 0);
       this.outputControlGroupTabPanel.Controls.Add(this.label2, 0, 1);
-      this.outputControlGroupTabPanel.Controls.Add(this.viewDirSelector, 1, 1);
       this.outputControlGroupTabPanel.Controls.Add(this.vsProjectPathSelector, 1, 3);
       this.outputControlGroupTabPanel.Controls.Add(this.label8, 0, 3);
       this.outputControlGroupTabPanel.Controls.Add(this.label3, 0, 2);
-      this.outputControlGroupTabPanel.Controls.Add(this.controllersDirSelector, 1, 2);
       this.outputControlGroupTabPanel.Controls.Add(this.messageLabel, 0, 5);
       this.outputControlGroupTabPanel.Controls.Add(this.rtbLog, 1, 5);
       this.outputControlGroupTabPanel.Controls.Add(this.label9, 0, 4);
       this.outputControlGroupTabPanel.Controls.Add(this.vsProjectFileName, 1, 4);
+      this.outputControlGroupTabPanel.Controls.Add(this.resourcesDir, 1, 0);
+      this.outputControlGroupTabPanel.Controls.Add(this.viewsDir, 1, 1);
+      this.outputControlGroupTabPanel.Controls.Add(this.controllersDir, 1, 2);
       this.outputControlGroupTabPanel.Dock = System.Windows.Forms.DockStyle.Fill;
       this.outputControlGroupTabPanel.Location = new System.Drawing.Point(3, 175);
       this.outputControlGroupTabPanel.Name = "outputControlGroupTabPanel";
@@ -353,17 +353,6 @@ namespace Nord.Nganga.WinApp
       this.label1.Text = "Resources Directory";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
       // 
-      // resourceDirSelector
-      // 
-      this.resourceDirSelector.Description = "Resource Output Directory";
-      this.resourceDirSelector.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.resourceDirSelector.History = ((System.Collections.Specialized.StringCollection)(resources.GetObject("resourceDirSelector.History")));
-      this.resourceDirSelector.Location = new System.Drawing.Point(157, 3);
-      this.resourceDirSelector.Name = "resourceDirSelector";
-      this.resourceDirSelector.SelectedPath = "C:\\Users\\mlloyd\\Desktop";
-      this.resourceDirSelector.Size = new System.Drawing.Size(767, 40);
-      this.resourceDirSelector.TabIndex = 1;
-      // 
       // label2
       // 
       this.label2.AutoSize = true;
@@ -374,17 +363,6 @@ namespace Nord.Nganga.WinApp
       this.label2.TabIndex = 2;
       this.label2.Text = "View Directory";
       this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-      // 
-      // viewDirSelector
-      // 
-      this.viewDirSelector.Description = "View Output Directory";
-      this.viewDirSelector.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.viewDirSelector.History = ((System.Collections.Specialized.StringCollection)(resources.GetObject("viewDirSelector.History")));
-      this.viewDirSelector.Location = new System.Drawing.Point(157, 49);
-      this.viewDirSelector.Name = "viewDirSelector";
-      this.viewDirSelector.SelectedPath = "C:\\Users\\mlloyd\\Desktop";
-      this.viewDirSelector.Size = new System.Drawing.Size(767, 40);
-      this.viewDirSelector.TabIndex = 3;
       // 
       // vsProjectPathSelector
       // 
@@ -417,17 +395,6 @@ namespace Nord.Nganga.WinApp
       this.label3.TabIndex = 4;
       this.label3.Text = "Controllers Directory";
       this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-      // 
-      // controllersDirSelector
-      // 
-      this.controllersDirSelector.Description = "Controller Output Directory";
-      this.controllersDirSelector.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.controllersDirSelector.History = ((System.Collections.Specialized.StringCollection)(resources.GetObject("controllersDirSelector.History")));
-      this.controllersDirSelector.Location = new System.Drawing.Point(157, 95);
-      this.controllersDirSelector.Name = "controllersDirSelector";
-      this.controllersDirSelector.SelectedPath = "C:\\Users\\mlloyd\\Desktop";
-      this.controllersDirSelector.Size = new System.Drawing.Size(767, 40);
-      this.controllersDirSelector.TabIndex = 5;
       // 
       // messageLabel
       // 
@@ -562,6 +529,39 @@ namespace Nord.Nganga.WinApp
       this.tabControl1.TabIndex = 1;
       this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
       // 
+      // resourcesDir
+      // 
+      this.resourcesDir.AutoSize = true;
+      this.resourcesDir.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.resourcesDir.Location = new System.Drawing.Point(157, 0);
+      this.resourcesDir.Name = "resourcesDir";
+      this.resourcesDir.Size = new System.Drawing.Size(767, 46);
+      this.resourcesDir.TabIndex = 11;
+      this.resourcesDir.Text = "<resources directory>";
+      this.resourcesDir.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+      // 
+      // viewsDir
+      // 
+      this.viewsDir.AutoSize = true;
+      this.viewsDir.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.viewsDir.Location = new System.Drawing.Point(157, 46);
+      this.viewsDir.Name = "viewsDir";
+      this.viewsDir.Size = new System.Drawing.Size(767, 46);
+      this.viewsDir.TabIndex = 12;
+      this.viewsDir.Text = "<views directory>";
+      this.viewsDir.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+      // 
+      // controllersDir
+      // 
+      this.controllersDir.AutoSize = true;
+      this.controllersDir.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.controllersDir.Location = new System.Drawing.Point(157, 92);
+      this.controllersDir.Name = "controllersDir";
+      this.controllersDir.Size = new System.Drawing.Size(767, 46);
+      this.controllersDir.TabIndex = 13;
+      this.controllersDir.Text = "<ng controllers directory>";
+      this.controllersDir.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+      // 
       // Form1
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -616,13 +616,10 @@ namespace Nord.Nganga.WinApp
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.TableLayoutPanel outputControlGroupTabPanel;
     private System.Windows.Forms.Label label1;
-    private DirectorySelector resourceDirSelector;
     private System.Windows.Forms.Label label2;
-    private DirectorySelector viewDirSelector;
     private DirectorySelector vsProjectPathSelector;
     private System.Windows.Forms.Label label8;
     private System.Windows.Forms.Label label3;
-    private DirectorySelector controllersDirSelector;
     private System.Windows.Forms.Label messageLabel;
     private System.Windows.Forms.RichTextBox rtbLog;
     private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
@@ -637,6 +634,9 @@ namespace Nord.Nganga.WinApp
     private System.Windows.Forms.ToolStripMenuItem logFusionResolutionEventsToolStripMenuItem;
     private System.Windows.Forms.Label label9;
     private System.Windows.Forms.Label vsProjectFileName;
+    private System.Windows.Forms.Label resourcesDir;
+    private System.Windows.Forms.Label viewsDir;
+    private System.Windows.Forms.Label controllersDir;
   }
 }
 
