@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Nord.Nganga.Fs.Coordination;
-using Nord.Nganga.Fs.VsIntegration;
 using Nord.Nganga.Models;
 
-namespace Nord.Nganga.WinApp
+namespace Nord.Nganga.Fs.VsIntegration
 {
   public delegate void LogHandler(string formatProvider, params object[] parms);
 
@@ -71,11 +70,6 @@ namespace Nord.Nganga.WinApp
       
       this.vsIntegrationDictionary.Values.ToList().ForEach(fileName => this.logHandler("{0}{1}", '\t', fileName));
 
-      if (!Settings1.Default.AutoVSIntegration)
-      {
-        this.logHandler("Integration disabled.");
-        return false;
-      }
       try
       {
         this.logHandler("Integration starting.");

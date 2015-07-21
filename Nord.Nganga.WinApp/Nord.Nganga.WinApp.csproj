@@ -77,7 +77,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings1.settings</DependentUpon>
     </Compile>
-    <Compile Include="VsIntegrator.cs" />
     <EmbeddedResource Include="NgangaMain.resx">
       <DependentUpon>NgangaMain.cs</DependentUpon>
     </EmbeddedResource>
