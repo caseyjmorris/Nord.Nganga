@@ -58,12 +58,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DirectoryExtensions.cs" />
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
     <Compile Include="NgangaMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,9 +78,6 @@
       <DependentUpon>Settings1.settings</DependentUpon>
     </Compile>
     <Compile Include="VsIntegrator.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="NgangaMain.resx">
       <DependentUpon>NgangaMain.cs</DependentUpon>
     </EmbeddedResource>
