@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -139,6 +140,28 @@ namespace Nord.Nganga.Core.Reflection
       };
 
       return assemblyResolutionHandler;
+    }
+
+    public static object[] GetCustomAssemblyAttributes<T>(Assembly assy)
+    {
+
+      // determine where the assembly lives on disk... 
+      // we may need this path later in the assemblyResolutionHandler 
+      // to deal with any dependencies Fusion cannot work out on it's own
+      var basePath = Path.GetDirectoryName(assy.Location);
+
+      // declare this a anonymous to explout the closure on the basePathDirectoryInfo
+      var assemblyResolutionHandler = CreateResolutionEventHandler(basePath);
+
+      // set up the dependency resolution handler 
+      AppDomain.CurrentDomain.AssemblyResolve += assemblyResolutionHandler;
+
+      var attributeList = assy.GetCustomAttributes(typeof(T), true);
+
+      // de-register the assembly resolution handler 
+      AppDomain.CurrentDomain.AssemblyResolve -= assemblyResolutionHandler;
+
+      return attributeList;
     }
   }
 }
