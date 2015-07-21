@@ -33,22 +33,32 @@ namespace Nord.Nganga.Fs.VsIntegration
     {
       var xdoc = XDocument.Load(originalXml);
 
-      this.ReduceContentTags(xdoc);
-
       var proj = xdoc.Root;
 
       var ns = proj.GetDefaultNamespace();
 
-      var itemGroups = proj.Elements(ns + "ItemGroup");
+      var itemGroups = proj.Elements(ns + "ItemGroup").ToList();
 
-      var targetItemGroup = itemGroups.Single(i => i.Elements().Any(e => e.Name == ns + "Content"));
+      var targetItemGroup = itemGroups.FirstOrDefault(i => i.Elements().Any(e => e.Name == ns + "Content"));
+
+      if (targetItemGroup == null)
+      {
+        targetItemGroup = new XElement(ns + "ItemGroup");
+
+        proj.Add(targetItemGroup);
+      }
+
+      var integratedNames =
+        new HashSet<string>(
+          itemGroups.Elements(ns + "Content").Select(el => el.Attribute("Include").Value.ToUpperInvariant()));
 
       foreach (var relativePath in relativePaths)
       {
-        if (targetItemGroup.Elements(ns + "Content").Any(e => e.Attribute("Include").Value == relativePath))
+        if (integratedNames.Contains(relativePath.ToUpperInvariant()))
         {
           continue;
         }
+
         targetItemGroup.Add(new XElement(ns + "Content", new XAttribute("Include", relativePath)));
         if (sourceNameVisitor != null)
         {
@@ -57,38 +67,6 @@ namespace Nord.Nganga.Fs.VsIntegration
       }
 
       return xdoc;
-    }
-
-    private void ReduceContentTags(XDocument xdoc)
-    {
-      var proj = xdoc.Root;
-
-      var ns = proj.GetDefaultNamespace();
-
-      var itemGroups = proj.Elements(ns + "ItemGroup");
-
-      var targetItemGroups = itemGroups.Where(i => i.Elements().Any(e => e.Name == ns + "Content")).ToList();
-
-      var annoitedContentTag = targetItemGroups.Elements(ns + "Content").First();
-
-      foreach (var tig in targetItemGroups)
-      {
-        var contentTags = tig.Elements(ns + "Content");
-
-        foreach (var c in contentTags)
-        {
-          if (c == annoitedContentTag)
-          {
-            continue;
-          }
-
-          var children = c.Elements();
-
-          annoitedContentTag.Add(children);
-
-          c.Remove();
-        }
-      }
     }
   }
 }
