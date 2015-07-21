@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nord.Nganga.Annotations</RootNamespace>
-    <AssemblyName>Nord.Nganga.Model</AssemblyName>
+    <AssemblyName>Nord.Nganga.Annotations</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

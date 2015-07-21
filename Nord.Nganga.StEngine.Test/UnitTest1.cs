@@ -29,7 +29,7 @@ namespace Nord.Nganga.StEngine.Test
     {
       var subjectType = typeof (Nganga.TestConsumer.Controllers.Api.SponsorsController);
       var ao = new AssemblyOptionsModel(subjectType);
-      Console.WriteLine(ao.CsProjectPath);
+      Console.WriteLine(ao.CsProjectName);
       Console.WriteLine(ao.NgControllersPath);
       Console.WriteLine(ao.NgResourcesPath);
       Console.WriteLine(ao.NgViewsPath);

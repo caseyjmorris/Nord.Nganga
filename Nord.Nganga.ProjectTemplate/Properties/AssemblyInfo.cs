@@ -39,4 +39,4 @@ using Nord.Nganga.Annotations.Attributes;
   ngControllersPath:@"client\app\js\ctrl\", 
   ngViewsPath: @"client\app\js\ui\views\", 
   ngResourcesPath:@"client\app\js\svc\", 
-  csProjectPath: "ProjectDir")]
+  csProjectName: "client.project.csproj")]

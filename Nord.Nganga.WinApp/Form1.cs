@@ -158,7 +158,7 @@ namespace Nord.Nganga.WinApp
       this.resourceDirSelector.SelectedPath = this.selectedAssemblyOptionsModel.NgResourcesPath;
       this.viewDirSelector.SelectedPath = this.selectedAssemblyOptionsModel.NgViewsPath;
       this.controllersDirSelector.SelectedPath = this.selectedAssemblyOptionsModel.NgControllersPath;
-      this.vsProjectFileName.Text = this.selectedAssemblyOptionsModel.CsProjectPath;
+      this.vsProjectFileName.Text = this.selectedAssemblyOptionsModel.CsProjectName;
       
     }
 

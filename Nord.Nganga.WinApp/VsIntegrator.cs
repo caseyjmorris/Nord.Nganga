@@ -39,7 +39,7 @@ namespace Nord.Nganga.WinApp
 
     public void IntegrateFiles(string projectPath, AssemblyOptionsModel optionsModel, LogHandler logHandler)
     {
-      var vsProjectFile = Path.Combine(projectPath, optionsModel.CsProjectPath);
+      var vsProjectFile = Path.Combine(projectPath, optionsModel.CsProjectName);
 
       if (string.IsNullOrEmpty(vsProjectFile) || !File.Exists(vsProjectFile)) return;
 

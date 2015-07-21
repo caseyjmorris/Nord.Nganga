@@ -16,7 +16,7 @@ namespace Nord.Nganga.Models
     public string NgControllersPath { get; set; }
     public string NgViewsPath { get; set; }
     public string NgResourcesPath { get; set; }
-    public string CsProjectPath { get; set; }
+    public string CsProjectName { get; set; }
 
     public CasingOption GetOption(CasingOptionContext context)
     {
@@ -60,7 +60,7 @@ namespace Nord.Nganga.Models
       this.NgControllersPath = psa.NgControllersPath;
       this.NgViewsPath = psa.NgViewsPath;
       this.NgResourcesPath = psa.NgResourcesPath;
-      this.CsProjectPath = psa.CsProjectPath;
+      this.CsProjectName = psa.CsProjectName;
     }
   }
 }

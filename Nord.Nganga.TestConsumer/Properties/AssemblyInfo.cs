@@ -40,7 +40,7 @@ using Nord.Nganga.Annotations.Attributes.Html;
   ngControllersPath: @"client\app\js\ctrl\",
   ngViewsPath: @"client\app\js\ui\views\",
   ngResourcesPath: @"client\app\js\svc\",
-  csProjectPath: @"Nord.Nganga.TestConsumer.csproj")]
+  csProjectName: @"Nord.Nganga.TestConsumer.csproj")]
 [assembly: TextCasePreferences(context: CasingOptionContext.Default, option: CasingOption.Sentence)]
 [assembly: TextCasePreferences(context: CasingOptionContext.Button, option: CasingOption.Title)]
 [assembly: TextCasePreferences(context: CasingOptionContext.Field, option: CasingOption.Sentence)]
