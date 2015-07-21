@@ -1,6 +1,6 @@
 ﻿$pkgName = 'Nord.Nganga.Annotations'
 
-$gitRoot = $(git rev-parse --show-toplevel | Out-String)
+$gitRoot = $(git rev-parse --show-toplevel | Out-String).Trim()
 
 cd "$($gitRoot)\$($pkgName)"
 
