@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nord.Nganga.Fs.Coordination;
 using Nord.Nganga.Fs.Naming;
@@ -16,7 +17,7 @@ namespace Nord.Nganga.WinApp
     private readonly Dictionary<Type, CoordinationResult> coordinationResults =
       new Dictionary<Type, CoordinationResult>();
 
-    private VsIntegrator vsIntegrator ;
+    private VsIntegrator vsIntegrator;
 
     public NgangaMain()
     {
@@ -43,7 +44,8 @@ namespace Nord.Nganga.WinApp
 
     private void Form1_Load(object sender, EventArgs e)
     {
-      this.Text = string.Format("{0} - [{1}]", typeof(NgangaMain).Assembly.GetName().Name, typeof(NgangaMain).Assembly.GetName().Version);
+      this.Text = string.Format("{0} - [{1}]", typeof(NgangaMain).Assembly.GetName().Name,
+        typeof(NgangaMain).Assembly.GetName().Version);
 
       this.logFusionResolutionEventsToolStripMenuItem.Checked = Settings1.Default.LogFusionResolutionEvents;
 
@@ -51,7 +53,7 @@ namespace Nord.Nganga.WinApp
 
       this.assemblySelector.SelectionChanged += this.assemblySelector_SelectionChanged;
       this.assemblySelector.LogHandler = this.Log;
-      
+
       this.assemblySelector.History = Settings1.Default.AssemblyFileNameHistory;
       this.assemblySelector.HistoryChanged += this.assemblySelector_HistoryChanged;
       this.assemblySelector.SelectedFile = Settings1.Default.SelectedAssemblyFileName;
@@ -62,12 +64,12 @@ namespace Nord.Nganga.WinApp
       this.vsProjectPathSelector.HistoryChanged += this.VsProjectFileSelectorHistoryChanged;
     }
 
-    void VsProjectFileSelectorHistoryChanged(object sender, EventArgs e)
+    private void VsProjectFileSelectorHistoryChanged(object sender, EventArgs e)
     {
       Settings1.Default.VSFileHistory = this.vsProjectPathSelector.History;
     }
 
-    void VsProjectFileSelectorSelectionChanged(object sender, EventArgs e)
+    private void VsProjectFileSelectorSelectionChanged(object sender, EventArgs e)
     {
       Settings1.Default.SelectedVSPath = this.vsProjectPathSelector.SelectedPath;
 
@@ -81,27 +83,34 @@ namespace Nord.Nganga.WinApp
 
     private void assemblySelector_SelectionChanged(object sender, EventArgs e)
     {
-      if (string.IsNullOrEmpty(this.assemblySelector.SelectedFile) || this.assemblySelector.SelectedAssembly == null ) return;
-      
+      if (string.IsNullOrEmpty(this.assemblySelector.SelectedFile) || this.assemblySelector.SelectedAssembly == null)
+        return;
+
       Settings1.Default.SelectedAssemblyFileName = this.assemblySelector.SelectedFile;
-      this.selectedAssemblyOptionsModel = new AssemblyOptionsModel(this.assemblySelector.SelectedAssembly );
+      this.selectedAssemblyOptionsModel = new AssemblyOptionsModel(this.assemblySelector.SelectedAssembly);
       this.InitVsIntegrator(this.vsProjectPathSelector.SelectedPath, this.selectedAssemblyOptionsModel);
       this.controllerTypeSelector.SourceAssembly = this.assemblySelector.SelectedAssembly;
       this.resourcesDir.Text = this.selectedAssemblyOptionsModel.NgResourcesPath;
       this.viewsDir.Text = this.selectedAssemblyOptionsModel.NgViewsPath;
       this.controllersDir.Text = this.selectedAssemblyOptionsModel.NgControllersPath;
       this.vsProjectFileName.Text = this.selectedAssemblyOptionsModel.CsProjectName;
-      
+      if (this.assemblySelector.SelectedAssembly == null)
+      {
+        return;
+      }
+      this.vsProjectPathSelector.SelectedPath = Regex.Replace(this.assemblySelector.SelectedAssembly.Location,
+        @"[\\\/]bin.*$",
+        string.Empty);
     }
 
     private void InitVsIntegrator(string path, AssemblyOptionsModel model)
     {
       if (string.IsNullOrEmpty(path) || model == null) return;
 
-      this.vsIntegrator = new VsIntegrator(path, model,this.Log);
+      this.vsIntegrator = new VsIntegrator(path, model, this.Log);
     }
 
-    private AssemblyOptionsModel selectedAssemblyOptionsModel; 
+    private AssemblyOptionsModel selectedAssemblyOptionsModel;
 
     private void exitToolStripMenuItem_Click(object sender, EventArgs e)
     {
@@ -156,7 +165,7 @@ namespace Nord.Nganga.WinApp
 
       this.vsIntegrator.Reset();
 
-      this.vsIntegrator.SaveResult(this.coordinationResults[targetType] );
+      this.vsIntegrator.SaveResult(this.coordinationResults[targetType]);
       if (this.autoVSIntegration.Checked && this.vsIntegrator.IntegrateFiles())
       {
         this.Log("{0}", Resources._The_generated_files_have_been_saved_to_the_output_paths);
@@ -166,7 +175,7 @@ namespace Nord.Nganga.WinApp
     private void allToolStripMenuItem_Click(object sender, EventArgs e)
     {
       this.vsIntegrator.Reset();
-      
+
       foreach (var target in this.controllerTypeSelector.TypeList)
       {
         this.GenerateTarget(target);
@@ -249,7 +258,8 @@ namespace Nord.Nganga.WinApp
       this.rtbLog.Select(0, 0);
       try
       {
-        this.rtbLog.SelectedText = string.Format("{0}{1} - {2}", Environment.NewLine, DateTime.Now.ToString("hh:mm:ss.fff"), string.Format(formatProvider, parms));
+        this.rtbLog.SelectedText = string.Format("{0}{1} - {2}", Environment.NewLine,
+          DateTime.Now.ToString("hh:mm:ss.fff"), string.Format(formatProvider, parms));
       }
       catch (Exception ex)
       {

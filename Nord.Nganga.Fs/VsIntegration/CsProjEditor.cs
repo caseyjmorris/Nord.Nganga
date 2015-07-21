@@ -48,9 +48,18 @@ namespace Nord.Nganga.Fs.VsIntegration
         proj.Add(targetItemGroup);
       }
 
-      var integratedNames =
-        new HashSet<string>(
-          itemGroups.Elements(ns + "Content").Select(el => el.Attribute("Include").Value.ToUpperInvariant()));
+      var integratedNames = new HashSet<string>();
+
+      // Clean up dupes...
+      foreach (var el in itemGroups.Elements(ns + "Content"))
+      {
+        var path = el.Attribute("Include").Value.ToUpperInvariant();
+
+        if (!integratedNames.Add(path))
+        {
+          el.Remove();
+        }
+      }
 
       foreach (var relativePath in relativePaths)
       {

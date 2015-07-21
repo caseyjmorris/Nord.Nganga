@@ -21,7 +21,7 @@ getEndpointTemplate(model, endpoint) ::= <<
         {
           var rsc = $resource(<getResourceUri(model, endpoint)>, {}, {'get' : { <isArray(endpoint)> <useCache(endpoint)> }});
 
-          return rcs.get({ <endpoint.ArgumentNames:{arg| <arg>: <arg>}; separator=","> }, {}, successFn, failFn);
+          return rsc.get({ <endpoint.ArgumentNames:{arg| <arg>: <arg>}; separator=","> }, {}, successFn, failFn);
         }
 >>
 
