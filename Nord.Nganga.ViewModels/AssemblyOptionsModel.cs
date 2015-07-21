@@ -5,6 +5,7 @@ using System.Reflection;
 using Nord.Nganga.Annotations;
 using Nord.Nganga.Annotations.Attributes;
 using Nord.Nganga.Annotations.Attributes.Html;
+using Nord.Nganga.Core.Reflection;
 
 namespace Nord.Nganga.Models
 {
@@ -44,9 +45,8 @@ namespace Nord.Nganga.Models
 
     private void InitFromAssy(Assembly assy)
     {
-
-      var tcpaList = assy.GetCustomAttributes(typeof(TextCasePreferencesAttribute), true);
-
+      var tcpaList = DependentTypeResolver.GetCustomAssemblyAttributes<TextCasePreferencesAttribute>(assy);
+      
       if (tcpaList.Any())
       {
         foreach (TextCasePreferencesAttribute tcpa in tcpaList)
