@@ -1,8 +1,7 @@
 using System;
 using Microsoft.Practices.Unity;
-using Microsoft.Practices.Unity.Configuration;
 
-namespace Nord.Nganga.TestConsumer.App_Start
+namespace Nord.Nganga.TestConsumer
 {
   /// <summary>
   /// Specifies the Unity configuration for the main container.
@@ -10,7 +9,7 @@ namespace Nord.Nganga.TestConsumer.App_Start
   public class UnityConfig
   {
     #region Unity Container
-    private static Lazy<IUnityContainer> container = new Lazy<IUnityContainer>(() =>
+    private static readonly Lazy<IUnityContainer> UnityContaineLazyr= new Lazy<IUnityContainer>(() =>
     {
       var container = new UnityContainer();
       RegisterTypes(container);
@@ -22,7 +21,7 @@ namespace Nord.Nganga.TestConsumer.App_Start
     /// </summary>
     public static IUnityContainer GetConfiguredContainer()
     {
-      return container.Value;
+      return UnityContaineLazyr.Value;
     }
     #endregion
 
