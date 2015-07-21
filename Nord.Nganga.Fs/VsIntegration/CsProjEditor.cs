@@ -28,9 +28,12 @@ namespace Nord.Nganga.Fs.VsIntegration
       File.WriteAllText(csProjPath, xml.Declaration + "\r\n" + xml.ToString());
     }
 
-    private XDocument GetModifiedXml(Stream originalXml, IEnumerable<string> relativePaths, Action<string> sourceNameVisitor)
+    private XDocument GetModifiedXml(Stream originalXml, IEnumerable<string> relativePaths,
+      Action<string> sourceNameVisitor)
     {
       var xdoc = XDocument.Load(originalXml);
+
+      this.ReduceContentTags(xdoc);
 
       var proj = xdoc.Root;
 
@@ -54,6 +57,38 @@ namespace Nord.Nganga.Fs.VsIntegration
       }
 
       return xdoc;
+    }
+
+    private void ReduceContentTags(XDocument xdoc)
+    {
+      var proj = xdoc.Root;
+
+      var ns = proj.GetDefaultNamespace();
+
+      var itemGroups = proj.Elements(ns + "ItemGroup");
+
+      var targetItemGroups = itemGroups.Where(i => i.Elements().Any(e => e.Name == ns + "Content")).ToList();
+
+      var annoitedContentTag = targetItemGroups.Elements(ns + "Content").First();
+
+      foreach (var tig in targetItemGroups)
+      {
+        var contentTags = tig.Elements(ns + "Content");
+
+        foreach (var c in contentTags)
+        {
+          if (c == annoitedContentTag)
+          {
+            continue;
+          }
+
+          var children = c.Elements();
+
+          annoitedContentTag.Add(children);
+
+          c.Remove();
+        }
+      }
     }
   }
 }
