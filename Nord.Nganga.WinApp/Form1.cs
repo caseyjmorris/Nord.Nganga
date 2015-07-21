@@ -54,9 +54,9 @@ namespace Nord.Nganga.WinApp
       this.autoVSIntegration.Checked = Settings1.Default.AutoVSIntegration;
       this.useCustomOutputMappingToolStripMenuItem.Checked = Settings1.Default.UseCustomOutputMapping;
 
-
-      this.assemblySelector.DialogFilter = "Assemblies|*.dll";
       this.assemblySelector.SelectionChanged += this.assemblySelector_SelectionChanged;
+      this.assemblySelector.LogHandler = this.Log;
+      
       this.assemblySelector.History = Settings1.Default.AssemblyFileNameHistory;
       this.assemblySelector.HistoryChanged += this.assemblySelector_HistoryChanged;
       this.assemblySelector.SelectedFile = Settings1.Default.SelectedAssemblyFileName;
@@ -150,40 +150,18 @@ namespace Nord.Nganga.WinApp
 
     private void assemblySelector_SelectionChanged(object sender, EventArgs e)
     {
-      if (string.IsNullOrEmpty(this.assemblySelector.SelectedFile)) return;
+      if (string.IsNullOrEmpty(this.assemblySelector.SelectedFile) || this.assemblySelector.SelectedAssembly == null ) return;
 
       Settings1.Default.SelectedAssemblyFileName = this.assemblySelector.SelectedFile;
 
-      Action<ResolveEventArgs, DirectoryInfo, FileInfo, Assembly> resolveEventVisitor = (resolveEventArgs, dirInfo, fileInfo, resolvedAssy) =>
-      {
-        this.Log(
-            "RESOLVE - for:{2}" +
-            "{0}{1}On behalf of:{3}" +
-            "{0}{1}Base dir:{4}" +
-            "{0}{1}Module:{5}" +
-            "{0}{1}Result Assy:{6}",
-            '\n',
-            '\t',
-            resolveEventArgs.Name,
-            resolveEventArgs.RequestingAssembly.FullName,
-            dirInfo.FullName,
-            fileInfo.FullName,
-            resolvedAssy == null ? "- RESOLVE FAILED!" : resolvedAssy.Location);
-      };
+      this.selectedAssemblyOptionsModel = new AssemblyOptionsModel(this.assemblySelector.SelectedAssembly );
+      this.controllerTypeSelector.SourceAssembly = this.assemblySelector.SelectedAssembly;
 
-      var assyTypes = DependentTypeResolver.GetTypesFrom(
-        this.assemblySelector.SelectedFile,
-        Settings1.Default.LogFusionResolutionEvents ? resolveEventVisitor : null);
-
-      var assy = assyTypes[0].Assembly;
-      this.selectedAssemblyOptionsModel = new AssemblyOptionsModel(assy);
       this.resourceDirSelector.SelectedPath = this.selectedAssemblyOptionsModel.NgResourcesPath;
       this.viewDirSelector.SelectedPath = this.selectedAssemblyOptionsModel.NgViewsPath;
       this.controllersDirSelector.SelectedPath = this.selectedAssemblyOptionsModel.NgControllersPath;
       this.vsProjectFileSelector.SelectedFile = this.selectedAssemblyOptionsModel.CsProjectPath;
-      this.controllerTypeSelector.SourceAssembly = assy;
-      //var types = assy.FindWebApiControllers().ToList();
-      //controllerTypeSelector.TypeList = types;
+      
     }
 
     private AssemblyOptionsModel selectedAssemblyOptionsModel; 

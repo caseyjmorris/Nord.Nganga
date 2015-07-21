@@ -34,13 +34,21 @@
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblySelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AssemblySelector.Designer.cs">
+      <DependentUpon>AssemblySelector.cs</DependentUpon>
+    </Compile>
     <Compile Include="FileSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
