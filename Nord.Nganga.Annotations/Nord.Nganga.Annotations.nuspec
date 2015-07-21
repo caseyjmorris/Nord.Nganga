@@ -8,7 +8,7 @@
     <owners>National Organization for Rare Diseases</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Annotations needed for an Nganga project.</description>
-    <releaseNotes>56126df Adding nuget cfg
+    <releaseNotes>0bce41d Adding nuget cfg
 4ebe093 Map service name
 3f7d032 bug fixed
 c14044a Merge branch 'master' of https://github.com/NationalOrganizationForRareDisorders/Nord.Nganga.git
