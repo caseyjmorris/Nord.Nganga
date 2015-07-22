@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using Nord.Nganga.Fs.Coordination;
 using Nord.Nganga.Fs.VsIntegration;
@@ -14,24 +17,21 @@ namespace Nord.Nganga.WinApp
       this.InitializeComponent();
     }
 
+    private static IEnumerable<object>  ToDataSource(CoordinationResult cr)
+    {
+      var propertyInfoCollection = typeof(CoordinationResult)
+      .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+      .Where(p => p.CanRead && p.PropertyType == typeof(string));
+      return propertyInfoCollection.Select(p => new KeyValuePair<string, string>(p.Name, (string)p.GetValue(cr))).Cast<object>().ToList();
+    }
     private void Form1_Load(object sender, EventArgs e)
     {
-
       this.Text = string.Format(
           "{0} - [{1}] - Coordination Result Browser",
           typeof(CoordinationResultBrowser).Assembly.GetName().Name,
           typeof(CoordinationResultBrowser).Assembly.GetName().Version);
 
-      this.viewRTB.Text = this.coordinationResult.ViewBody;
-      this.contorllerRTB.Text = this.coordinationResult.ControllerBody;
-      this.resourceRTB.Text = this.coordinationResult.ResourceBody;
-      this.apiControllerAssyLocation.Text = this.coordinationResult.SourceAssemblyLocation;
-      this.apiControllerTypeName.Text = this.coordinationResult.ControllerTypeName;
-      this.resourcesDir.Text = this.coordinationResult.NgResourcesPath;
-      this.viewsDir.Text = this.coordinationResult.NgViewsPath;
-      this.controllersDir.Text = this.coordinationResult.NgControllersPath;
-      this.vsProjectFileName.Text = this.coordinationResult.VsProjectName;
-      this.vsProjectPath.Text = this.coordinationResult.VsProjectPath;
+      this.dataGridView1.DataSource = ToDataSource(this.coordinationResult).ToList();
 
       foreach (var ex in this.coordinationResult.Exceptions)
       {
@@ -79,6 +79,30 @@ namespace Nord.Nganga.WinApp
     private static void Log(string formatProvider, params object[] parms)
     {
       NgangaLog.Instance.Log(formatProvider, parms);
+    }
+
+    private void dataGridView1_DoubleClick(object sender, EventArgs e)
+    {
+      var q = (from DataGridViewRow r 
+      in this.dataGridView1.SelectedRows 
+      select (KeyValuePair<string,string>)r.DataBoundItem).ToList();
+      if (!q.Any()) return;
+      var kvp = q.First();
+      var value = kvp.Value ;
+
+      Action<string> updateAcceptor = s =>
+      {
+        var propertyInfoCollection = typeof (CoordinationResult)
+          .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+          .Where(p => p.CanRead && p.PropertyType == typeof (string) && p.Name == kvp.Key).ToList();
+        if (!propertyInfoCollection.Any()) return;
+        var propertyInfo = propertyInfoCollection.First();
+        propertyInfo.SetValue(this.coordinationResult, s);
+        this.dataGridView1.DataSource = ToDataSource(this.coordinationResult);
+      };
+
+      (new SourceBrowser(kvp.Key, () => value, updateAcceptor)).Show();
+
     }
   }
 }

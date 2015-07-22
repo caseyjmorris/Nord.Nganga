@@ -36,6 +36,5 @@ namespace Nord.Nganga.Fs.Coordination
       get { return Path.Combine(this.VsProjectPath, this.VsProjectName); }
     }
 
-
   }
 }
