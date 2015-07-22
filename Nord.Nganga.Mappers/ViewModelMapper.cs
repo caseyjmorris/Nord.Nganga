@@ -5,7 +5,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using Humanizer;
+using Newtonsoft.Json;
 using Nord.Nganga.Annotations;
+using Nord.Nganga.Annotations.Attributes.Angular;
 using Nord.Nganga.Annotations.Attributes.Html;
 using Nord.Nganga.Annotations.Attributes.ViewModels;
 using Nord.Nganga.Core.Reflection;
@@ -81,7 +83,7 @@ namespace Nord.Nganga.Mappers
     public ViewModelMapper(ViewCoordinationMapper viewCoordinationMapper = null)
     {
       this.viewCoordinationMapper = viewCoordinationMapper;
-      this.AssemblyOptions = new AssemblyOptionsModel(); 
+      this.AssemblyOptions = new AssemblyOptionsModel();
     }
 
     #endregion
@@ -120,7 +122,8 @@ namespace Nord.Nganga.Mappers
         DisplayName =
           info.HasAttribute<DisplayAttribute>()
             ? info.GetAttribute<DisplayAttribute>().Name
-            : info.Name.Humanize(CasingEnumMap.Instance[this.AssemblyOptions.GetOption(CasingOptionContext.Field)]) + (info.PropertyType.GetNonNullableType() == typeof(bool) ? "?" : String.Empty),
+            : info.Name.Humanize(CasingEnumMap.Instance[this.AssemblyOptions.GetOption(CasingOptionContext.Field)]) +
+              (info.PropertyType.GetNonNullableType() == typeof(bool) ? "?" : String.Empty),
         FieldName = info.Name.Camelize(),
         IsHidden = info.HasAttribute<DoNotShowAttribute>(),
         IsRequired = info.HasAttribute<RequiredAttribute>(),
@@ -144,7 +147,8 @@ namespace Nord.Nganga.Mappers
       return fieldModel;
     }
 
-    private IEnumerable<ViewModelViewModel.FieldViewModel> GetFieldViewModelCollection(IEnumerable<PropertyInfo> t, Boolean isCollection)
+    private IEnumerable<ViewModelViewModel.FieldViewModel> GetFieldViewModelCollection(IEnumerable<PropertyInfo> t,
+      Boolean isCollection)
     {
       var pfi = t.Select(p => this.GetFieldViewModel(p, isCollection));
       return pfi;
@@ -164,7 +168,8 @@ namespace Nord.Nganga.Mappers
         Section =
           info.GetAttributePropertyValueOrDefault<UiSectionAttribute, string>(s => s.SectionName) ?? string.Empty,
         DisplayName =
-          info.GetAttributePropertyValueOrDefault<DisplayAttribute, string>(a => a.Name) ?? info.Name.Humanize(CasingEnumMap.Instance[this.AssemblyOptions.GetOption(CasingOptionContext.Field)]),
+          info.GetAttributePropertyValueOrDefault<DisplayAttribute, string>(a => a.Name) ??
+          info.Name.Humanize(CasingEnumMap.Instance[this.AssemblyOptions.GetOption(CasingOptionContext.Field)]),
         IsLedger = info.HasAttribute<LedgerAttribute>(),
         LedgerSumProperty =
           info.GetAttributePropertyValueOrDefault<LedgerAttribute, string>(a => a.SumPropertyName),
@@ -183,7 +188,18 @@ namespace Nord.Nganga.Mappers
             depthMultiplier);
       }
 
+      wrapper.TableFieldsExpression = this.GetTableVisibleFieldsExpression(wrapper);
+
       return wrapper;
+    }
+
+    private string GetTableVisibleFieldsExpression(ViewModelViewModel.SubordinateViewModelWrapper wrapper)
+    {
+      var fields = wrapper.Model.Scalars.Where(s => !s.IsHidden);
+
+      var fieldsDesc = fields.Select(f => new {name = f.FieldName, label = f.DisplayName});
+
+      return JsonConvert.SerializeObject(fieldsDesc, Formatting.None);
     }
 
     private NgangaControlType DetermineControlType(ViewModelViewModel.MemberDiscriminator discriminator,
@@ -303,7 +319,7 @@ namespace Nord.Nganga.Mappers
         Name = type.Name.Replace("ViewModel", string.Empty).Camelize(),
         Scalars = this.GetFieldViewModelCollection(
           decoratedProperties.Where(p => p.discriminator == ViewModelViewModel.MemberDiscriminator.Scalar)
-            .Select(p => p.pi), false ),
+            .Select(p => p.pi), false),
         IsViewOnly = type.HasAttribute<NotUserEditableAttribute>(),
         ComplexCollections =
           decoratedProperties.Where(p => p.discriminator == ViewModelViewModel.MemberDiscriminator.ComplexCollection)
@@ -311,7 +327,7 @@ namespace Nord.Nganga.Mappers
             .Select(this.GetSubordinateViewModelWrapper),
         PrimitiveCollections = this.GetFieldViewModelCollection(
           decoratedProperties.Where(p => p.discriminator == ViewModelViewModel.MemberDiscriminator.PrimitiveCollection)
-            .Select(p => p.pi), true ),
+            .Select(p => p.pi), true),
         Members = decoratedProperties.Select(dp => dp.memberWrapper).ToList()
       };
 
