@@ -22,8 +22,12 @@ namespace Nord.Nganga.WinApp
       var propertyInfoCollection = typeof(CoordinationResult)
       .GetProperties(BindingFlags.Public | BindingFlags.Instance)
       .Where(p => p.CanRead && p.PropertyType == typeof(string));
-      return propertyInfoCollection.Select(p => new KeyValuePair<string, string>(p.Name, (string)p.GetValue(cr))).Cast<object>().ToList();
+      return propertyInfoCollection.Select(p => new KeyValuePair<string, string>(p.Name, (string)p.GetValue(cr)))
+        .OrderBy(k=>k.Key)
+        .Cast<object>()
+        .ToList();
     }
+
     private void Form1_Load(object sender, EventArgs e)
     {
       this.Text = string.Format(
