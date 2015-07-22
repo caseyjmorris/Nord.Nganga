@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Humanizer;
+using Nord.Nganga.Annotations;
 using Nord.Nganga.Models;
 using Nord.Nganga.Models.Configuration;
 using Nord.Nganga.Models.ViewModels;
@@ -16,7 +17,9 @@ namespace Nord.Nganga.Mappers.Views
 
     private readonly EndpointMapper endpointMapper;
 
-    public ViewCoordinationMapper(ViewModelMapper viewModelMapper, EndpointFilter endpointFilter,
+    public ViewCoordinationMapper(
+      ViewModelMapper viewModelMapper, 
+      EndpointFilter endpointFilter,
       EndpointMapper endpointMapper)
     {
       this.viewModelMapper = viewModelMapper;
@@ -51,10 +54,10 @@ namespace Nord.Nganga.Mappers.Views
       {
         NgControllerName = controller.Name.Replace("Controller", "Ctrl").Camelize(),
         ViewCoordinatedInfo = coordinatedInfo,
-        Header = controller.Name.Replace("Controller", string.Empty).Humanize(LetterCasing.Sentence), //TODO:  casing
+        Header = controller.Name.Replace("Controller", string.Empty).Humanize(CasingEnumMap.Instance[this.viewModelMapper.AssemblyOptions.GetOption(CasingOptionContext.Header)]), //TODO:  casing
       };
     }
-
+     
     public ViewCoordinatedInformationViewModel GetViewCoordinatedInformationSingle(Type vmType, int depthMultiplier = 1)
     {
       var vmVm = this.viewModelMapper.GetViewModelViewModel(vmType);
@@ -68,9 +71,9 @@ namespace Nord.Nganga.Mappers.Views
       var coord = new ViewCoordinatedInformationViewModel
       {
         //TODO:  case pref
-        SaveButtonText = "Save changes to " + vmVm.Name.Humanize(LetterCasing.LowerCase),
+        SaveButtonText = ("Save changes to " + vmVm.Name.Humanize(LetterCasing.LowerCase)).Humanize(CasingEnumMap.Instance[this.viewModelMapper.AssemblyOptions.GetOption(CasingOptionContext.Button)]),
         Sections = this.SplitSections(vmVm, depthMultipler),
-        Title = vmVm.Name.Humanize(LetterCasing.Sentence), //TODO:  CASING
+        Title = vmVm.Name.Humanize(CasingEnumMap.Instance[this.viewModelMapper.AssemblyOptions.GetOption(CasingOptionContext.Header)]), 
         NgFormName = vmVm.Name.Camelize() + "Form",
         NgSubmitAction = string.Format("saveChangesTo{0}()", vmVm.Name.Pascalize()),
         ParentObjectName = vmVm.Name.Camelize(),
