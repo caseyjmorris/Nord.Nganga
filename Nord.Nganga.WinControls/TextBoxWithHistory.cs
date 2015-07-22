@@ -16,8 +16,8 @@ namespace Nord.Nganga.WinControls
     {
       set
       {
-        this.history = value;
-        this.comboBox1.DataSource = (from string s in value select s).ToList();
+        this.history = value ?? new StringCollection();
+        this.comboBox1.DataSource = (from string s in this.history select s).ToList();
       }
       get
       {

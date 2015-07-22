@@ -35,11 +35,43 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppDomainAssemblyListBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AppDomainAssemblyListBrowser.Designer.cs">
+      <DependentUpon>AppDomainAssemblyListBrowser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CoordinationResultCollectionBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CoordinationResultCollectionBrowser.Designer.cs">
+      <DependentUpon>CoordinationResultCollectionBrowser.cs</DependentUpon>
+    </Compile>
     <Compile Include="DirectoryExtensions.cs" />
+    <Compile Include="CoordinationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CoordinationForm.Designer.cs">
+      <DependentUpon>CoordinationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CoordinationResultBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CoordinationResultBrowser.Designer.cs">
+      <DependentUpon>CoordinationResultBrowser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NgangaLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NgangaLog.Designer.cs">
+      <DependentUpon>NgangaLog.cs</DependentUpon>
+    </Compile>
     <Compile Include="NgangaMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -59,6 +91,21 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings1.settings</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="AppDomainAssemblyListBrowser.resx">
+      <DependentUpon>AppDomainAssemblyListBrowser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CoordinationForm.resx">
+      <DependentUpon>CoordinationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CoordinationResultBrowser.resx">
+      <DependentUpon>CoordinationResultBrowser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CoordinationResultCollectionBrowser.resx">
+      <DependentUpon>CoordinationResultCollectionBrowser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NgangaLog.resx">
+      <DependentUpon>NgangaLog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="NgangaMain.resx">
       <DependentUpon>NgangaMain.cs</DependentUpon>
     </EmbeddedResource>

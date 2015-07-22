@@ -66,6 +66,7 @@ namespace Nord.Nganga.WinControls
         else
         {
           this.comboBox1.Text = string.Empty;
+          this.SelectedType = null;
         }
       }
     }

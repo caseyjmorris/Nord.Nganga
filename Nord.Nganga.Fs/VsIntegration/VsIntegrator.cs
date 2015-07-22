@@ -2,129 +2,148 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Nord.Nganga.Core;
 using Nord.Nganga.Fs.Coordination;
-using Nord.Nganga.Models;
 
 namespace Nord.Nganga.Fs.VsIntegration
 {
-  public delegate void LogHandler(string formatProvider, params object[] parms);
-
-  public class VsIntegrator
+  public static class VsIntegrator
   {
 
-    private readonly CsProjEditor csProjEditor = new CsProjEditor();
-    private readonly Dictionary<string, string> vsIntegrationDictionary = new Dictionary<string, string>();
-
-    private readonly Dictionary<string, string> saveFileFiltersDictionary = new Dictionary<string, string>
+    public static bool Save(
+      IEnumerable<CoordinationResult> coordinationResults,
+      bool integrate,
+      StringFormatProviderVisitor logHandler)
     {
-      {".html","HTML | *.html"},
-      {".js","JavaScript| *.js"}
-    };
+      var list = coordinationResults.ToList();
 
-    private readonly string vsProjectFileName;
-    private readonly LogHandler logHandler;
-    private readonly AssemblyOptionsModel optionsModel;
-    private readonly string vsProjectPath;
-    public VsIntegrator(string projectPath, AssemblyOptionsModel optionsModel, LogHandler logHandler)
+      var integrationDictionary = new Dictionary<string, string>();
+
+      foreach (var cr in list)
+      {
+        Save(cr, integrationDictionary, logHandler);
+      }
+
+      return !integrate || Integrate(list.First().VsProjectFileName, integrationDictionary, logHandler);
+    }
+
+    public static bool Save(CoordinationResult coordinationResult, bool integrate, StringFormatProviderVisitor logHandler)
+    {
+      if (!AssertArgumentQuality(coordinationResult, logHandler)) return false;
+
+      var integrationDictionary = new Dictionary<string, string>();
+
+      Save(coordinationResult, integrationDictionary, logHandler);
+
+      return !integrate || Integrate(coordinationResult.VsProjectFileName, integrationDictionary, logHandler);
+    }
+
+    private static bool Integrate(
+    string vsProjectFileName,
+    Dictionary<string, string> integrationDictionary,
+    StringFormatProviderVisitor logHandler)
+    {
+      logHandler("VS integration target is {0}", vsProjectFileName);
+
+      try
+      {
+        logHandler("Integration starting.");
+
+        var csProjEditor = new CsProjEditor();
+
+        csProjEditor.AddFileToCsProj(
+          vsProjectFileName, integrationDictionary.Values.ToList(),
+          (p) => logHandler("{0}{1}", '\t', p));
+
+        logHandler("Integration complete.");
+      }
+      catch (Exception ie)
+      {
+        logHandler("VS Integration failed due to {0}", ie.Message);
+        logHandler(string.Format("{0}", ie));
+        return false;
+      }
+      return true;
+    }
+
+    private static bool AssertArgumentQuality(CoordinationResult coordinationResult, StringFormatProviderVisitor logHandler)
     {
       if (logHandler == null)
       {
         throw new ArgumentNullException("logHandler");
       }
 
-      if (optionsModel == null)
+      if (string.IsNullOrEmpty(coordinationResult.VsProjectPath) ||
+      string.IsNullOrEmpty(coordinationResult.VsProjectName) ||
+      !File.Exists(coordinationResult.VsProjectFileName))
       {
-        logHandler("Assembly attribute ProjectStructure cannot be null.");
-        return;
-      }
-
-      if (string.IsNullOrEmpty(optionsModel.CsProjectName))
-      {
-        logHandler("Assembly attribute ProjectStructure.CsProjectName cannot be null.");
-        return;
-      }
-      
-      var vsProjectFile = Path.Combine(projectPath, optionsModel.CsProjectName);
-
-      if (string.IsNullOrEmpty(vsProjectFile) || !File.Exists(vsProjectFile))
-      {
-        logHandler("Cannot find " + vsProjectFile + ".  Are you sure the specified path is correct?");
-        return;
-      }
-
-      this.logHandler = logHandler;
-      this.optionsModel = optionsModel;
-      this.vsProjectPath = projectPath;
-      this.vsProjectFileName = vsProjectFile;
-    }
-
-    public void Reset()
-    {
-      this.vsIntegrationDictionary.Clear();
-    }
-    
-
-    public bool IntegrateFiles()
-    {
-      this.logHandler("VS integration target is {0}", this.vsProjectFileName);
-      
-      this.vsIntegrationDictionary.Values.ToList().ForEach(fileName => this.logHandler("{0}{1}", '\t', fileName));
-
-      try
-      {
-        this.logHandler("Integration starting.");
-
-        this.csProjEditor.AddFileToCsProj(
-          this.vsProjectFileName, this.vsIntegrationDictionary.Values.ToList(),
-          (p) => this.logHandler("{0}{1}", '\t', p));
-
-        this.logHandler("Integration complete.");
-      }
-      catch (Exception ie)
-      {
-        this.logHandler("VS Integration failed due to {0}", ie.Message);
-        this.logHandler(string.Format("{0}", ie));
+        logHandler("Cannot find " + coordinationResult.VsProjectFileName + ".  Are you sure the specified path is correct?");
         return false;
       }
       return true;
     }
 
-    public void SaveResult(CoordinationResult coordinationResult)
+    public static void Save(
+    CoordinationResult coordinationResult,
+    Dictionary<string, string> integrationDictionary,
+    StringFormatProviderVisitor logHandler)
     {
-      this.SaveFile(
-        () => this.optionsModel.NgViewsPath,
-        () => coordinationResult.ViewPath,
-        () => coordinationResult.ViewBody);
+      if (!string.IsNullOrEmpty(coordinationResult.ViewBody))
+      {
+        SaveFile(
+          coordinationResult.VsProjectPath,
+          integrationDictionary,
+          () => coordinationResult.NgViewsPath,
+          () => coordinationResult.ViewPath,
+          () => coordinationResult.ViewBody,
+          logHandler);
+      }
 
-      this.SaveFile(
-        () => this.optionsModel.NgControllersPath,
-        () => coordinationResult.ControllerPath,
-        () => coordinationResult.ControllerBody);
-
-      this.SaveFile(
-      () => this.optionsModel.NgResourcesPath,
-      () => coordinationResult.ResourcePath,
-        () => coordinationResult.ResourceBody);
+      if (!string.IsNullOrEmpty(coordinationResult.ControllerBody))
+      {
+        SaveFile(
+          coordinationResult.VsProjectPath,
+          integrationDictionary,
+          () => coordinationResult.NgControllersPath,
+          () => coordinationResult.ControllerPath,
+          () => coordinationResult.ControllerBody,
+          logHandler);
+      }
+      if (!string.IsNullOrEmpty(coordinationResult.ResourceBody))
+      {
+        SaveFile
+        (coordinationResult.VsProjectPath,
+        integrationDictionary,
+        () => coordinationResult.NgResourcesPath,
+        () => coordinationResult.ResourcePath,
+        () => coordinationResult.ResourceBody,
+        logHandler)
+        ;
+      }
     }
+
+    public static void SaveFile(
+    string vsProjectPath,
+    Dictionary<string, string> integrationDictionary,
+  Func<string> rootProvider,
+  Func<string> nameProvider,
+  Func<string> dataProvider,
+   StringFormatProviderVisitor logHandler
+  )
+    {
+      var relativeName = Path.Combine(rootProvider(), nameProvider());
+      var targetFileName = Path.Combine(vsProjectPath, relativeName);
+      CreatePathTree(targetFileName);
+      File.WriteAllText(targetFileName, dataProvider());
+      logHandler("{0} written to disk.", targetFileName);
+      integrationDictionary[targetFileName] = relativeName;
+    }
+
     private static void CreatePathTree(string path)
     {
       var dir = Path.GetDirectoryName(path);
       if (string.IsNullOrEmpty(dir)) return;
       Directory.CreateDirectory(dir);
     }
-
-    public  void SaveFile(
-      Func<string> rootProvider, 
-      Func<string> nameProvider, 
-      Func<string> dataProvider)
-    {
-      var relativeName = Path.Combine(rootProvider(), nameProvider());
-      var targetFileName = Path.Combine(this.vsProjectPath, relativeName);
-      CreatePathTree(targetFileName);
-      File.WriteAllText(targetFileName, dataProvider());
-      this.logHandler("{0} written to disk.", targetFileName);
-      this.vsIntegrationDictionary[targetFileName] = relativeName;
-    }
-
   }
 }

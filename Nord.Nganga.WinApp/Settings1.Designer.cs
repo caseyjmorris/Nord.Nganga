@@ -183,5 +183,28 @@ namespace Nord.Nganga.WinApp {
                 this["LogFusionResolutionEvents"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection VsProjectPathHistory {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["VsProjectPathHistory"]));
+            }
+            set {
+                this["VsProjectPathHistory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SelectedVsProjectPath {
+            get {
+                return ((string)(this["SelectedVsProjectPath"]));
+            }
+            set {
+                this["SelectedVsProjectPath"] = value;
+            }
+        }
     }
 }
