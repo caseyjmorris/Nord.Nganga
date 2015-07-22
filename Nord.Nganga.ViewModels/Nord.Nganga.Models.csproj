@@ -52,9 +52,6 @@
     <Compile Include="ViewModels\ViewModelViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Nord.Nganga.Annotations\Nord.Nganga.Annotations.csproj">
       <Project>{d77415e5-25a4-4ceb-8e08-a2d7b82eb1a9}</Project>
       <Name>Nord.Nganga.Annotations</Name>
@@ -63,6 +60,9 @@
       <Project>{D57B30BF-6E21-4C47-A06C-2155F6C2C8CA}</Project>
       <Name>Nord.Nganga.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -26,6 +26,12 @@ childView(model) ::= <<
 <nord-row>
   <form name="%model.NgFormName%" id="%model.NgFormName%" ng-submit="%model.NgSubmitAction%" class="user-edit-form form-horizontal">
     %childViewNested(model)%
+
+    <nord-row-simple>
+      <button class="btn btn-primary pull-right" type="submit" ng-disabled="%model.NgFormName%.$pristine || %model.NgFormName%.$invalid">
+        <span class="glyphicon glyphicon-floppy-save"></span> %model.SaveButtonText%
+      </button>
+    </nord-row-simple>
   </form>
 </nord-row>
 >>
@@ -35,8 +41,12 @@ childViewNested(model) ::= <%
 %>
 
 section(model, parentObjectName) ::= <<
- %(sectionHeaderMap.(model.Title))(model)% 
-%model.Rows:{r|%row(r, parentObjectName)%}%
+
+<nord-form-section>
+  %(sectionHeaderMap.(model.Title))(model)% 
+  %model.Rows:{r|%row(r, parentObjectName)%}%
+</nord-form-section>
+
 >>
 
 sectionTitle(model) ::= <<
@@ -57,11 +67,11 @@ sectionHeaderMap ::= [
 
 row(model, parentObjectName) ::= <<
 
-<div class="row"> %! would like to replace with <nord-row-simple> directive !%
+<nord-row-simple> %! would like to replace with <nord-row-simple> directive !%
   %model.Members:{m|
   %member(m, parentObjectName)%
   }%
-</div>
+</nord-row-simple>
 >>
 
 member(model, parentObjectName) ::= <<
@@ -124,10 +134,11 @@ required
 
 multipleComplexEditor(model, parentObjectName) ::= <%
 <nord-multiple-complex-editor 
-parentObject="%parentObjectName%" 
+parent-object="%parentObjectName%" 
 collection-name="%model.Member.FieldName%" 
 child-field-name="%model.Member.CoordinatedInfo.ParentObjectName%"
-panel-top-label="%model.DisplayName%"
+panel-top-label="%model.DisplayName%" 
+field-definitions="%model.TableFieldsExpression%" 
 >
 %\n%
 %childViewNested(model.Member.CoordinatedInfo)%
