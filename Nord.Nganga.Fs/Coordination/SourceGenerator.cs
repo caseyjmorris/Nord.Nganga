@@ -40,9 +40,6 @@ namespace Nord.Nganga.Fs.Coordination
       var resourceCoordMapper = new ResourceCoordinationMapper(endpointMapper);
 
       var model = resourceCoordMapper.GetResourceCoordinationInformationViewModel(controllerType);
-      //model.UseCustomCache = true;
-      //model.CustomCacheFactory = "test";
-      //model.ServiceName = "service";
 
       return this.ProcessModel(stringTemplate, model);
     }

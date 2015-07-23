@@ -7,12 +7,6 @@ namespace Nord.Nganga.Fs.Coordination
   [Serializable]
   public class CoordinationResult
   {
-    public CoordinationResult()
-    {
-      this.Exceptions = new List<Exception>();
-    }
-    public List<Exception> Exceptions { get; private set; }
-
     public string SourceAssemblyLocation { get;set; }
     public string ControllerTypeName { get; set; }
 
@@ -33,9 +27,17 @@ namespace Nord.Nganga.Fs.Coordination
 
     public string VsProjectFileName
     {
-      get { return Path.Combine(this.VsProjectPath, this.VsProjectName); }
+      get
+      {
+        var path = this.VsProjectPath ?? string.Empty;
+        var name = this.VsProjectName ?? string.Empty;
+        if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(path))
+        {
+          return Path.Combine(path, name);
+        }
+        return name;
+      }
     }
-
 
   }
 }

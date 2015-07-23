@@ -33,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -91,6 +92,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings1.settings</DependentUpon>
     </Compile>
+    <Compile Include="SourceBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SourceBrowser.Designer.cs">
+      <DependentUpon>SourceBrowser.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="AppDomainAssemblyListBrowser.resx">
       <DependentUpon>AppDomainAssemblyListBrowser.cs</DependentUpon>
     </EmbeddedResource>
@@ -121,6 +128,9 @@
     </Compile>
     <EmbeddedResource Include="ResourceOnlyParmsDialog.resx">
       <DependentUpon>ResourceOnlyParmsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SourceBrowser.resx">
+      <DependentUpon>SourceBrowser.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

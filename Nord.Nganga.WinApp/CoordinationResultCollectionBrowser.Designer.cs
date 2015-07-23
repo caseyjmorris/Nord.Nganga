@@ -40,6 +40,7 @@
       // 
       // dataGridView1
       // 
+      this.dataGridView1.AllowUserToAddRows = false;
       this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
       this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.dataGridView1.Location = new System.Drawing.Point(0, 24);
@@ -70,7 +71,7 @@
       // allToolStripMenuItem
       // 
       this.allToolStripMenuItem.Name = "allToolStripMenuItem";
-      this.allToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.allToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
       this.allToolStripMenuItem.Text = "Save";
       this.allToolStripMenuItem.Click += new System.EventHandler(this.allToolStripMenuItem_Click);
       // 
@@ -88,7 +89,7 @@
       this.autoIntegrateToolStripMenuItem.CheckOnClick = true;
       this.autoIntegrateToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
       this.autoIntegrateToolStripMenuItem.Name = "autoIntegrateToolStripMenuItem";
-      this.autoIntegrateToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.autoIntegrateToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
       this.autoIntegrateToolStripMenuItem.Text = "Auto Integrate";
       this.autoIntegrateToolStripMenuItem.Click += new System.EventHandler(this.autoIntegrateToolStripMenuItem_Click);
       // 

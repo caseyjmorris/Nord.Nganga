@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
+using Nord.Nganga.Core;
+using Nord.Nganga.Core.Reflection;
 using Nord.Nganga.Fs.Coordination;
 using Nord.Nganga.Models;
 using Nord.Nganga.Models.Configuration;
@@ -12,11 +14,26 @@ namespace Nord.Nganga.WinApp
 {
   public partial class CoordinationForm : Form
   {
-    private Action<CoordinationResult> resultVisitor;
-    public CoordinationForm(Action<CoordinationResult> resultVisitor)
+    private readonly Action<CoordinationResult> resultVisitor;
+    private StringFormatProviderVisitor logHandler;
+    public CoordinationForm(Action<CoordinationResult> resultVisitor, StringFormatProviderVisitor logHandler)
     {
       this.InitializeComponent();
       this.resultVisitor = resultVisitor;
+      this.logHandler = logHandler;
+      DependentTypeResolver.ResolveEventVisitor = (args, dirInfo, fileInfo, assy) => logHandler(
+        "RESOLVE - for:{2}" +
+        "{0}{1}On behalf of:{3}" +
+        "{0}{1}Base dir:{4}" +
+        "{0}{1}Module:{5}" +
+        "{0}{1}Result Assy:{6}",
+        '\n',
+        '\t',
+        args.Name,
+        args.RequestingAssembly.FullName,
+        dirInfo.FullName,
+        fileInfo.FullName,
+        assy == null ? "- RESOLVE FAILED!" : assy.Location);
     }
 
     private AssemblyOptionsModel AssemblyOptionsModel { get; set; }
@@ -124,11 +141,8 @@ namespace Nord.Nganga.WinApp
       }
       catch (Exception ex)
       {
-        var result = new CoordinationResult();
-        result.Exceptions.Add(ex);
-        this.resultVisitor(result);
+        this.HandleException(ex);
         this.DialogResult = DialogResult.Abort;
-        this.Close();
       }
     }
 
@@ -162,13 +176,20 @@ namespace Nord.Nganga.WinApp
       }
       catch (Exception ex)
       {
-        var result = new CoordinationResult();
-        result.Exceptions.Add(ex);
-        this.resultVisitor(result);
+        this.HandleException(ex);
         this.DialogResult = DialogResult.Abort;
       }
     }
 
+    private void HandleException(Exception ex)
+    {
+      var iex = ex;
+      while (iex != null)
+      {
+        this.logHandler("Error: {0}", iex.Message);
+        iex = ex.InnerException;
+      }
+    }
     
     private void button2_Click(object sender, EventArgs e)
     {

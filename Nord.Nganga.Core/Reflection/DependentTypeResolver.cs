@@ -13,6 +13,8 @@ namespace Nord.Nganga.Core.Reflection
   /// </summary>
   public static class DependentTypeResolver
   {
+    public static Action<ResolveEventArgs, DirectoryInfo, FileInfo, Assembly> ResolveEventVisitor { get;set; }
+
     public static Type[] GetTypesFrom(
       string fileName,
       Action<ResolveEventArgs, DirectoryInfo, FileInfo, Assembly> resolveEventVistior = null)
@@ -135,6 +137,10 @@ namespace Nord.Nganga.Core.Reflection
         if (resolveEventVistior != null)
         {
           resolveEventVistior(args, basePathDirectoryInfo, module, assy);
+        }
+        if (ResolveEventVisitor != null)
+        {
+          ResolveEventVisitor(args, basePathDirectoryInfo, module, assy);
         }
         return assy;
       };
