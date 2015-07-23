@@ -214,6 +214,10 @@ step="%model.Member.Step%"
 %if(model.Member.IsRequired)%
 required
 %endif%
+
+%if(model.Member.IsViewOnly)%
+view-only
+%endif%
 >
 </nord-number-control>
 %>
