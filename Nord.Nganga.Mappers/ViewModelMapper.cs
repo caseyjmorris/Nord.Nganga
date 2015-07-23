@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Humanizer;
 using Newtonsoft.Json;
 using Nord.Nganga.Annotations;
@@ -199,7 +201,18 @@ namespace Nord.Nganga.Mappers
 
       var fieldsDesc = fields.Select(f => new {name = f.FieldName, label = f.DisplayName});
 
-      return JsonConvert.SerializeObject(fieldsDesc, Formatting.None);
+      var sb = new StringBuilder();
+      using (var sw = new StringWriter(sb))
+      using (var writer = new JsonTextWriter(sw))
+      {
+        writer.QuoteChar = '\'';
+        writer.Formatting = Formatting.None;
+
+        var ser = new JsonSerializer();
+        ser.Serialize(writer, fieldsDesc);
+      }
+
+      return sb.ToString();
     }
 
     private NgangaControlType DetermineControlType(ViewModelViewModel.MemberDiscriminator discriminator,
