@@ -88,6 +88,7 @@ controlTypeTemplateMap ::= [
     "MultipleSimpleEditorForPrimitive" : "multipleSimpleEditorForPrimitive",
     "NumberControl" : "numberControl",
     "TextControl": "textControl",
+    "CommonSelectExpansible": "commonSelectExpansible",
     default : "THROWANEXCEPTION"	
 ]
 
@@ -105,6 +106,22 @@ required
 
 commonSelect(model, parentObjectName) ::= <%
 <nord-common-select 
+%if(!model.Member.SelectCommon.RestrictUntilResolved)%wait-resolve="false" %endif%
+%! Need to fill in startcap, endcap (but no attrs exist ATM) !%
+%ngModel(model, parentObjectName)% 
+twelfths="%model.Width%" 
+field-label-text="%model.Member.DisplayName%" 
+common-select-source="%model.Member.SelectCommon.ObjectName%.%model.Member.SelectCommon.CommonInformationName%%if(model.Member.SelectCommon.Index)%model.Member.SelectCommon.Index%endif%"
+
+%if(model.Member.IsRequired)%
+required
+%endif%
+>
+</nord-common-select>
+%>
+
+commonSelectExpansible(model, parentObjectName) ::= <%
+<nord-common-select-expansible 
 %if(!model.Member.SelectCommon.RestrictUntilResolved)%wait-resolve="false" %endif%
 %! Need to fill in startcap, endcap (but no attrs exist ATM) !%
 %ngModel(model, parentObjectName)% 
