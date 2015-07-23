@@ -8,11 +8,11 @@
     <owners>National Organization for Rare Disorders</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Datatypes used by Nganga models</description>
-    <releaseNotes>4fa736b Data types package
+    <releaseNotes>ef7e419 Published latest version to nuget package
+4fa736b Data types package
 e5802b9 Merge branch 'master' of https://github.com/NationalOrganizationForRareDisorders/Nord.Nganga
 d5b0541 Fixes to table
 97e26e4 DataTypes project
-5c68cff ensured type resolution logging works again.  removed exceptions from coordination reuslt.  no longer return (empty) coordination result for failed controller types.
 </releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>nganga</tags>
