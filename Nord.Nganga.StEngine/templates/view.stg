@@ -24,11 +24,12 @@ childView(model) ::= <<
 </nord-row>
 
 <nord-row>
-  <form name="%model.NgFormName%" id="%model.NgFormName%" ng-submit="%model.NgSubmitAction%" class="user-edit-form form-horizontal">
+  <form name="%model.NgFormName%" id="%model.NgFormName%" ng-submit="%model.NgSubmitAction%" class="user-edit-form form-horizontal" novalidate>
     %childViewNested(model)%
 
     <nord-row-simple>
-      <button class="btn btn-primary pull-right" type="submit" ng-disabled="%model.NgFormName%.$pristine || %model.NgFormName%.$invalid">
+      %! issues with checking for invalid... model.NgFormNvame.$invalid !%
+      <button class="btn btn-primary pull-right" type="submit" ng-disabled="%model.NgFormName%.$pristine">
         <span class="glyphicon glyphicon-floppy-save"></span> %model.SaveButtonText%
       </button>
     </nord-row-simple>
@@ -87,6 +88,7 @@ controlTypeTemplateMap ::= [
     "MultipleSimpleEditorForPrimitive" : "multipleSimpleEditorForPrimitive",
     "NumberControl" : "numberControl",
     "TextControl": "textControl",
+    "CommonSelectExpansible": "commonSelectExpansible",
     default : "THROWANEXCEPTION"	
 ]
 
@@ -104,6 +106,22 @@ required
 
 commonSelect(model, parentObjectName) ::= <%
 <nord-common-select 
+%if(!model.Member.SelectCommon.RestrictUntilResolved)%wait-resolve="false" %endif%
+%! Need to fill in startcap, endcap (but no attrs exist ATM) !%
+%ngModel(model, parentObjectName)% 
+twelfths="%model.Width%" 
+field-label-text="%model.Member.DisplayName%" 
+common-select-source="%model.Member.SelectCommon.ObjectName%.%model.Member.SelectCommon.CommonInformationName%%if(model.Member.SelectCommon.Index)%model.Member.SelectCommon.Index%endif%"
+
+%if(model.Member.IsRequired)%
+required
+%endif%
+>
+</nord-common-select>
+%>
+
+commonSelectExpansible(model, parentObjectName) ::= <%
+<nord-common-select-expansible 
 %if(!model.Member.SelectCommon.RestrictUntilResolved)%wait-resolve="false" %endif%
 %! Need to fill in startcap, endcap (but no attrs exist ATM) !%
 %ngModel(model, parentObjectName)% 
@@ -136,9 +154,9 @@ multipleComplexEditor(model, parentObjectName) ::= <%
 <nord-multiple-complex-editor 
 parent-object="%parentObjectName%" 
 collection-name="%model.Member.FieldName%" 
-child-field-name="%model.Member.CoordinatedInfo.ParentObjectName%"
-panel-top-label="%model.DisplayName%" 
-field-definitions="%model.TableFieldsExpression%" 
+child-field-name="%model.Member.CoordinatedInfo.ParentObjectName%" 
+panel-top-label="%model.Member.DisplayName%" 
+field-definitions="%model.Member.TableFieldsExpression%" 
 >
 %\n%
 %childViewNested(model.Member.CoordinatedInfo)%
@@ -150,6 +168,7 @@ multipleSimpleEditorForComplex(model, parentObjectName) ::= <%
 <nord-multiple-simple-editor 
 parent-object="%parentObjectName%" 
 collection-name="%model.Member.FieldName%" 
+field-label-text="%model.Member.DisplayName%" 
 child-field-name="%model.Member.CoordinatedInfo.ParentObjectName%"
 >
 %\n%
@@ -162,6 +181,7 @@ multipleSimpleEditorForPrimitive(model, parentObjectName) ::= <%
 <nord-multiple-simple-editor 
 parent-object="%parentObjectName%" 
 child-field-name="%model.Member.FieldName%" 
+field-label-text="%model.Member.DisplayName%" 
 collection-name="%model.Member.FieldName%">
     %\n% %if(model.Member.SelectCommon)% %commonSelect(model)% %else% %(clrTypeMap.(model.Member.DataType.Name))(model)% %endif% %\n%
 </nord-multiple-simple-editor>
@@ -193,6 +213,10 @@ step="%model.Member.Step%"
 
 %if(model.Member.IsRequired)%
 required
+%endif%
+
+%if(model.Member.IsViewOnly)%
+view-only
 %endif%
 >
 </nord-number-control>

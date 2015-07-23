@@ -11,6 +11,7 @@
     BasicScalar,
     BoolControl,
     CommonSelect,
+    CommonSelectExpansible,
     DateControl,
     MultipleComplexEditor,
     MultipleSimpleEditorForComplex,

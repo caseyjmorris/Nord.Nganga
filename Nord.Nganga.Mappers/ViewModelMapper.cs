@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Humanizer;
 using Newtonsoft.Json;
 using Nord.Nganga.Annotations;
@@ -11,6 +13,7 @@ using Nord.Nganga.Annotations.Attributes.Angular;
 using Nord.Nganga.Annotations.Attributes.Html;
 using Nord.Nganga.Annotations.Attributes.ViewModels;
 using Nord.Nganga.Core.Reflection;
+using Nord.Nganga.DataTypes;
 using Nord.Nganga.Mappers.Views;
 using Nord.Nganga.Models;
 using Nord.Nganga.Models.ViewModels;
@@ -26,35 +29,36 @@ namespace Nord.Nganga.Mappers
     private static readonly ICollection<Type> PrimitiveTypes =
       new HashSet<Type>(new[]
       {
-        typeof(bool), typeof(bool?),
-        typeof(long), typeof(long?),
-        typeof(int), typeof(int?),
-        typeof(decimal), typeof(decimal?),
-        typeof(float), typeof(float?),
-        typeof(double), typeof(double?),
-        typeof(string),
-        typeof(DateTime), typeof(DateTime?),
+        typeof (bool), typeof (bool?),
+        typeof (long), typeof (long?),
+        typeof (int), typeof (int?),
+        typeof (decimal), typeof (decimal?),
+        typeof (float), typeof (float?),
+        typeof (double), typeof (double?),
+        typeof (string),
+        typeof (DateTime), typeof (DateTime?),
+        typeof (UserExpansibleSelectChoice),
       });
 
     private static readonly ICollection<Type> Numerics = new HashSet<Type>(new[]
     {
-      typeof(long), typeof(long?),
-      typeof(int), typeof(int?),
-      typeof(decimal), typeof(decimal?),
-      typeof(float), typeof(float?),
-      typeof(double), typeof(double?),
+      typeof (long), typeof (long?),
+      typeof (int), typeof (int?),
+      typeof (decimal), typeof (decimal?),
+      typeof (float), typeof (float?),
+      typeof (double), typeof (double?),
     });
 
     #region type detectors
 
     private static bool IsScalar(PropertyInfo info)
     {
-      return !typeof(IEnumerable).IsAssignableFrom(info.PropertyType) || info.PropertyType == typeof(string);
+      return !typeof (IEnumerable).IsAssignableFrom(info.PropertyType) || info.PropertyType == typeof (string);
     }
 
     private static bool IsCollection(PropertyInfo info)
     {
-      return (typeof(IEnumerable).IsAssignableFrom(info.PropertyType) && info.PropertyType != typeof(string));
+      return (typeof (IEnumerable).IsAssignableFrom(info.PropertyType) && info.PropertyType != typeof (string));
     }
 
     private static bool IsComplexCollection(PropertyInfo info)
@@ -94,7 +98,7 @@ namespace Nord.Nganga.Mappers
 
       var numeric = Numerics.Contains(propType);
 
-      var isInt = numeric && propType == typeof(int) || propType == typeof(long);
+      var isInt = numeric && propType == typeof (int) || propType == typeof (long);
 
       if (!numeric)
       {
@@ -104,7 +108,7 @@ namespace Nord.Nganga.Mappers
       {
         return 1;
       }
-      if (propType == typeof(decimal))
+      if (propType == typeof (decimal))
       {
         return ".01";
       }
@@ -123,7 +127,7 @@ namespace Nord.Nganga.Mappers
           info.HasAttribute<DisplayAttribute>()
             ? info.GetAttribute<DisplayAttribute>().Name
             : info.Name.Humanize(CasingEnumMap.Instance[this.AssemblyOptions.GetOption(CasingOptionContext.Field)]) +
-              (info.PropertyType.GetNonNullableType() == typeof(bool) ? "?" : String.Empty),
+              (info.PropertyType.GetNonNullableType() == typeof (bool) ? "?" : String.Empty),
         FieldName = info.Name.Camelize(),
         IsHidden = info.HasAttribute<DoNotShowAttribute>(),
         IsRequired = info.HasAttribute<RequiredAttribute>(),
@@ -199,7 +203,18 @@ namespace Nord.Nganga.Mappers
 
       var fieldsDesc = fields.Select(f => new {name = f.FieldName, label = f.DisplayName});
 
-      return JsonConvert.SerializeObject(fieldsDesc, Formatting.None);
+      var sb = new StringBuilder();
+      using (var sw = new StringWriter(sb))
+      using (var writer = new JsonTextWriter(sw))
+      {
+        writer.QuoteChar = '\'';
+        writer.Formatting = Formatting.None;
+
+        var ser = new JsonSerializer();
+        ser.Serialize(writer, fieldsDesc);
+      }
+
+      return sb.ToString();
     }
 
     private NgangaControlType DetermineControlType(ViewModelViewModel.MemberDiscriminator discriminator,
@@ -219,23 +234,28 @@ namespace Nord.Nganga.Mappers
         return NgangaControlType.MultipleSimpleEditorForComplex;
       }
 
-      if (info.HasAttribute<SelectCommonAttribute>())
+      if (info.HasAttribute<SelectCommonAttribute>() && info.PropertyType == typeof (UserExpansibleSelectChoice))
+      {
+        return NgangaControlType.CommonSelectExpansible;
+      }
+
+      if (info.HasAttribute<SelectCommonAttribute>() && info.PropertyType != typeof (UserExpansibleSelectChoice))
       {
         return NgangaControlType.CommonSelect;
       }
 
       var underlyingType = info.PropertyType.GetNonNullableType();
 
-      if (underlyingType == typeof(string))
+      if (underlyingType == typeof (string))
       {
         return NgangaControlType.TextControl;
       }
 
-      if (underlyingType == typeof(bool))
+      if (underlyingType == typeof (bool))
       {
         return NgangaControlType.BoolControl;
       }
-      if (underlyingType == typeof(DateTime))
+      if (underlyingType == typeof (DateTime))
       {
         return NgangaControlType.DateControl;
       }

@@ -46,7 +46,7 @@ postEndpointTemplate(model, endpoint) ::= <<
         {
           var rsc = $resource(<postResourceUri(model, endpoint)>, {}, {'save': {<isArray(endpoint)>, method: 'POST'}});
 
-          rsc.save({}, model,  <if(model.UseCustomCache)><clearCustomCache()><else>succssFn<endif>, failFn);
+          rsc.save({}, model,  <if(model.UseCustomCache)><clearCustomCache()><else>successFn<endif>, failFn);
         }
 >>
 
