@@ -46,8 +46,14 @@ namespace Nord.Nganga.Models.ViewModels
 
     public class SectionViewModel
     {
+      public SectionViewModel()
+      {
+        this.Attributes = new Dictionary<string, string>();
+      }
+
       public string Title { get; set; }
       public ICollection<RowViewModel> Rows { get; set; }
+      public Dictionary<string, string> Attributes { get; set; }
 
       public override string ToString()
       {

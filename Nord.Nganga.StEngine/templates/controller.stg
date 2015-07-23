@@ -4,11 +4,11 @@
   ['$scope', '$state', '$stateParams', 'commonRecordsService', 'userInfoService', '<model.ServiceName>'<model.AdditionalNgServices:{svc|, '<svc>' }>,
   function($scope, $state, $stateParams, commonRecordsService, userInfoService, <model.ServiceName><model.AdditionalNgServices:{svc|, <svc>}>)
     {
+      <if(model.RouteIdParameter)><primeRouteId(model.RouteIdParameter)><endif>
       <if(model.EditRestricted)><authorizationInformation(model)>
       
       <endif>
       <if(model.HasCommonRecords)>$scope.common = $scope.common || {};<commonRecordsSetup(model)><endif>
-      <if(model.RouteIdParameter)><primeRouteId(model.RouteIdParameter)><endif>
       <if(model.RouteIdParameterIsNullable)>
       if (<model.RouteIdParameter> !== null)
         {

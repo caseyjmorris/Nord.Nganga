@@ -43,7 +43,7 @@ childViewNested(model) ::= <%
 
 section(model, parentObjectName) ::= <<
 
-<nord-form-section>
+<nord-form-section %model.Attributes.keys: {a|%a%="%model.Attributes.(a)%"}; separator=" "%>
   %(sectionHeaderMap.(model.Title))(model)% 
   %model.Rows:{r|%row(r, parentObjectName)%}%
 </nord-form-section>

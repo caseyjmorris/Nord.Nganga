@@ -18,7 +18,7 @@ namespace Nord.Nganga.Mappers.Views
     private readonly EndpointMapper endpointMapper;
 
     public ViewCoordinationMapper(
-      ViewModelMapper viewModelMapper, 
+      ViewModelMapper viewModelMapper,
       EndpointFilter endpointFilter,
       EndpointMapper endpointMapper)
     {
@@ -54,10 +54,13 @@ namespace Nord.Nganga.Mappers.Views
       {
         NgControllerName = controller.Name.Replace("Controller", "Ctrl").Camelize(),
         ViewCoordinatedInfo = coordinatedInfo,
-        Header = controller.Name.Replace("Controller", string.Empty).Humanize(CasingEnumMap.Instance[this.viewModelMapper.AssemblyOptions.GetOption(CasingOptionContext.Header)]), //TODO:  casing
+        Header =
+          controller.Name.Replace("Controller", string.Empty)
+            .Humanize(CasingEnumMap.Instance[this.viewModelMapper.AssemblyOptions.GetOption(CasingOptionContext.Header)]),
+        //TODO:  casing
       };
     }
-     
+
     public ViewCoordinatedInformationViewModel GetViewCoordinatedInformationSingle(Type vmType, int depthMultiplier = 1)
     {
       var vmVm = this.viewModelMapper.GetViewModelViewModel(vmType);
@@ -70,10 +73,13 @@ namespace Nord.Nganga.Mappers.Views
     {
       var coord = new ViewCoordinatedInformationViewModel
       {
-        //TODO:  case pref
-        SaveButtonText = ("Save changes to " + vmVm.Name.Humanize(LetterCasing.LowerCase)).Humanize(CasingEnumMap.Instance[this.viewModelMapper.AssemblyOptions.GetOption(CasingOptionContext.Button)]),
+        SaveButtonText =
+          ("Save changes to " + vmVm.Name.Humanize(LetterCasing.LowerCase)).Humanize(
+            CasingEnumMap.Instance[this.viewModelMapper.AssemblyOptions.GetOption(CasingOptionContext.Button)]),
         Sections = this.SplitSections(vmVm, depthMultipler),
-        Title = vmVm.Name.Humanize(CasingEnumMap.Instance[this.viewModelMapper.AssemblyOptions.GetOption(CasingOptionContext.Header)]), 
+        Title =
+          vmVm.Name.Humanize(
+            CasingEnumMap.Instance[this.viewModelMapper.AssemblyOptions.GetOption(CasingOptionContext.Header)]),
         NgFormName = vmVm.Name.Camelize() + "Form",
         NgSubmitAction = string.Format("saveChangesTo{0}()", vmVm.Name.Pascalize()),
         ParentObjectName = vmVm.Name.Camelize(),
@@ -89,11 +95,20 @@ namespace Nord.Nganga.Mappers.Views
 
       const int rowMax = 12;
 
+      Dictionary<string, string> sectionAttrs;
+
       var currentSection = new ViewCoordinatedInformationViewModel.SectionViewModel
       {
         Title = vmVm.Members[0].Section,
         Rows = new List<ViewCoordinatedInformationViewModel.RowViewModel>()
       };
+
+      if (
+        vmVm.SectionHtmlAttributeValues.TryGetValue(
+          currentSection.Title.ToUpperInvariant().Replace(@"\w", string.Empty), out sectionAttrs))
+      {
+        currentSection.Attributes = sectionAttrs;
+      }
 
       sections.Add(currentSection);
 
@@ -115,6 +130,13 @@ namespace Nord.Nganga.Mappers.Views
             Title = member.Section,
             Rows = new List<ViewCoordinatedInformationViewModel.RowViewModel>(),
           };
+
+          if (
+            vmVm.SectionHtmlAttributeValues.TryGetValue(
+              currentSection.Title.ToUpperInvariant().Replace(@"\w", string.Empty), out sectionAttrs))
+          {
+            currentSection.Attributes = sectionAttrs;
+          }
 
           currentRow = new ViewCoordinatedInformationViewModel.RowViewModel
           {

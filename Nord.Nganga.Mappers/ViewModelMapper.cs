@@ -360,7 +360,7 @@ namespace Nord.Nganga.Mappers
         if (!sectionsDict.TryGetValue(attr.SectionName, out htmlAttrsDict))
         {
           htmlAttrsDict = new Dictionary<string, string>();
-          sectionsDict[attr.SectionName] = htmlAttrsDict;
+          sectionsDict[attr.SectionName.ToUpperInvariant().Replace(@"\w", string.Empty)] = htmlAttrsDict;
         }
 
         htmlAttrsDict[attr.HtmlAttributeName] = attr.HtmlAttributeValue;
