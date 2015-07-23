@@ -37,15 +37,6 @@ namespace Nord.Nganga.WinApp
 
       this.dataGridView1.DataSource = ToDataSource(this.coordinationResult).ToList();
 
-      foreach (var ex in this.coordinationResult.Exceptions)
-      {
-        var ie = ex;
-        while (ie != null)
-        {
-          Log("{0}", ie.Message);
-          ie = ex.InnerException;
-        }
-      }
       this.autoVSIntegration.Checked = Settings1.Default.AutoVSIntegration;
     }
 

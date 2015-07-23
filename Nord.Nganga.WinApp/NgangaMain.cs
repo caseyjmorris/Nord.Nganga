@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using Nord.Nganga.Core;
 using Nord.Nganga.Fs.Coordination;
 
 namespace Nord.Nganga.WinApp
@@ -9,8 +10,8 @@ namespace Nord.Nganga.WinApp
   public partial class NgangaMain : Form
   {
   
-    private readonly Func<IEnumerable<CoordinationResult>> coordinationResultProvider;
-    public NgangaMain(Func<IEnumerable<CoordinationResult>> coordinationResultProvider)
+    private readonly Func<StringFormatProviderVisitor,IEnumerable<CoordinationResult>> coordinationResultProvider;
+    public NgangaMain(Func<StringFormatProviderVisitor, IEnumerable<CoordinationResult>> coordinationResultProvider)
     {
       this.coordinationResultProvider = coordinationResultProvider;
       this.InitializeComponent();
@@ -18,7 +19,7 @@ namespace Nord.Nganga.WinApp
 
     private void openAssemblyToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      var coordinationResults = this.coordinationResultProvider().ToList();
+      var coordinationResults = this.coordinationResultProvider(NgangaLog.Instance.Log).ToList();
       if (!coordinationResults.Any())
       {
         return;

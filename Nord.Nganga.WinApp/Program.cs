@@ -45,14 +45,14 @@ namespace Nord.Nganga.WinApp
     // instantiates the host and invokes the run method 
     // unloads the app domain to ensure the client assemblies are unloaded 
     // returns the coordination result
-    private static IEnumerable<CoordinationResult> Coordinate()
+    private static IEnumerable<CoordinationResult> Coordinate(StringFormatProviderVisitor logHandler)
     {
       var domain = CreateAppDomain();
       var exeAssembly = Assembly.GetEntryAssembly().FullName;
       var host = (CoordinatorHost) domain.CreateInstanceAndUnwrap(
         exeAssembly,
         typeof (CoordinatorHost).FullName);
-      var result  = host.Run();
+      var result = host.Run(logHandler);
       AppDomain.Unload(domain);
       return result;
     }
@@ -62,12 +62,12 @@ namespace Nord.Nganga.WinApp
   // this ensures that any loaded assemblies are freed upon completion
   public class CoordinatorHost : MarshalByRefObject
   {
-    public IEnumerable<CoordinationResult> Run()
+    public IEnumerable<CoordinationResult> Run(StringFormatProviderVisitor logHandler)
     {
       var result = new List<CoordinationResult>();
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
-      Application.Run(new CoordinationForm(r=>result.Add(r)));
+      Application.Run(new CoordinationForm(r => result.Add(r), logHandler));
       return result;
     }
   }
