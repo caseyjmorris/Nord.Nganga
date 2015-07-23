@@ -30,11 +30,11 @@ isArray: <if(endpoint.ReturnsIEnumerable)>true<else>false<endif>
 >>
 
 getResourceUri(model, endpoint) ::= <<
-'/api/<model.ControllerName>/<endpoint.MethodName><endpoint.ArgumentQueryString>'
+'/api/<model.ControllerName>/<endpoint.UrlDisplayName><endpoint.ArgumentQueryString>'
 >>
 
 postResourceUri(model, endpoint) ::= <%
-'/api/<model.ControllerName>/<endpoint.MethodName>'
+'/api/<model.ControllerName>/<endpoint.UrlDisplayName>'
 %>
 
 useCache(endpoint) ::= <<
