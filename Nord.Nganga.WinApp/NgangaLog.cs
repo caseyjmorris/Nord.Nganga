@@ -29,7 +29,14 @@ namespace Nord.Nganga.WinApp
         "{0} - [{1}] - Log",
         typeof(CoordinationResultBrowser).Assembly.GetName().Name,
         typeof(CoordinationResultBrowser).Assembly.GetName().Version);
-        this.fontSelector1.Bind(this.rtbLog);
+        this.fontSelector1.Bind(this.rtbLog, Settings1.Default.LogFontFamilyName, Settings1.Default.LogFontSize);
+        this.rtbLog.FontChanged += this.rtbLog_FontChanged;
+    }
+
+    void rtbLog_FontChanged(object sender, EventArgs e)
+    {
+      Settings1.Default.LogFontFamilyName = this.rtbLog.Font.FontFamily.Name;
+      Settings1.Default.LogFontSize = this.rtbLog.Font.Size;
     }
 
     public void Log(string formatProvider, params object[] parms)
@@ -52,6 +59,11 @@ namespace Nord.Nganga.WinApp
     private void rtbLog_TextChanged(object sender, EventArgs e)
     {
 
+    }
+
+    private void NgangaLog_FormClosing(object sender, FormClosingEventArgs e)
+    {
+      Settings1.Default.Save();
     }
   }
 }

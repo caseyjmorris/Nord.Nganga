@@ -56,6 +56,7 @@
       this.Controls.Add(this.rtbLog);
       this.Name = "NgangaLog";
       this.Text = "NgangaLog";
+      this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.NgangaLog_FormClosing);
       this.Load += new System.EventHandler(this.NgangaLog_Load);
       this.ResumeLayout(false);
 

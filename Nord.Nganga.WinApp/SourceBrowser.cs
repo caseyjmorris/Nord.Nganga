@@ -28,7 +28,14 @@ namespace Nord.Nganga.WinApp
       this.richTextBox1.Text = this.sourceProvider();
       this.originalSource = this.richTextBox1.Text;
 
-      this.fontSelector1.Bind(this.richTextBox1);
+      this.fontSelector1.Bind(this.richTextBox1, Settings1.Default.SourceBrowserFontFamilyName, Settings1.Default.SourceBrowserFontSize);
+      this.richTextBox1.FontChanged += richTextBox1_FontChanged;
+    }
+
+    void richTextBox1_FontChanged(object sender, EventArgs e)
+    {
+      Settings1.Default.SourceBrowserFontFamilyName = this.richTextBox1.Font.FontFamily.Name;
+      Settings1.Default.SourceBrowserFontSize = this.richTextBox1.Font.Size;
     }
 
     private void SourceBrowser_FormClosing(object sender, FormClosingEventArgs e)

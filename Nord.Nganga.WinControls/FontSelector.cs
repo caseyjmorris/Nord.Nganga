@@ -18,7 +18,7 @@ namespace Nord.Nganga.WinControls
 
     private ToolStripMenuItem activeFamilyItem;
     private ToolStripMenuItem activeSizeItem;
-
+    public FontFamily[] FontFamilyCollection { get; private set; }
     private EventHandler<FontChangedEventArgs> ChangeHandler { get; set; }
 
     public FontSelector()
@@ -26,8 +26,18 @@ namespace Nord.Nganga.WinControls
       this.InitializeComponent();
     }
 
-    public void Bind(Control bindingTarget )
+    public void Bind(Control bindingTarget, string initialFamily = null, float? initialSize = null )
     {
+      var fontsCollection = new InstalledFontCollection();
+      this.FontFamilyCollection = fontsCollection.Families;
+
+      var name = initialFamily ?? bindingTarget.Font.FontFamily.Name;
+      var size = initialSize ?? bindingTarget.Font.Size;
+      if (name != bindingTarget.Font.FontFamily.Name || size != bindingTarget.Font.Size)
+      {
+        bindingTarget.Font = new Font(this.FontFamilyCollection.ToList().First(ff=>ff.Name == name), size);
+      }
+
       this.CurrentSizeProvider = () => bindingTarget.Font.Size;
       this.CurrentFamilyProvider = () => bindingTarget.Font.FontFamily;
       this.LoadMenuItems();
@@ -44,9 +54,8 @@ namespace Nord.Nganga.WinControls
 
       this.fontFamilyMenuDictionary = new Dictionary<string, ToolStripMenuItem>();
       var currentFamily = this.CurrentFamilyProvider();
-      var fontsCollection = new InstalledFontCollection();
-      var fontFamilies = fontsCollection.Families;
-      foreach (var fontFamily in fontFamilies)
+
+      foreach (var fontFamily in this.FontFamilyCollection)
       {
         var mi = new ToolStripMenuItem(fontFamily.Name) { Tag = fontFamily };
         mi.Click += this.font_Click;

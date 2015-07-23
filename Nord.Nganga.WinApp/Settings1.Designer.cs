@@ -206,5 +206,53 @@ namespace Nord.Nganga.WinApp {
                 this["SelectedVsProjectPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Arial")]
+        public string LogFontFamilyName {
+            get {
+                return ((string)(this["LogFontFamilyName"]));
+            }
+            set {
+                this["LogFontFamilyName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public float LogFontSize {
+            get {
+                return ((float)(this["LogFontSize"]));
+            }
+            set {
+                this["LogFontSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Arial")]
+        public string SourceBrowserFontFamilyName {
+            get {
+                return ((string)(this["SourceBrowserFontFamilyName"]));
+            }
+            set {
+                this["SourceBrowserFontFamilyName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public float SourceBrowserFontSize {
+            get {
+                return ((float)(this["SourceBrowserFontSize"]));
+            }
+            set {
+                this["SourceBrowserFontSize"] = value;
+            }
+        }
     }
 }
