@@ -29,6 +29,7 @@ namespace Nord.Nganga.WinApp
         "{0} - [{1}] - Log",
         typeof(CoordinationResultBrowser).Assembly.GetName().Name,
         typeof(CoordinationResultBrowser).Assembly.GetName().Version);
+        this.fontSelector1.Bind(this.rtbLog);
     }
 
     public void Log(string formatProvider, params object[] parms)

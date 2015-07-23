@@ -29,16 +29,23 @@
     private void InitializeComponent()
     {
       this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+      this.fontSelector1 = new Nord.Nganga.WinControls.FontSelector();
       this.SuspendLayout();
       // 
       // richTextBox1
       // 
+      this.richTextBox1.ContextMenuStrip = this.fontSelector1;
       this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.richTextBox1.Location = new System.Drawing.Point(0, 0);
       this.richTextBox1.Name = "richTextBox1";
       this.richTextBox1.Size = new System.Drawing.Size(284, 261);
       this.richTextBox1.TabIndex = 0;
       this.richTextBox1.Text = "";
+      // 
+      // fontSelector1
+      // 
+      this.fontSelector1.Name = "FontSelector";
+      this.fontSelector1.Size = new System.Drawing.Size(61, 4);
       // 
       // SourceBrowser
       // 
@@ -57,5 +64,6 @@
     #endregion
 
     private System.Windows.Forms.RichTextBox richTextBox1;
+    private WinControls.FontSelector fontSelector1;
   }
 }

@@ -27,6 +27,8 @@ namespace Nord.Nganga.WinApp
 
       this.richTextBox1.Text = this.sourceProvider();
       this.originalSource = this.richTextBox1.Text;
+
+      this.fontSelector1.Bind(this.richTextBox1);
     }
 
     private void SourceBrowser_FormClosing(object sender, FormClosingEventArgs e)
