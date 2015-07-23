@@ -15,25 +15,13 @@ namespace Nord.Nganga.WinApp
   public partial class CoordinationForm : Form
   {
     private readonly Action<CoordinationResult> resultVisitor;
-    private StringFormatProviderVisitor logHandler;
+    private readonly StringFormatProviderVisitor logHandler;
     public CoordinationForm(Action<CoordinationResult> resultVisitor, StringFormatProviderVisitor logHandler)
     {
       this.InitializeComponent();
       this.resultVisitor = resultVisitor;
       this.logHandler = logHandler;
-      DependentTypeResolver.ResolveEventVisitor = (args, dirInfo, fileInfo, assy) => logHandler(
-        "RESOLVE - for:{2}" +
-        "{0}{1}On behalf of:{3}" +
-        "{0}{1}Base dir:{4}" +
-        "{0}{1}Module:{5}" +
-        "{0}{1}Result Assy:{6}",
-        '\n',
-        '\t',
-        args.Name,
-        args.RequestingAssembly.FullName,
-        dirInfo.FullName,
-        fileInfo.FullName,
-        assy == null ? "- RESOLVE FAILED!" : assy.Location);
+      DependentTypeResolver.ResolveEventVisitor = DependentTypeResolver.CreateResolveEventLogger(this.logHandler);
     }
 
     private AssemblyOptionsModel AssemblyOptionsModel { get; set; }

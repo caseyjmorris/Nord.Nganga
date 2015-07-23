@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Remoting.Messaging;
 
 namespace Nord.Nganga.Core.Reflection
 {
@@ -13,7 +14,26 @@ namespace Nord.Nganga.Core.Reflection
   /// </summary>
   public static class DependentTypeResolver
   {
-    public static Action<ResolveEventArgs, DirectoryInfo, FileInfo, Assembly> ResolveEventVisitor { get;set; }
+    public static Action<ResolveEventArgs, DirectoryInfo, FileInfo, Assembly> ResolveEventVisitor { get; set; }
+
+    public static Action<ResolveEventArgs, DirectoryInfo, FileInfo, Assembly>
+      CreateResolveEventLogger(StringFormatProviderVisitor formattingLogger)
+    {
+        return (args, dirInfo, fileInfo, assy) =>
+          formattingLogger(
+            "RESOLVE - for:{2}" +
+            "{0}{1}On behalf of:{3}" +
+            "{0}{1}Base dir:{4}" +
+            "{0}{1}Module:{5}" +
+            "{0}{1}Result Assy:{6}",
+            '\n',
+            '\t',
+            args.Name,
+            args.RequestingAssembly.FullName,
+            dirInfo.FullName,
+            fileInfo.FullName,
+            assy == null ? "- RESOLVE FAILED!" : assy.Location);
+    }
 
     public static Type[] GetTypesFrom(
       string fileName,
