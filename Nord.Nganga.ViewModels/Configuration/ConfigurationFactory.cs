@@ -33,26 +33,9 @@ namespace Nord.Nganga.Models.Configuration
       return Path.Combine(FileLocation, fileName);
     }
 
-    private static void InitDirs()
-    {
-      var nord = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "NORD");
-
-      if (!Directory.Exists(nord))
-      {
-        Directory.CreateDirectory(nord);
-      }
-
-      var nganga = Path.Combine(nord, "Nganga");
-
-      if (!Directory.Exists(nganga))
-      {
-        Directory.CreateDirectory(nganga);
-      }
-    }
-
     public static void UpdateSettings<T>(T settings) where T : IConfigurationPackage
     {
-      InitDirs();
+      Directory.CreateDirectory(FileLocation);
 
       var path = GetPath(typeof(T));
 
@@ -63,7 +46,7 @@ namespace Nord.Nganga.Models.Configuration
 
     public static T GetConfiguration<T>() where T : IConfigurationPackage, new()
     {
-      InitDirs();
+      Directory.CreateDirectory(FileLocation);
 
       var path = GetPath(typeof(T));
 
