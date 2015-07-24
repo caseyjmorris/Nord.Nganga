@@ -8,7 +8,11 @@
       <if(model.EditRestricted)><authorizationInformation(model)>
       
       <endif>
-      <if(model.HasCommonRecords)>$scope.common = $scope.common || {};<commonRecordsSetup(model)><endif>
+      <if(model.HasCommonRecords)>
+      <commonRecordsObjectInit(model)>
+
+      <commonRecordsSetup(model)>
+      <endif>
       <if(model.RouteIdParameterIsNullable)>
       if (<model.RouteIdParameter> !== null)
         {
@@ -30,9 +34,12 @@ authorizationInformation(model) ::= <%
 $scope.canEdit = <model.EditRestrictedToRoles: {role |userInfoService.userIsInRole('<role>')}; separator=" || ">;
 %>
 
-commonRecordsSetup(model) ::= <<
-<model.CommonRecordObjects:{cr|$scope.<cr> = $scope.<cr> OR INIT HERE  };>
+commonRecordsObjectInit(model) ::= <<
+<model.CommonRecordObjects:{cr|$scope.<cr> = $scope.<cr> || {\};
+}>
+>>
 
+commonRecordsSetup(model) ::= <<
 <model.CommonRecordsWithResolvers.keys: {cr|
 $scope.<cr> = <model.CommonRecordsWithResolvers.(cr)>}>
 >>
