@@ -36,6 +36,7 @@
       this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.loadedAssembliesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.openAssemblyBtn = new System.Windows.Forms.Button();
       this.menuStrip1.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -83,6 +84,7 @@
       this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
       this.quitToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
       this.quitToolStripMenuItem.Text = "Exit";
+      this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
       // 
       // viewToolStripMenuItem
       // 
@@ -99,11 +101,22 @@
       this.loadedAssembliesToolStripMenuItem.Text = "Loaded Assemblies";
       this.loadedAssembliesToolStripMenuItem.Click += new System.EventHandler(this.loadedAssembliesToolStripMenuItem_Click);
       // 
+      // openAssemblyBtn
+      // 
+      this.openAssemblyBtn.Location = new System.Drawing.Point(13, 40);
+      this.openAssemblyBtn.Name = "openAssemblyBtn";
+      this.openAssemblyBtn.Size = new System.Drawing.Size(725, 23);
+      this.openAssemblyBtn.TabIndex = 1;
+      this.openAssemblyBtn.Text = "Open assembly";
+      this.openAssemblyBtn.UseVisualStyleBackColor = true;
+      this.openAssemblyBtn.Click += new System.EventHandler(this.openAssemblyToolStripMenuItem_Click);
+      // 
       // NgangaMain
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(750, 89);
+      this.Controls.Add(this.openAssemblyBtn);
       this.Controls.Add(this.menuStrip1);
       this.MainMenuStrip = this.menuStrip1;
       this.Name = "NgangaMain";
@@ -126,5 +139,6 @@
     private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
     private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem loadedAssembliesToolStripMenuItem;
+    private System.Windows.Forms.Button openAssemblyBtn;
   }
 }

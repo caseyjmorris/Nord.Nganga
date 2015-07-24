@@ -11,19 +11,20 @@ namespace Nord.Nganga.WinApp
   public partial class CoordinationResultBrowser : Form
   {
     private readonly CoordinationResult coordinationResult;
+
     public CoordinationResultBrowser(CoordinationResult coordinationResult)
     {
       this.coordinationResult = coordinationResult;
       this.InitializeComponent();
     }
 
-    private static IEnumerable<object>  ToDataSource(CoordinationResult cr)
+    private static IEnumerable<object> ToDataSource(CoordinationResult cr)
     {
       var propertyInfoCollection = typeof(CoordinationResult)
-      .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-      .Where(p => p.CanRead && p.PropertyType == typeof(string));
-      return propertyInfoCollection.Select(p => new KeyValuePair<string, string>(p.Name, (string)p.GetValue(cr)))
-        .OrderBy(k=>k.Key)
+        .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+        .Where(p => p.CanRead && p.PropertyType == typeof(string));
+      return propertyInfoCollection.Select(p => new KeyValuePair<string, string>(p.Name, (string) p.GetValue(cr)))
+        .OrderBy(k => k.Key)
         .Cast<object>()
         .ToList();
     }
@@ -31,9 +32,9 @@ namespace Nord.Nganga.WinApp
     private void Form1_Load(object sender, EventArgs e)
     {
       this.Text = string.Format(
-          "{0} - [{1}] - Coordination Result Browser",
-          typeof(CoordinationResultBrowser).Assembly.GetName().Name,
-          typeof(CoordinationResultBrowser).Assembly.GetName().Version);
+        "{0} - [{1}] - Coordination Result Browser",
+        typeof(CoordinationResultBrowser).Assembly.GetName().Name,
+        typeof(CoordinationResultBrowser).Assembly.GetName().Version);
 
       this.dataGridView1.DataSource = ToDataSource(this.coordinationResult).ToList();
 
@@ -42,7 +43,7 @@ namespace Nord.Nganga.WinApp
 
     private void exitToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      Application.Exit();
+      this.Close();
     }
 
     private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -78,18 +79,18 @@ namespace Nord.Nganga.WinApp
 
     private void dataGridView1_DoubleClick(object sender, EventArgs e)
     {
-      var q = (from DataGridViewRow r 
-      in this.dataGridView1.SelectedRows 
-      select (KeyValuePair<string,string>)r.DataBoundItem).ToList();
+      var q = (from DataGridViewRow r
+        in this.dataGridView1.SelectedRows
+        select (KeyValuePair<string, string>) r.DataBoundItem).ToList();
       if (!q.Any()) return;
       var kvp = q.First();
-      var value = kvp.Value ;
+      var value = kvp.Value;
 
       Action<string> updateAcceptor = s =>
       {
-        var propertyInfoCollection = typeof (CoordinationResult)
+        var propertyInfoCollection = typeof(CoordinationResult)
           .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-          .Where(p => p.CanRead && p.PropertyType == typeof (string) && p.Name == kvp.Key).ToList();
+          .Where(p => p.CanRead && p.PropertyType == typeof(string) && p.Name == kvp.Key).ToList();
         if (!propertyInfoCollection.Any()) return;
         var propertyInfo = propertyInfoCollection.First();
         propertyInfo.SetValue(this.coordinationResult, s);
@@ -97,7 +98,6 @@ namespace Nord.Nganga.WinApp
       };
 
       (new SourceBrowser(kvp.Key, () => value, updateAcceptor)).Show();
-
     }
   }
 }
