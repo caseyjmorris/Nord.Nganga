@@ -41,8 +41,27 @@ namespace Nord.Nganga.WinApp
       this.autoVSIntegration.Checked = Settings1.Default.AutoVSIntegration;
     }
 
+    private void OnClose()
+    {
+            var coordinationResults = Program.Coordinate(NgangaLog.Instance.Log).ToList();
+      if (!coordinationResults.Any())
+      {
+        return;
+      }
+
+      if (coordinationResults.Count() == 1)
+      {
+        (new CoordinationResultBrowser(coordinationResults.First())).Show();
+      }
+      else
+      {
+        (new CoordinationResultCollectionBrowser(coordinationResults)).Show();
+      }
+    }
+
     private void exitToolStripMenuItem_Click(object sender, EventArgs e)
     {
+      this.OnClose();
       this.Close();
     }
 
@@ -98,6 +117,11 @@ namespace Nord.Nganga.WinApp
       };
 
       (new SourceBrowser(kvp.Key, () => value, updateAcceptor)).Show();
+    }
+
+    private void exitToolStripMenuItem_Click (object sender, FormClosedEventArgs e)
+    {
+      this.OnClose();
     }
   }
 }

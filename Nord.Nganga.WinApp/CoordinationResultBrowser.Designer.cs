@@ -171,6 +171,7 @@ namespace Nord.Nganga.WinApp
       this.MainMenuStrip = this.menuStrip1;
       this.Name = "CoordinationResultBrowser";
       this.Text = "Nganga";
+      this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.exitToolStripMenuItem_Click);
       this.Load += new System.EventHandler(this.Form1_Load);
       this.menuStrip1.ResumeLayout(false);
       this.menuStrip1.PerformLayout();

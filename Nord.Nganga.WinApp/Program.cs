@@ -9,7 +9,6 @@ namespace Nord.Nganga.WinApp
 {
   internal static class Program
   {
-
     /// <summary>
     /// The main entry point for the application.
     /// </summary>
@@ -42,13 +41,13 @@ namespace Nord.Nganga.WinApp
     // instantiates the host and invokes the run method 
     // unloads the app domain to ensure the client assemblies are unloaded 
     // returns the coordination result
-    private static IEnumerable<CoordinationResult> Coordinate(StringFormatProviderVisitor logHandler)
+    public static IEnumerable<CoordinationResult> Coordinate(StringFormatProviderVisitor logHandler)
     {
       var domain = CreateAppDomain();
       var exeAssembly = Assembly.GetEntryAssembly().FullName;
       var host = (CoordinatorHost) domain.CreateInstanceAndUnwrap(
         exeAssembly,
-        typeof (CoordinatorHost).FullName);
+        typeof(CoordinatorHost).FullName);
       var result = host.Run(logHandler);
       AppDomain.Unload(domain);
       return result;
