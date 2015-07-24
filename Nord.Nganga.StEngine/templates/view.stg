@@ -111,7 +111,7 @@ commonSelect(model, parentObjectName) ::= <%
 %ngModel(model, parentObjectName)% 
 twelfths="%model.Width%" 
 field-label-text="%model.Member.DisplayName%" 
-common-select-source="%model.Member.SelectCommon.ObjectName%.%model.Member.SelectCommon.CommonInformationName%%if(model.Member.SelectCommon.Index)%model.Member.SelectCommon.Index%endif%"
+common-select-source="%model.Member.SelectCommon.ObjectName%.%model.Member.SelectCommon.CommonInformationName%%if(model.Member.SelectCommon.Index)%[%parentObjectName%.%model.Member.SelectCommon.Index%]%endif%" 
 
 %if(model.Member.IsRequired)%
 required

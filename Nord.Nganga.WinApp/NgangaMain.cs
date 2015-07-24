@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using Nord.Nganga.Core;
@@ -9,8 +10,8 @@ namespace Nord.Nganga.WinApp
 {
   public partial class NgangaMain : Form
   {
-  
-    private readonly Func<StringFormatProviderVisitor,IEnumerable<CoordinationResult>> coordinationResultProvider;
+    private readonly Func<StringFormatProviderVisitor, IEnumerable<CoordinationResult>> coordinationResultProvider;
+
     public NgangaMain(Func<StringFormatProviderVisitor, IEnumerable<CoordinationResult>> coordinationResultProvider)
     {
       this.coordinationResultProvider = coordinationResultProvider;
@@ -43,12 +44,12 @@ namespace Nord.Nganga.WinApp
     private void NgangaMain_Load(object sender, EventArgs e)
     {
       this.Text = string.Format(
-        "{0} - [{1}] - Main", 
+        "{0} - [{1}] - Main",
         typeof(CoordinationResultBrowser).Assembly.GetName().Name,
         typeof(CoordinationResultBrowser).Assembly.GetName().Version);
     }
 
-    private void quitToolStripMenuItem_Click (object sender, EventArgs e)
+    private void quitToolStripMenuItem_Click(object sender, EventArgs e)
     {
       Application.Exit();
     }

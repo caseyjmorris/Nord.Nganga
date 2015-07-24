@@ -4,8 +4,10 @@
   {<if(model.UseCustomCache)>
 <cacheInit(model)><endif>
     return {
-<model.PostEndpoints: { endpoint |<postEndpointTemplate(model, endpoint)>};separator=","><if(first(model.PostEndpoints) && first(model.GetEndpoints))>,<endif>
-<model.GetEndpoints: { endpoint |<getEndpointTemplate(model, endpoint)>};separator=",">
+<model.PostEndpoints: { endpoint |<postEndpointTemplate(model, endpoint)>};separator=",
+"><if(first(model.PostEndpoints) && first(model.GetEndpoints))>,<endif>
+<model.GetEndpoints: { endpoint |<getEndpointTemplate(model, endpoint)>};separator=",
+">
     };
   }]);
 >>
