@@ -7,12 +7,12 @@ namespace Nord.Nganga.Fs.Coordination
 {
   public class GenerationCoordinator
   {
-    private readonly SourceGenerator sourceGenerator ;
+    private readonly SourceGenerator sourceGenerator;
     private readonly NameSuggester nameSuggester;
 
-    public GenerationCoordinator(WebApiSettingsPackage settingsPackage)
+    public GenerationCoordinator(WebApiSettingsPackage webApiSettings, SystemPathSettingsPackage pathSettings)
     {
-      this.sourceGenerator = new SourceGenerator(settingsPackage);
+      this.sourceGenerator = new SourceGenerator(webApiSettings, pathSettings);
       this.nameSuggester = new NameSuggester();
     }
 

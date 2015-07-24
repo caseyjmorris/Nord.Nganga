@@ -37,6 +37,7 @@ namespace Nord.Nganga.Mappers.Controllers
       var endpoints = this.endpointMapper.GetEnpoints(controller);
 
       var filteredInfo = this.endpointFilter.ExamineEndpoints(endpoints);
+      var crObjects = new HashSet<string>();
 
       var model = new ControllerCoordinatedInformationViewModel
       {
@@ -55,7 +56,8 @@ namespace Nord.Nganga.Mappers.Controllers
           controller.GetAttributePropertyValueOrDefault<InjectAngularServicesAttribute, IEnumerable<string>>(
             a => a.Services),
         CommonRecordsWithResolvers =
-          this.GetCommonRecordsWithResolvers(filteredInfo.TargetComplexTypesWithChildren.ToList())
+          this.GetCommonRecordsWithResolvers(filteredInfo.TargetComplexTypesWithChildren.ToList(), crObjects),
+        CommonRecordObjects = crObjects,
       };
 
       model.EditRestricted = model.EditRestrictedToRoles != null && model.EditRestrictedToRoles.Any();
@@ -66,7 +68,7 @@ namespace Nord.Nganga.Mappers.Controllers
     }
 
     private Dictionary<string, string> GetCommonRecordsWithResolvers(
-      IList<ViewModelViewModel> complexTypes)
+      IList<ViewModelViewModel> complexTypes, HashSet<string> crObjects)
     {
       var targetScalars =
         complexTypes.SelectMany(ct => ct.Scalars)
@@ -95,6 +97,7 @@ namespace Nord.Nganga.Mappers.Controllers
           continue;
         }
         result[item.QualifiedName] = item.ProviderExpression;
+        crObjects.Add(item.ObjectName);
       }
 
       return result;

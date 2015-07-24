@@ -57,7 +57,6 @@ namespace Nord.Nganga.Mappers.Views
         Header =
           controller.Name.Replace("Controller", string.Empty)
             .Humanize(CasingEnumMap.Instance[this.viewModelMapper.AssemblyOptions.GetOption(CasingOptionContext.Header)]),
-        //TODO:  casing
       };
     }
 

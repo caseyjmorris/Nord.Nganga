@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Antlr4.StringTemplate;
+using Nord.Nganga.Models.Configuration;
 
 namespace Nord.Nganga.StEngine
 {
@@ -13,16 +14,17 @@ namespace Nord.Nganga.StEngine
       Resource
     }
 
-    public static Template GetTemplate(Context context, string name, bool debug = false)
+    public static Template GetTemplate(SystemPathSettingsPackage settings, Context context, string name,
+      bool debug = false)
     {
-      var fileName = string.Format(@"{0}/templates/{1}.stg", Environment.CurrentDirectory, context);
+      var filename = Path.Combine(settings.TemplatesDirectory, context.ToString() + ".stg");
       if (debug)
       {
-        Console.WriteLine(fileName + ":");
-        Console.WriteLine(File.ReadAllText(fileName));
+        Console.WriteLine(filename + ":");
+        Console.WriteLine(File.ReadAllText(filename));
         Console.WriteLine("---");
       }
-      TemplateGroup group = new TemplateGroupFile(fileName);
+      TemplateGroup group = new TemplateGroupFile(filename);
       var template = group.GetInstanceOf(name);
       return template;
     }

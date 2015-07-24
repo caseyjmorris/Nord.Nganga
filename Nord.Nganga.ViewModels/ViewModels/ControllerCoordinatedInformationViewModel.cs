@@ -18,5 +18,6 @@ namespace Nord.Nganga.Models.ViewModels
     public IEnumerable<string> EditRestrictedToRoles { get; set; }
     public bool HasCommonRecords { get; set; }
     public Dictionary<string, string> CommonRecordsWithResolvers { get; set; }
+    public IEnumerable<string> CommonRecordObjects { get; set; }
   }
 }

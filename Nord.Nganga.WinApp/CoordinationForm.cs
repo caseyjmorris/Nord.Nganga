@@ -16,6 +16,7 @@ namespace Nord.Nganga.WinApp
   {
     private readonly Action<CoordinationResult> resultVisitor;
     private readonly StringFormatProviderVisitor logHandler;
+
     public CoordinationForm(Action<CoordinationResult> resultVisitor, StringFormatProviderVisitor logHandler)
     {
       this.InitializeComponent();
@@ -35,11 +36,11 @@ namespace Nord.Nganga.WinApp
     {
       get { return this.typeSelector1.SelectedType; }
     }
+
     private void NgangaGenParmsForm_Load(object sender, EventArgs e)
     {
-
       this.Text = string.Format(
-        "{0} - [{1}] - Client Assembly Selection", 
+        "{0} - [{1}] - Client Assembly Selection",
         typeof(CoordinationResultBrowser).Assembly.GetName().Name,
         typeof(CoordinationResultBrowser).Assembly.GetName().Version);
 
@@ -74,22 +75,22 @@ namespace Nord.Nganga.WinApp
       this.SetOkButtonState();
     }
 
-    void directorySelector1_HistoryChanged(object sender, EventArgs e)
+    private void directorySelector1_HistoryChanged(object sender, EventArgs e)
     {
       Settings1.Default.VsProjectPathHistory = this.directorySelector1.History;
     }
 
-    void assemblySelector1_HistoryChanged(object sender, EventArgs e)
+    private void assemblySelector1_HistoryChanged(object sender, EventArgs e)
     {
       Settings1.Default.AssemblyFileNameHistory = this.assemblySelector1.History;
     }
 
-    void typeSelector1_SelectionChanged(object sender, EventArgs e)
+    private void typeSelector1_SelectionChanged(object sender, EventArgs e)
     {
       this.SetOkButtonState();
     }
 
-    void SetOkButtonState()
+    private void SetOkButtonState()
     {
       this.button1.Enabled = false;
       if (string.IsNullOrEmpty(this.directorySelector1.SelectedPath)) return;
@@ -97,7 +98,7 @@ namespace Nord.Nganga.WinApp
       this.button1.Enabled = true;
     }
 
-    void AssertDirectorySelection()
+    private void AssertDirectorySelection()
     {
       if (this.assemblySelector1.SelectedAssembly == null) return;
       if (string.IsNullOrEmpty(this.directorySelector1.SelectedPath)) return;
@@ -110,13 +111,14 @@ namespace Nord.Nganga.WinApp
           "Verify Directory Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
       }
     }
-    void directorySelector1_SelectionChanged(object sender, SelectionChangedEventArgs<string> e)
+
+    private void directorySelector1_SelectionChanged(object sender, SelectionChangedEventArgs<string> e)
     {
       this.SetOkButtonState();
       this.AssertDirectorySelection();
     }
 
-    void assemblySelector1_SelectionChanged(object sender, EventArgs e)
+    private void assemblySelector1_SelectionChanged(object sender, EventArgs e)
     {
       this.AssertDirectorySelection();
       try
@@ -156,11 +158,13 @@ namespace Nord.Nganga.WinApp
       {
         if (controllerType == null) return;
 
-        var wasp = new WebApiSettingsPackage();
-        wasp.SetPropertiesToDefault();
+        var wasp = ConfigurationFactory.GetConfiguration<WebApiSettingsPackage>();
+        var fileSettings = ConfigurationFactory.GetConfiguration<SystemPathSettingsPackage>();
         this.resultVisitor(this.resourceOnly.Checked
-          ? (new GenerationCoordinator(wasp)).CoordinateResourceGeneration(controllerType, this.directorySelector1.SelectedPath)
-          : (new GenerationCoordinator(wasp)).CoordinateUiGeneration(controllerType, this.directorySelector1.SelectedPath));
+          ? (new GenerationCoordinator(wasp, fileSettings)).CoordinateResourceGeneration(controllerType,
+            this.directorySelector1.SelectedPath)
+          : (new GenerationCoordinator(wasp, fileSettings)).CoordinateUiGeneration(controllerType,
+            this.directorySelector1.SelectedPath));
       }
       catch (Exception ex)
       {
@@ -178,10 +182,9 @@ namespace Nord.Nganga.WinApp
         iex = ex.InnerException;
       }
     }
-    
+
     private void button2_Click(object sender, EventArgs e)
     {
-    
       this.Close();
     }
 
@@ -192,7 +195,6 @@ namespace Nord.Nganga.WinApp
 
     private void resourceOnly_CheckedChanged(object sender, EventArgs e)
     {
-
     }
 
     private void allTypes_CheckedChanged(object sender, EventArgs e)
@@ -202,13 +204,12 @@ namespace Nord.Nganga.WinApp
 
     private void logFusionEventsToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      Settings1.Default.LogFusionResolutionEvents = this.logFusionEventsToolStripMenuItem.Checked ;
+      Settings1.Default.LogFusionResolutionEvents = this.logFusionEventsToolStripMenuItem.Checked;
     }
 
     private void loadedAssembliesToolStripMenuItem_Click(object sender, EventArgs e)
     {
       (new AppDomainAssemblyListBrowser()).Show();
     }
-
   }
 }

@@ -55,7 +55,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Nord.Nganga.ViewModels\Nord.Nganga.Models.csproj">
+      <Project>{7ccea467-e8b3-4c22-8420-cf1851c96824}</Project>
+      <Name>Nord.Nganga.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

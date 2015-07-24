@@ -31,6 +31,8 @@ $scope.canEdit = <model.EditRestrictedToRoles: {role |userInfoService.userIsInRo
 %>
 
 commonRecordsSetup(model) ::= <<
+<model.CommonRecordObjects:{cr|$scope.<cr> = $scope.<cr> OR INIT HERE  };>
+
 <model.CommonRecordsWithResolvers.keys: {cr|
 $scope.<cr> = <model.CommonRecordsWithResolvers.(cr)>}>
 >>

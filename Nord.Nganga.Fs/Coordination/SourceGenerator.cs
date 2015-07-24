@@ -13,30 +13,34 @@ namespace Nord.Nganga.Fs.Coordination
 {
   public class SourceGenerator
   {
-    private readonly WebApiSettingsPackage settingsPackage;
+    private readonly WebApiSettingsPackage webApiSettings;
+    private readonly SystemPathSettingsPackage pathSettings;
 
-    public SourceGenerator(WebApiSettingsPackage settingsPackage)
+    public SourceGenerator(WebApiSettingsPackage settingsPackage, SystemPathSettingsPackage pathSettings)
     {
-      this.settingsPackage = settingsPackage;
+      this.webApiSettings = settingsPackage;
+      this.pathSettings = pathSettings;
     }
 
-    public string GenerateController(Type controllerType )
+    public string GenerateController(Type controllerType)
     {
-      var stringTemplate = TemplateFactory.GetTemplate(TemplateFactory.Context.Controller, "controller", false);
+      var stringTemplate = TemplateFactory.GetTemplate(this.pathSettings, TemplateFactory.Context.Controller,
+        "controller", false);
 
-      var endpointMapper = new EndpointMapper(this.settingsPackage);
+      var endpointMapper = new EndpointMapper(this.webApiSettings);
       var controllerCoordinatedInfoMapper = new ControllerCoordinationMapper(endpointMapper,
         new EndpointFilter(new ViewModelMapper()));
-      
+
       var model = controllerCoordinatedInfoMapper.GetControllerCoordinatedInformationViewModel(controllerType);
       return this.ProcessModel(stringTemplate, model);
     }
 
     public string GenerateResource(Type controllerType)
     {
-      var stringTemplate = TemplateFactory.GetTemplate(TemplateFactory.Context.Resource, "resourceFile", false);
+      var stringTemplate = TemplateFactory.GetTemplate(this.pathSettings, TemplateFactory.Context.Resource,
+        "resourceFile", false);
 
-      var endpointMapper = new EndpointMapper(this.settingsPackage);
+      var endpointMapper = new EndpointMapper(this.webApiSettings);
       var resourceCoordMapper = new ResourceCoordinationMapper(endpointMapper);
 
       var model = resourceCoordMapper.GetResourceCoordinationInformationViewModel(controllerType);
@@ -46,8 +50,8 @@ namespace Nord.Nganga.Fs.Coordination
 
     public string GenerateView(Type controllerType)
     {
-      var stringTemplate = TemplateFactory.GetTemplate(TemplateFactory.Context.View, "view", false);
-      var vcMapper = new ViewCoordinationMapper(this.settingsPackage);
+      var stringTemplate = TemplateFactory.GetTemplate(this.pathSettings, TemplateFactory.Context.View, "view", false);
+      var vcMapper = new ViewCoordinationMapper(this.webApiSettings);
 
       var model = vcMapper.GetViewCoordinatedInformationCollection(controllerType);
       return this.ProcessModel(stringTemplate, model);

@@ -26,13 +26,34 @@ namespace Nord.Nganga.Models.Configuration
     {
       var typeName = t.Name;
 
-      var fileName = new string(typeName.Where(tn => IllegalFileNameCharacters.Contains(tn)).ToArray()) + ".json";
+      var noIllegalArr = typeName.ToCharArray().Where(ch => !IllegalFileNameCharacters.Contains(ch)).ToArray();
+
+      var fileName = new string(noIllegalArr) + ".json";
 
       return Path.Combine(FileLocation, fileName);
     }
 
+    private static void InitDirs()
+    {
+      var nord = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "NORD");
+
+      if (!Directory.Exists(nord))
+      {
+        Directory.CreateDirectory(nord);
+      }
+
+      var nganga = Path.Combine(nord, "Nganga");
+
+      if (!Directory.Exists(nganga))
+      {
+        Directory.CreateDirectory(nganga);
+      }
+    }
+
     public static void UpdateSettings<T>(T settings) where T : IConfigurationPackage
     {
+      InitDirs();
+
       var path = GetPath(typeof(T));
 
       var serialized = JsonConvert.SerializeObject(settings, new StringEnumConverter());
@@ -42,6 +63,8 @@ namespace Nord.Nganga.Models.Configuration
 
     public static T GetConfiguration<T>() where T : IConfigurationPackage, new()
     {
+      InitDirs();
+
       var path = GetPath(typeof(T));
 
       if (File.Exists(path))
