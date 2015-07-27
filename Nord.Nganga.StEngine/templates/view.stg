@@ -18,12 +18,6 @@ ngModel(model, parentObjectName) ::= <<
 
 childView(model) ::= <<
 <nord-row>
-  <h3>
-    %model.Title%
-  </h3>
-</nord-row>
-
-<nord-row>
   <form name="%model.NgFormName%" id="%model.NgFormName%" ng-submit="%model.NgSubmitAction%" class="user-edit-form form-horizontal" novalidate>
     %childViewNested(model)%
 
@@ -68,7 +62,7 @@ sectionHeaderMap ::= [
 
 row(model, parentObjectName) ::= <<
 
-<nord-row-simple> %! would like to replace with <nord-row-simple> directive !%
+<nord-row-simple>
   %model.Members:{m|
   %member(m, parentObjectName)%
   }%
@@ -92,14 +86,14 @@ controlTypeTemplateMap ::= [
     default : "THROWANEXCEPTION"	
 ]
 
-caps(model) :: =<%
-<if(model.StartCap)>
-start-cap="%model.StartCap%" 
-<endif>
+caps(model) ::= <%
+%if(model.Member.StartCap)%
+start-cap="%model.Member.StartCap%" 
+%endif%
 
-<if(model.EndCap)>
-end-cap="%%model.EndCap" 
-<endif>
+%if(model.Member.EndCap)%
+end-cap="%model.Member.EndCap%" 
+%endif%
 %>
 
 boolControl(model, parentObjectName) ::= <%
@@ -152,7 +146,7 @@ dateControl(model, parentObjectName) ::= <%
 %ngModel(model, parentObjectName)% 
 twelfths="%model.Width%" 
 field-label-text="%model.Member.DisplayName%"  
-<caps(model)> 
+%caps(model)% 
 
 %if(model.Member.IsRequired)%
 required
@@ -227,7 +221,7 @@ max="%model.Member.Maximum%"
 
 step="%model.Member.Step%" 
 
-<caps(model)> 
+%caps(model)% 
 
 %if(model.Member.IsRequired)%
 required
@@ -247,7 +241,7 @@ textControl(model, parentObjectName) ::= <%
 twelfths="%model.Width%" 
 field-label-text="%model.Member.DisplayName%" 
 
-<caps(model)> 
+%caps(model)% 
 
 %if(model.Member.IsRequired)%
 required 

@@ -90,6 +90,7 @@ namespace Nord.Nganga.Mappers.Views
     private IEnumerable<ViewCoordinatedInformationViewModel.SectionViewModel> SplitSections(ViewModelViewModel vmVm,
       int depthMultipler)
     {
+      depthMultipler = 1;
       var sections = new List<ViewCoordinatedInformationViewModel.SectionViewModel>();
 
       const int rowMax = 12;
