@@ -21,7 +21,7 @@ cacheInit(model) ::= <<
 getEndpointTemplate(model, endpoint) ::= <<
       <endpoint.MethodName>: function( <endpoint.ArgumentNames: { arg | <arg> ,}> successFn, failFn) 
         {
-          var rsc = $resource(<getResourceUri(model, endpoint)>, {}, {'get' : { <isArray(endpoint)> <useCache(endpoint)> }});
+          var rsc = $resource(<getResourceUri(model, endpoint)>, {}, {'get' : { <isArray(endpoint)> <useCache(model)> }});
 
           return rsc.get({ <endpoint.ArgumentNames:{arg| <arg>: <arg>}; separator=","> }, {}, successFn, failFn);
         }
@@ -39,9 +39,13 @@ postResourceUri(model, endpoint) ::= <%
 '/api/<model.ControllerName>/<endpoint.UrlDisplayName>'
 %>
 
-useCache(endpoint) ::= <<
-<if(endpoint.UseCache)>, cache: true<endif>
->>
+useCache(endpoint) ::= <%
+<if(model.UseCustomCache)>
+, cache: resourceCache
+<elseif(model.UseCache)>
+, cache: true
+<endif>
+%>
 
 postEndpointTemplate(model, endpoint) ::= <<
       <endpoint.MethodName>: function(model, successFn, failFn)

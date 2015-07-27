@@ -21,7 +21,7 @@ namespace Nord.Nganga.Mappers.Resources
     {
       var endpoints = this.endpointMapper.GetEnpoints(controller).ToList();
 
-      return new ResourceCoordinatedInformationViewModel
+      var model = new ResourceCoordinatedInformationViewModel
       {
         AppName = controller.GetAttribute<AngularModuleNameAttribute>().ModuleName,
         UseCache =
@@ -38,6 +38,8 @@ namespace Nord.Nganga.Mappers.Resources
         ControllerName = controller.Name.Replace("Controller", string.Empty),
         ServiceName = controller.Name.Replace("Controller", "Service").Camelize(),
       };
+
+      return model;
     }
   }
 }
