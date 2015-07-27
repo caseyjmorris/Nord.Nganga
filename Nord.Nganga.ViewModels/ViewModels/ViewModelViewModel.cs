@@ -91,6 +91,8 @@ namespace Nord.Nganga.Models.ViewModels
       public string InputMask { get; set; }
       public object Minimum { get; set; }
       public object Maximum { get; set; }
+      public string StartCap { get; set; }
+      public string EndCap { get; set; }
       public object Step { get; set; } //1, .01, "any" are the most likely values here
       public Type DataType { get; set; }
 

@@ -92,6 +92,16 @@ controlTypeTemplateMap ::= [
     default : "THROWANEXCEPTION"	
 ]
 
+caps(model) :: =<%
+<if(model.StartCap)>
+start-cap="%model.StartCap%" 
+<endif>
+
+<if(model.EndCap)>
+end-cap="%%model.EndCap" 
+<endif>
+%>
+
 boolControl(model, parentObjectName) ::= <%
 <nord-bool-control  
 %ngModel(model, parentObjectName)% 
@@ -142,6 +152,7 @@ dateControl(model, parentObjectName) ::= <%
 %ngModel(model, parentObjectName)% 
 twelfths="%model.Width%" 
 field-label-text="%model.Member.DisplayName%"  
+<caps(model)> 
 
 %if(model.Member.IsRequired)%
 required
@@ -216,6 +227,8 @@ max="%model.Member.Maximum%"
 
 step="%model.Member.Step%" 
 
+<caps(model)> 
+
 %if(model.Member.IsRequired)%
 required
 %endif%
@@ -233,6 +246,9 @@ textControl(model, parentObjectName) ::= <%
 %ngModel(model, parentObjectName)% 
 twelfths="%model.Width%" 
 field-label-text="%model.Member.DisplayName%" 
+
+<caps(model)> 
+
 %if(model.Member.IsRequired)%
 required 
 %endif%
