@@ -8,11 +8,11 @@
     <owners>National Organization for Rare Diseases</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Annotations needed for an Nganga project.</description>
-    <releaseNotes>f4c4a95 UPdated script again...
-ef89d17 Updated spec
-7f2a367 Updated publish script
-1693192 fixes and renames
-dec7cde Merge branch 'master' of https://github.com/NationalOrganizationForRareDisorders/Nord.Nganga.git
+    <releaseNotes>97d7fc8 Cap support.
+5a21efd Fix handling of cache in generation...
+4ea824b Template editing.
+5bd659b Re-open window on close...
+c3c57a3 Fixed various UI issues.
 </releaseNotes>
     <copyright>Copyright 2015</copyright>
   </metadata>
