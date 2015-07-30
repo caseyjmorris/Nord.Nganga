@@ -41,49 +41,33 @@ namespace Nord.Nganga.WinApp
       this.autoVSIntegration.Checked = Settings1.Default.AutoVSIntegration;
     }
 
-    private void OnClose()
-    {
-            var coordinationResults = Program.Coordinate(NgangaLog.Instance.Log).ToList();
-      if (!coordinationResults.Any())
-      {
-        return;
-      }
+    //private void OnClose()
+    //{
+    //        var coordinationResults = Program.Coordinate(NgangaLog.Instance.Log).ToList();
+    //  if (!coordinationResults.Any())
+    //  {
+    //    return;
+    //  }
 
-      if (coordinationResults.Count() == 1)
-      {
-        (new CoordinationResultBrowser(coordinationResults.First())).Show();
-      }
-      else
-      {
-        (new CoordinationResultCollectionBrowser(coordinationResults)).Show();
-      }
-    }
+    //  if (coordinationResults.Count() == 1)
+    //  {
+    //    (new CoordinationResultBrowser(coordinationResults.First())).Show();
+    //  }
+    //  else
+    //  {
+    //    (new CoordinationResultCollectionBrowser(coordinationResults)).Show();
+    //  }
+    //}
 
     private void exitToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      this.OnClose();
+    //  this.OnClose();
       this.Close();
     }
 
     private void saveToolStripMenuItem_Click(object sender, EventArgs e)
     {
       VsIntegrator.Save(this.coordinationResult, this.autoVSIntegration.Checked, Log);
-    }
-
-    private void tabControl1_Selected(object sender, TabControlEventArgs e)
-    {
-      var tabControl = sender as TabControl;
-      if (tabControl == null) return;
-
-      var selectedPage = tabControl.SelectedTab;
-      if (selectedPage == null) return;
-
-      var rtb = selectedPage.Controls[0] as RichTextBox;
-      if (rtb == null) return;
-      var txt = rtb.Text;
-      if (string.IsNullOrEmpty(txt)) return;
-
-      Clipboard.SetText(rtb.Text);
     }
 
     private void autoVSIntegration_Click(object sender, EventArgs e)
@@ -121,7 +105,7 @@ namespace Nord.Nganga.WinApp
 
     private void exitToolStripMenuItem_Click (object sender, FormClosedEventArgs e)
     {
-      this.OnClose();
+      //this.OnClose();
     }
   }
 }
