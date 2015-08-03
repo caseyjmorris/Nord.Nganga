@@ -31,10 +31,7 @@ namespace Nord.Nganga.WinApp
 
     private void Form1_Load(object sender, EventArgs e)
     {
-      this.Text = string.Format(
-        "{0} - [{1}] - Coordination Result Browser",
-        typeof(CoordinationResultBrowser).Assembly.GetName().Name,
-        typeof(CoordinationResultBrowser).Assembly.GetName().Version);
+     this.SetId("Coordination Result Browser");
 
       this.dataGridView1.DataSource = ToDataSource(this.coordinationResult).ToList();
 

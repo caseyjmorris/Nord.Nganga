@@ -25,10 +25,7 @@ namespace Nord.Nganga.WinApp
 
     private void NgangaLog_Load(object sender, EventArgs e)
     {
-      this.Text = string.Format(
-        "{0} - [{1}] - Log",
-        typeof(CoordinationResultBrowser).Assembly.GetName().Name,
-        typeof(CoordinationResultBrowser).Assembly.GetName().Version);
+         this.SetId("Log");
         this.fontSelector1.Bind(this.rtbLog, Settings1.Default.LogFontFamilyName, Settings1.Default.LogFontSize);
         this.rtbLog.FontChanged += this.rtbLog_FontChanged;
     }

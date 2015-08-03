@@ -67,6 +67,7 @@
     <Compile Include="CoordinationResultBrowser.Designer.cs">
       <DependentUpon>CoordinationResultBrowser.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormExtensions.cs" />
     <Compile Include="NgangaLog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -81,12 +82,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResourceOnlyParmsDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ResourceOnlyParmsDialog.Designer.cs">
-      <DependentUpon>ResourceOnlyParmsDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="Settings1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -126,9 +121,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="ResourceOnlyParmsDialog.resx">
-      <DependentUpon>ResourceOnlyParmsDialog.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="SourceBrowser.resx">
       <DependentUpon>SourceBrowser.cs</DependentUpon>
     </EmbeddedResource>

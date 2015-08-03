@@ -24,10 +24,8 @@ namespace Nord.Nganga.WinApp
 
     private void CoordinationResultCollectionBrowser_Load(object sender, EventArgs e)
     {
-      this.Text = string.Format(
-    "{0} - [{1}] - Coordination Result Collection Browser",
-    typeof(CoordinationResultBrowser).Assembly.GetName().Name,
-    typeof(CoordinationResultBrowser).Assembly.GetName().Version);
+         this.SetId("Coordination Result Collection Browser");
+      
     }
 
     private void dataGridView1_DoubleClick(object sender, EventArgs e)

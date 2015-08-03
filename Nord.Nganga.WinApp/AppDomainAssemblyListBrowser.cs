@@ -20,10 +20,11 @@ namespace Nord.Nganga.WinApp
 
     private void AppDomainAssemblyListBrowser_Load(object sender, EventArgs e)
     {
+      this.SetId("Loaded Assemblies");
       this.dataGridView1.DataSource = AppDomain.CurrentDomain.GetAssemblies()
         .Select(a => a.GetName())
         .OrderBy(n => n.Name)
-        .Select(n=> new {AssemblyName=n.Name, AssemblyVersion=n.Version})
+        .Select(n => new {AssemblyName = n.Name, AssemblyVersion = n.Version})
         .ToList();
     }
   }

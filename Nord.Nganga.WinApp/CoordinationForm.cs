@@ -39,10 +39,7 @@ namespace Nord.Nganga.WinApp
 
     private void NgangaGenParmsForm_Load(object sender, EventArgs e)
     {
-      this.Text = string.Format(
-        "{0} - [{1}] - Client Assembly Selection",
-        typeof(CoordinationResultBrowser).Assembly.GetName().Name,
-        typeof(CoordinationResultBrowser).Assembly.GetName().Version);
+      this.SetId("Assembly Selection");
 
       this.logFusionEventsToolStripMenuItem.Checked = Settings1.Default.LogFusionResolutionEvents;
 
