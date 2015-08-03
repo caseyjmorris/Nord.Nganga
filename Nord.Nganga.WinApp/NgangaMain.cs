@@ -12,7 +12,7 @@ namespace Nord.Nganga.WinApp
   {
     private readonly Func<StringFormatProviderVisitor, IEnumerable<CoordinationResult>> coordinationResultProvider;
 
-    public NgangaMain(Func<StringFormatProviderVisitor, IEnumerable<CoordinationResult>> coordinationResultProvider)
+    public NgangaMain(Func< StringFormatProviderVisitor, IEnumerable<CoordinationResult>> coordinationResultProvider)
     {
       this.coordinationResultProvider = coordinationResultProvider;
       this.InitializeComponent();
@@ -20,7 +20,28 @@ namespace Nord.Nganga.WinApp
 
     private void openAssemblyToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      var coordinationResults = this.coordinationResultProvider(NgangaLog.Instance.Log).ToList();
+
+    }
+
+    private void loadedAssembliesToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    private void NgangaMain_Load(object sender, EventArgs e)
+    {
+      this.Text =
+        $"{typeof(CoordinationResultBrowser).Assembly.GetName().Name} - [{typeof(CoordinationResultBrowser).Assembly.GetName().Version}] - Main";
+    }
+
+    private void quitToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      Application.Exit();
+    }
+
+    private void toolStripButton1_Click (object sender, EventArgs e)
+    {
+          var coordinationResults = this.coordinationResultProvider(NgangaLog.Instance.Log).ToList();
       if (!coordinationResults.Any())
       {
         return;
@@ -36,22 +57,9 @@ namespace Nord.Nganga.WinApp
       }
     }
 
-    private void loadedAssembliesToolStripMenuItem_Click(object sender, EventArgs e)
+    private void toolStripButton2_Click (object sender, EventArgs e)
     {
-      (new AppDomainAssemblyListBrowser()).Show();
-    }
-
-    private void NgangaMain_Load(object sender, EventArgs e)
-    {
-      this.Text = string.Format(
-        "{0} - [{1}] - Main",
-        typeof(CoordinationResultBrowser).Assembly.GetName().Name,
-        typeof(CoordinationResultBrowser).Assembly.GetName().Version);
-    }
-
-    private void quitToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      Application.Exit();
+          (new AppDomainAssemblyListBrowser()).Show();
     }
   }
 }

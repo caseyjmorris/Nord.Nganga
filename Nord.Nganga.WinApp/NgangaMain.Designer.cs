@@ -28,102 +28,55 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-      this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-      this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.openAssemblyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-      this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.loadedAssembliesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.openAssemblyBtn = new System.Windows.Forms.Button();
-      this.menuStrip1.SuspendLayout();
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NgangaMain));
+      this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+      this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+      this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+      this.toolStrip1.SuspendLayout();
       this.SuspendLayout();
       // 
-      // menuStrip1
+      // toolStrip1
       // 
-      this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1,
-            this.fileToolStripMenuItem,
-            this.viewToolStripMenuItem});
-      this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-      this.menuStrip1.Name = "menuStrip1";
-      this.menuStrip1.Size = new System.Drawing.Size(750, 24);
-      this.menuStrip1.TabIndex = 0;
-      this.menuStrip1.Text = "menuStrip1";
+      this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButton1,
+            this.toolStripButton2});
+      this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+      this.toolStrip1.Name = "toolStrip1";
+      this.toolStrip1.Size = new System.Drawing.Size(432, 25);
+      this.toolStrip1.TabIndex = 2;
+      this.toolStrip1.Text = "toolStrip1";
       // 
-      // toolStripMenuItem1
+      // toolStripButton1
       // 
-      this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-      this.toolStripMenuItem1.Size = new System.Drawing.Size(12, 20);
+      this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+      this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.toolStripButton1.Name = "toolStripButton1";
+      this.toolStripButton1.Size = new System.Drawing.Size(94, 22);
+      this.toolStripButton1.Text = "Open Assembly";
+      this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
       // 
-      // fileToolStripMenuItem
+      // toolStripButton2
       // 
-      this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openAssemblyToolStripMenuItem,
-            this.toolStripMenuItem2,
-            this.quitToolStripMenuItem});
-      this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-      this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-      this.fileToolStripMenuItem.Text = "File";
-      // 
-      // openAssemblyToolStripMenuItem
-      // 
-      this.openAssemblyToolStripMenuItem.Name = "openAssemblyToolStripMenuItem";
-      this.openAssemblyToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-      this.openAssemblyToolStripMenuItem.Text = "Open Assembly";
-      this.openAssemblyToolStripMenuItem.Click += new System.EventHandler(this.openAssemblyToolStripMenuItem_Click);
-      // 
-      // toolStripMenuItem2
-      // 
-      this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-      this.toolStripMenuItem2.Size = new System.Drawing.Size(154, 6);
-      // 
-      // quitToolStripMenuItem
-      // 
-      this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-      this.quitToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-      this.quitToolStripMenuItem.Text = "Exit";
-      this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
-      // 
-      // viewToolStripMenuItem
-      // 
-      this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.loadedAssembliesToolStripMenuItem});
-      this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-      this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-      this.viewToolStripMenuItem.Text = "View";
-      // 
-      // loadedAssembliesToolStripMenuItem
-      // 
-      this.loadedAssembliesToolStripMenuItem.Name = "loadedAssembliesToolStripMenuItem";
-      this.loadedAssembliesToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
-      this.loadedAssembliesToolStripMenuItem.Text = "Loaded Assemblies";
-      this.loadedAssembliesToolStripMenuItem.Click += new System.EventHandler(this.loadedAssembliesToolStripMenuItem_Click);
-      // 
-      // openAssemblyBtn
-      // 
-      this.openAssemblyBtn.Location = new System.Drawing.Point(13, 40);
-      this.openAssemblyBtn.Name = "openAssemblyBtn";
-      this.openAssemblyBtn.Size = new System.Drawing.Size(725, 23);
-      this.openAssemblyBtn.TabIndex = 1;
-      this.openAssemblyBtn.Text = "Open assembly";
-      this.openAssemblyBtn.UseVisualStyleBackColor = true;
-      this.openAssemblyBtn.Click += new System.EventHandler(this.openAssemblyToolStripMenuItem_Click);
+      this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
+      this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.toolStripButton2.Name = "toolStripButton2";
+      this.toolStripButton2.Size = new System.Drawing.Size(140, 22);
+      this.toolStripButton2.Text = "View Loaded Assemblies";
+      this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
       // 
       // NgangaMain
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(750, 89);
-      this.Controls.Add(this.openAssemblyBtn);
-      this.Controls.Add(this.menuStrip1);
-      this.MainMenuStrip = this.menuStrip1;
+      this.ClientSize = new System.Drawing.Size(432, 67);
+      this.Controls.Add(this.toolStrip1);
       this.Name = "NgangaMain";
       this.Text = "NgangaMain";
       this.Load += new System.EventHandler(this.NgangaMain_Load);
-      this.menuStrip1.ResumeLayout(false);
-      this.menuStrip1.PerformLayout();
+      this.toolStrip1.ResumeLayout(false);
+      this.toolStrip1.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -131,14 +84,8 @@
 
     #endregion
 
-    private System.Windows.Forms.MenuStrip menuStrip1;
-    private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-    private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem openAssemblyToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
-    private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
-    private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem loadedAssembliesToolStripMenuItem;
-    private System.Windows.Forms.Button openAssemblyBtn;
+    private System.Windows.Forms.ToolStrip toolStrip1;
+    private System.Windows.Forms.ToolStripButton toolStripButton1;
+    private System.Windows.Forms.ToolStripButton toolStripButton2;
   }
 }
