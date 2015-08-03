@@ -15,8 +15,7 @@ namespace Nord.Nganga.WinControls
 {
   public partial class AssemblySelector : FileSelector
   {
-
-    public new event EventHandler<EventArgs> SelectionChanged ;
+    public new event EventHandler<EventArgs> SelectionChanged;
     public Assembly SelectedAssembly { get; private set; }
 
     public StringFormatProviderVisitor LogHandler { get; set; }
@@ -30,23 +29,19 @@ namespace Nord.Nganga.WinControls
       this.LogFusionResolutionEvents = false;
     }
 
-    void AssemblySelector_SelectionChanged(object sender, EventArgs e)
+    private void AssemblySelector_SelectionChanged(object sender, EventArgs e)
     {
       if (string.IsNullOrEmpty(this.SelectedFile)) return;
 
       var assyTypes = DependentTypeResolver.GetTypesFrom(
         this.SelectedFile,
-        this.LogFusionResolutionEvents ? 
-        DependentTypeResolver.CreateResolveEventLogger(this.LogHandler) : 
-        null);
+        this.LogFusionResolutionEvents
+          ? DependentTypeResolver.CreateResolveEventLogger(this.LogHandler)
+          : null);
 
       this.SelectedAssembly = assyTypes[0].Assembly;
 
-      if (this.SelectionChanged != null)
-      {
-        this.SelectionChanged(this, new EventArgs());
-      }
-
+      this.SelectionChanged?.Invoke(this, new EventArgs());
     }
   }
 }

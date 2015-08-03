@@ -14,10 +14,11 @@ namespace Nord.Nganga.WinApp
 {
   public partial class CoordinationForm : Form
   {
-    private readonly Action<CoordinationResult> resultVisitor;
+    private readonly Action<IEnumerable<CoordinationResult>> resultVisitor;
     private readonly StringFormatProviderVisitor logHandler;
 
-    public CoordinationForm(Action<CoordinationResult> resultVisitor, StringFormatProviderVisitor logHandler)
+    public CoordinationForm(StringFormatProviderVisitor logHandler,
+      Action<IEnumerable<CoordinationResult>> resultVisitor)
     {
       this.InitializeComponent();
       this.resultVisitor = resultVisitor;
@@ -146,7 +147,7 @@ namespace Nord.Nganga.WinApp
           this.Coordinate(t);
         }
       }
-      this.Close();
+      //this.Close();
     }
 
     private void Coordinate(Type controllerType)
@@ -157,11 +158,14 @@ namespace Nord.Nganga.WinApp
 
         var wasp = ConfigurationFactory.GetConfiguration<WebApiSettingsPackage>();
         var fileSettings = ConfigurationFactory.GetConfiguration<SystemPathSettingsPackage>();
-        this.resultVisitor(this.resourceOnly.Checked
-          ? (new GenerationCoordinator(wasp, fileSettings)).CoordinateResourceGeneration(controllerType,
-            this.directorySelector1.SelectedPath)
-          : (new GenerationCoordinator(wasp, fileSettings)).CoordinateUiGeneration(controllerType,
-            this.directorySelector1.SelectedPath));
+        this.resultVisitor(new List<CoordinationResult>
+        {
+          this.resourceOnly.Checked
+            ? (new GenerationCoordinator(wasp, fileSettings)).CoordinateResourceGeneration(controllerType,
+              this.directorySelector1.SelectedPath)
+            : (new GenerationCoordinator(wasp, fileSettings)).CoordinateUiGeneration(controllerType,
+              this.directorySelector1.SelectedPath)
+        });
       }
       catch (Exception ex)
       {

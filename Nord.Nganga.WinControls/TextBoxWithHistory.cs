@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Forms;
+
 namespace Nord.Nganga.WinControls
 {
   public partial class TextBoxWithHistory : UserControl
@@ -12,6 +13,7 @@ namespace Nord.Nganga.WinControls
     public Action<StringCollection> StringCollectionVisitor { get; set; }
 
     private StringCollection history;
+
     public StringCollection History
     {
       set
@@ -19,10 +21,7 @@ namespace Nord.Nganga.WinControls
         this.history = value ?? new StringCollection();
         this.comboBox1.DataSource = (from string s in this.history select s).ToList();
       }
-      get
-      {
-        return this.history;
-      }
+      get { return this.history; }
     }
 
     public TextBoxWithHistory()
@@ -33,10 +32,7 @@ namespace Nord.Nganga.WinControls
 
     public new string Text
     {
-      get
-      {
-        return this.comboBox1.SelectedItem == null ? this.comboBox1.Text : this.comboBox1.SelectedItem as string;
-      }
+      get { return this.comboBox1.SelectedItem == null ? this.comboBox1.Text : this.comboBox1.SelectedItem as string; }
       set
       {
         this.ConditionalAdd(value);
@@ -44,7 +40,7 @@ namespace Nord.Nganga.WinControls
         this.comboBox1.SelectedItem = value;
         if (this.SelectionChanged != null)
         {
-          this.SelectionChanged(this, new SelectionChangedEventArgs<string> { SelectedValue = value });
+          this.SelectionChanged(this, new SelectionChangedEventArgs<string> {SelectedValue = value});
         }
       }
     }
@@ -60,10 +56,7 @@ namespace Nord.Nganga.WinControls
 
       this.ConditionalAdd(currentText);
 
-      if (this.SelectionChanged != null)
-      {
-        this.SelectionChanged(this, new SelectionChangedEventArgs<string> { SelectedValue = currentText });
-      }
+      this.SelectionChanged?.Invoke(this, new SelectionChangedEventArgs<string> {SelectedValue = currentText});
     }
 
     private void ConditionalAdd(string currentText)
@@ -78,18 +71,12 @@ namespace Nord.Nganga.WinControls
       this.comboBox1.DataSource = null;
       this.comboBox1.DataSource = this.history;
 
-      if (this.HistoryChanged != null)
-      {
-        this.HistoryChanged(this, new EventArgs());
-      }
+      this.HistoryChanged?.Invoke(this, new EventArgs());
     }
 
     private void comboBox1_DropDownClosed(object sender, EventArgs e)
     {
-      if (this.SelectionChanged != null)
-      {
-        this.SelectionChanged(this, new SelectionChangedEventArgs<string> { SelectedValue = this.Text });
-      }
+      this.SelectionChanged?.Invoke(this, new SelectionChangedEventArgs<string> {SelectedValue = this.Text});
     }
 
     private void comboBox1_KeyDown(object sender, KeyEventArgs e)
@@ -111,14 +98,14 @@ namespace Nord.Nganga.WinControls
       });
     }
 
-    void mi_Click(object sender, EventArgs e)
+    private void mi_Click(object sender, EventArgs e)
     {
-      this.history.Remove(((ToolStripMenuItem)sender).Text);
+      this.history.Remove(((ToolStripMenuItem) sender).Text);
     }
 
     private void comboBox1_Format(object sender, ListControlConvertEventArgs e)
     {
-      var cb = (ComboBox)sender;
+      var cb = (ComboBox) sender;
       var fv = e.ListItem.ToString().ReduceToFit(cb, 3);
       e.Value = fv;
     }

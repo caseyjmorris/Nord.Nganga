@@ -26,7 +26,7 @@ namespace Nord.Nganga.WinControls
           this.TypeList = new List<Type>();
           return;
         }
-        
+
         var assertWebApi = this.Filters.Any(f => f.IsActive && f.FilterDescription.Contains("Api"));
         var assertModule = this.Filters.Any(f => f.IsActive && f.FilterDescription.Contains("Module"));
         var assertRoute = this.Filters.Any(f => f.IsActive && f.FilterDescription.Contains("Route"));
@@ -42,15 +42,16 @@ namespace Nord.Nganga.WinControls
         if (!this.TypeList.Any())
         {
           MessageBox.Show(
-          "No types match the selected filter criteria",
-          "No Match",
-          MessageBoxButtons.OK,
-          MessageBoxIcon.Information);
+            "No types match the selected filter criteria",
+            "No Match",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information);
         }
       }
     }
 
     private List<Type> typeList;
+
     public List<Type> TypeList
     {
       get { return this.typeList; }
@@ -80,19 +81,13 @@ namespace Nord.Nganga.WinControls
 
     public Type SelectedType
     {
-      get
-      {
-        return (Type)this.comboBox1.SelectedItem;
-      }
+      get { return (Type) this.comboBox1.SelectedItem; }
       set { this.comboBox1.SelectedItem = value; }
     }
 
     private void comboBox1_DropDownClosed(object sender, EventArgs e)
     {
-      if (this.SelectionChanged != null)
-      {
-        this.SelectionChanged(this, new EventArgs());
-      }
+      this.SelectionChanged?.Invoke(this, new EventArgs());
     }
 
     private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -114,11 +109,10 @@ namespace Nord.Nganga.WinControls
       }
     }
 
-    void filterCheckbox_CheckStateChanged(object sender, EventArgs e)
+    private void filterCheckbox_CheckStateChanged(object sender, EventArgs e)
     {
       var menuItem = sender as ToolStripMenuItem;
-      if (menuItem == null) return;
-      var filter = menuItem.Tag as TypeSelectorFilter;
+      var filter = menuItem?.Tag as TypeSelectorFilter;
       if (filter == null) return;
       filter.IsActive = menuItem.Checked;
       this.SourceAssembly = this.sourceAssembly;

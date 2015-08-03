@@ -36,10 +36,7 @@ namespace Nord.Nganga.WinControls
 
     void selectedPath_SelectionChanged(object sender, SelectionChangedEventArgs<string> e)
     {
-      if (this.SelectionChanged != null)
-      {
-        this.SelectionChanged(sender, e);
-      }
+      this.SelectionChanged?.Invoke(sender, e);
     }
 
     public string SelectedPath

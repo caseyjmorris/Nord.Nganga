@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -9,11 +10,13 @@ namespace Nord.Nganga.WinApp
 {
   public partial class NgangaMain : Form
   {
-    private readonly Func<StringFormatProviderVisitor, IEnumerable<CoordinationResult>> coordinationResultProvider;
+    private readonly Action<StringFormatProviderVisitor, Action<IEnumerable<CoordinationResult>>>
+      coordinationResultAcceptor;
 
-    public NgangaMain(Func<StringFormatProviderVisitor, IEnumerable<CoordinationResult>> coordinationResultProvider)
+    public NgangaMain(
+      Action<StringFormatProviderVisitor, Action<IEnumerable<CoordinationResult>>> coordinationResultAcceptor)
     {
-      this.coordinationResultProvider = coordinationResultProvider;
+      this.coordinationResultAcceptor = coordinationResultAcceptor;
       this.InitializeComponent();
     }
 
@@ -24,25 +27,36 @@ namespace Nord.Nganga.WinApp
 
     private void toolStripButton1_Click(object sender, EventArgs e)
     {
-      var coordinationResults = this.coordinationResultProvider(NgangaLog.Instance.Log).ToList();
-      if (!coordinationResults.Any())
-      {
-        return;
-      }
-
-      if (coordinationResults.Count() == 1)
-      {
-        (new CoordinationResultBrowser(coordinationResults.First())).Show();
-      }
-      else
-      {
-        (new CoordinationResultCollectionBrowser(coordinationResults)).Show();
-      }
+      this.coordinationResultAcceptor(NgangaLog.Instance.Log, ResultRouter);
     }
 
     private void toolStripButton2_Click(object sender, EventArgs e)
     {
       (new AppDomainAssemblyListBrowser()).Show();
+    }
+
+    private void ResultRouter(IEnumerable<CoordinationResult> coordinationResults)
+    {
+     this.Invoke(new Action<IEnumerable<CoordinationResult>>(RouteResult), coordinationResults);
+    }
+
+    private static void RouteResult(IEnumerable<CoordinationResult> coordinationResults)
+    {
+            var results = coordinationResults.ToList();
+
+      if (!results.Any())
+      {
+        return;
+      }
+
+      if (results.Count() == 1)
+      {
+       (new CoordinationResultBrowser(results.First())).Show();
+      }
+      else
+      {
+        (new CoordinationResultCollectionBrowser(results)).Show();
+      }
     }
   }
 }

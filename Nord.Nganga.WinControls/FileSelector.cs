@@ -9,7 +9,12 @@ namespace Nord.Nganga.WinControls
     public string DialogFilter { get; set; }
     public event EventHandler<EventArgs> SelectionChanged;
     public event EventHandler<EventArgs> HistoryChanged;
-    public StringCollection History { get { return this.selectedFile.History; } set { this.selectedFile.History = value; } }
+
+    public StringCollection History
+    {
+      get { return this.selectedFile.History; }
+      set { this.selectedFile.History = value; }
+    }
 
     public FileSelector()
     {
@@ -20,41 +25,31 @@ namespace Nord.Nganga.WinControls
       this.selectedFile.HistoryChanged += this.selectedFile_HistoryChanged;
     }
 
-    void selectedFile_HistoryChanged(object sender, EventArgs e)
+    private void selectedFile_HistoryChanged(object sender, EventArgs e)
     {
-      if (this.HistoryChanged != null)
-      {
-        this.HistoryChanged(sender, e);
-      }
+      this.HistoryChanged?.Invoke(sender, e);
     }
 
-    void selectedFile_SelectionChanged(object sender, EventArgs e)
+    private void selectedFile_SelectionChanged(object sender, EventArgs e)
     {
-      if (this.SelectionChanged != null)
-      {
-        this.SelectionChanged(sender, e);
-      }
+      this.SelectionChanged?.Invoke(sender, e);
     }
 
     public string SelectedFile
     {
       get { return this.selectedFile.Text; }
-      set
-      {
-        this.selectedFile.Text = value;
-      }
+      set { this.selectedFile.Text = value; }
     }
 
     private void browse_Click(object sender, EventArgs e)
     {
-      var d = new OpenFileDialog { Filter = this.DialogFilter };
+      var d = new OpenFileDialog {Filter = this.DialogFilter};
 
       var r = d.ShowDialog();
 
       if (r != DialogResult.OK && r != DialogResult.Yes) return;
 
       this.SelectedFile = d.FileName;
-
     }
   }
 }
