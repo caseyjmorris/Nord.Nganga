@@ -192,7 +192,7 @@ multipleSimpleEditorForPrimitive(model, parentObjectName) ::= <%
 parent-object="%parentObjectName%" 
 child-field-name="%model.Member.FieldName%" 
 field-label-text="%model.Member.DisplayName%" 
-collection-name="%model.Member.FieldName%">
+collection-name="%model.Member.FieldName%" is-primitive>
     %\n% %if(model.Member.SelectCommon)% %commonSelect(model)% %else% %(clrTypeMap.(model.Member.DataType.Name))(model)% %endif% %\n%
 </nord-multiple-simple-editor>
 %>
