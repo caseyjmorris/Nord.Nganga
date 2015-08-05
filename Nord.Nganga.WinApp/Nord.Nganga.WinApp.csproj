@@ -159,6 +159,10 @@
       <Project>{8aa252ad-ce48-421d-bf83-4a5a7367f968}</Project>
       <Name>Nord.Nganga.Mappers</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Nord.Nganga.ObjectBrowser\Nord.Nganga.ObjectBrowser.csproj">
+      <Project>{689dd644-fdc3-4043-ae0e-423a283409b5}</Project>
+      <Name>Nord.Nganga.ObjectBrowser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nord.Nganga.StEngine\Nord.Nganga.StEngine.csproj">
       <Project>{b4bcbb48-b413-4d29-9f74-21c24ece18cc}</Project>
       <Name>Nord.Nganga.StEngine</Name>
