@@ -72,6 +72,7 @@ namespace Nord.Nganga.Mappers.Views
     {
       var coord = new ViewCoordinatedInformationViewModel
       {
+        ViewModel = vmVm,
         SaveButtonText =
           ("Save changes to " + vmVm.Name.Humanize(LetterCasing.LowerCase)).Humanize(
             CasingEnumMap.Instance[this.viewModelMapper.AssemblyOptions.GetOption(CasingOptionContext.Button)]),

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
@@ -8,6 +9,7 @@ using Nord.Nganga.Core.Reflection;
 using Nord.Nganga.Fs.Coordination;
 using Nord.Nganga.Models;
 using Nord.Nganga.Models.Configuration;
+using Nord.Nganga.Models.ViewModels;
 using Nord.Nganga.WinControls;
 
 namespace Nord.Nganga.WinApp
@@ -147,7 +149,15 @@ namespace Nord.Nganga.WinApp
           this.Coordinate(t);
         }
       }
-      //this.Close();
+    }
+
+    private void VisitModel(object model)
+    {
+      var modelType = model.GetType();
+      if (modelType == typeof(ViewCoordinationInformationCollectionViewModel) && !this.viewToolStripMenuItem1.Checked) return;
+      if (modelType == typeof(ControllerCoordinatedInformationViewModel) && !this.controllerToolStripMenuItem.Checked) return;
+      if (modelType == typeof(ResourceCoordinatedInformationViewModel) && !this.resourceToolStripMenuItem.Checked) return;
+     (new ObjectBrowser.ObjectEditor {DataSource = model}).Show();
     }
 
     private void Coordinate(Type controllerType)
@@ -161,9 +171,10 @@ namespace Nord.Nganga.WinApp
         this.resultVisitor(new List<CoordinationResult>
         {
           this.resourceOnly.Checked
-            ? (new GenerationCoordinator(wasp, fileSettings)).CoordinateResourceGeneration(controllerType,
+            ? (new GenerationCoordinator(wasp, fileSettings, this.VisitModel)).CoordinateResourceGeneration(
+              controllerType,
               this.directorySelector1.SelectedPath)
-            : (new GenerationCoordinator(wasp, fileSettings)).CoordinateUiGeneration(controllerType,
+            : (new GenerationCoordinator(wasp, fileSettings, this.VisitModel)).CoordinateUiGeneration(controllerType,
               this.directorySelector1.SelectedPath)
         });
       }
@@ -211,6 +222,11 @@ namespace Nord.Nganga.WinApp
     private void loadedAssembliesToolStripMenuItem_Click(object sender, EventArgs e)
     {
       (new AppDomainAssemblyListBrowser()).Show();
+    }
+
+    private void controllerToolStripMenuItem_Click (object sender, EventArgs e)
+    {
+
     }
   }
 }

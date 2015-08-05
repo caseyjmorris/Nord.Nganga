@@ -15,11 +15,14 @@ namespace Nord.Nganga.Fs.Coordination
   {
     private readonly WebApiSettingsPackage webApiSettings;
     private readonly SystemPathSettingsPackage pathSettings;
+    private Action<object> modelVisitor;
 
-    public SourceGenerator(WebApiSettingsPackage settingsPackage, SystemPathSettingsPackage pathSettings)
+    public SourceGenerator(WebApiSettingsPackage settingsPackage, SystemPathSettingsPackage pathSettings,
+      Action<object> modelVisitor = null)
     {
       this.webApiSettings = settingsPackage;
       this.pathSettings = pathSettings;
+      this.modelVisitor = modelVisitor;
     }
 
     public string GenerateController(Type controllerType)
@@ -32,6 +35,8 @@ namespace Nord.Nganga.Fs.Coordination
         new EndpointFilter(new ViewModelMapper()));
 
       var model = controllerCoordinatedInfoMapper.GetControllerCoordinatedInformationViewModel(controllerType);
+      this.modelVisitor?.Invoke(model);
+
       return this.ProcessModel(stringTemplate, model);
     }
 
@@ -44,7 +49,7 @@ namespace Nord.Nganga.Fs.Coordination
       var resourceCoordMapper = new ResourceCoordinationMapper(endpointMapper);
 
       var model = resourceCoordMapper.GetResourceCoordinationInformationViewModel(controllerType);
-
+      this.modelVisitor?.Invoke(model);
       return this.ProcessModel(stringTemplate, model);
     }
 
@@ -54,6 +59,7 @@ namespace Nord.Nganga.Fs.Coordination
       var vcMapper = new ViewCoordinationMapper(this.webApiSettings);
 
       var model = vcMapper.GetViewCoordinatedInformationCollection(controllerType);
+      this.modelVisitor?.Invoke(model);
       return this.ProcessModel(stringTemplate, model);
     }
 

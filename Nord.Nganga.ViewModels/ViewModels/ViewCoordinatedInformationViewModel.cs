@@ -12,6 +12,7 @@ namespace Nord.Nganga.Models.ViewModels
 
   public class ViewCoordinatedInformationViewModel
   {
+    public ViewModelViewModel ViewModel { get;set; }
     public string Title { get; set; }
 
     public IEnumerable<SectionViewModel> Sections { get; set; }

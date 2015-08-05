@@ -20,13 +20,14 @@ childView(model) ::= <<
 <nord-row>
   <form name="%model.NgFormName%" id="%model.NgFormName%" ng-submit="%model.NgSubmitAction%" class="user-edit-form form-horizontal" novalidate>
     %childViewNested(model)%
-
+    %if(!model.ViewModel.IsViewOnly)%    
     <nord-row-simple>
       %! issues with checking for invalid... model.NgFormNvame.$invalid !%
       <button class="btn btn-primary pull-right" type="submit" ng-disabled="%model.NgFormName%.$pristine">
         <span class="glyphicon glyphicon-floppy-save"></span> %model.SaveButtonText%
       </button>
     </nord-row-simple>
+    %endif%
   </form>
 </nord-row>
 >>
@@ -192,7 +193,7 @@ multipleSimpleEditorForPrimitive(model, parentObjectName) ::= <%
 parent-object="%parentObjectName%" 
 child-field-name="%model.Member.FieldName%" 
 field-label-text="%model.Member.DisplayName%" 
-collection-name="%model.Member.FieldName%">
+collection-name="%model.Member.FieldName%" is-primitive>
     %\n% %if(model.Member.SelectCommon)% %commonSelect(model)% %else% %(clrTypeMap.(model.Member.DataType.Name))(model)% %endif% %\n%
 </nord-multiple-simple-editor>
 %>

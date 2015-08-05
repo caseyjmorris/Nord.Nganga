@@ -9,11 +9,12 @@ namespace Nord.Nganga.Fs.Coordination
   {
     private readonly SourceGenerator sourceGenerator;
     private readonly NameSuggester nameSuggester;
-
-    public GenerationCoordinator(WebApiSettingsPackage webApiSettings, SystemPathSettingsPackage pathSettings)
+    private Action<object> modelVisitor;
+    public GenerationCoordinator(WebApiSettingsPackage webApiSettings, SystemPathSettingsPackage pathSettings, Action<object> modelVisitor = null )
     {
-      this.sourceGenerator = new SourceGenerator(webApiSettings, pathSettings);
+      this.sourceGenerator = new SourceGenerator(webApiSettings, pathSettings, modelVisitor);
       this.nameSuggester = new NameSuggester();
+      this.modelVisitor = modelVisitor;
     }
 
     public CoordinationResult CoordinateUiGeneration(Type controllerType, string vsProjectPath)

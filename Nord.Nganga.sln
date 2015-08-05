@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.Core", "Nord.Nganga.Core\Nord.Nganga.Core.csproj", "{D57B30BF-6E21-4C47-A06C-2155F6C2C8CA}"
 EndProject
@@ -28,6 +28,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.Fs", "Nord.Nganga.Fs\Nord.Nganga.Fs.csproj", "{D1ED0121-E79E-42B8-81E5-1CFCA011B18D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.DataTypes", "Nord.Nganga.DataTypes\Nord.Nganga.DataTypes.csproj", "{DB2C0BA3-C238-4A77-A5C8-D4EF8EED3C25}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.Vsix", "Nord.Nganga.Vsix\Nord.Nganga.Vsix.csproj", "{20AE1B73-627E-4A0D-BF4D-5E6D89E3EE88}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.ObjectBrowser", "Nord.Nganga.ObjectBrowser\Nord.Nganga.ObjectBrowser.csproj", "{689DD644-FDC3-4043-AE0E-423A283409B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -86,6 +90,14 @@ Global
 		{DB2C0BA3-C238-4A77-A5C8-D4EF8EED3C25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB2C0BA3-C238-4A77-A5C8-D4EF8EED3C25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB2C0BA3-C238-4A77-A5C8-D4EF8EED3C25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20AE1B73-627E-4A0D-BF4D-5E6D89E3EE88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20AE1B73-627E-4A0D-BF4D-5E6D89E3EE88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20AE1B73-627E-4A0D-BF4D-5E6D89E3EE88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20AE1B73-627E-4A0D-BF4D-5E6D89E3EE88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{689DD644-FDC3-4043-AE0E-423A283409B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{689DD644-FDC3-4043-AE0E-423A283409B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{689DD644-FDC3-4043-AE0E-423A283409B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{689DD644-FDC3-4043-AE0E-423A283409B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
