@@ -31,7 +31,7 @@ namespace Nord.Nganga.Core.Reflection
             (!assertAngularModuleNameAttribute || t.HasAttribute<AngularModuleNameAttribute>())
           ));
 
-      return result;
+      return result.OrderBy(r => r.FullName);
     }
   }
 }
