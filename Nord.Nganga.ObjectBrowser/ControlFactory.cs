@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -155,12 +157,43 @@ namespace Nord.Nganga.ObjectBrowser
           aControl = CreateUnsupportedControl(aPropertyBinding);
           break;
 
+        case PropertyBinding.BindingTypes.Enumerable:
+          aControl = CreateEnumerableControl(aPropertyBinding);
+          break;
+
+        case PropertyBinding.BindingTypes.Unknown:
+          aControl = CreateUnknownControl(aPropertyBinding);
+          break;
+            
         default:
           {
-            throw new System.Exception("Invalid binding type");
+            throw new System.Exception($"Invalid binding type: {aPropertyBinding.BindingType}");
           }
       }
       return aControl;
+    }
+
+    private static Control CreateUnknownControl(PropertyBinding aPropertyBinding)
+    {
+      return new Label() {Text = aPropertyBinding.PropertyName};
+    }
+
+    private static Control CreateEnumerableControl(PropertyBinding aPropertyBinding)
+    {
+      var parent = new Control();
+      foreach (var i in (IEnumerable) aPropertyBinding.PropertyValue)
+      {
+         var child = new ObjectControl(i);
+         parent.Controls.Add(child); 
+      }
+      //var dg = new DataGrid {DataSource = aPropertyBinding.PropertyValue};
+      //dg.Click += Dg_Click;
+      return parent;
+    }
+
+    private static void Dg_Click (object sender, EventArgs e)
+    {
+      
     }
   }
 }

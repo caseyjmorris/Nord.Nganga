@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
@@ -153,11 +152,10 @@ namespace Nord.Nganga.WinApp
 
     private void VisitModel(object model)
     {
-      var modelType = model.GetType();
-      if (modelType == typeof(ViewCoordinationInformationCollectionViewModel) && !this.viewToolStripMenuItem1.Checked) return;
-      if (modelType == typeof(ControllerCoordinatedInformationViewModel) && !this.controllerToolStripMenuItem.Checked) return;
-      if (modelType == typeof(ResourceCoordinatedInformationViewModel) && !this.resourceToolStripMenuItem.Checked) return;
-     (new ObjectBrowser.ObjectEditor {DataSource = model}).Show();
+      var vm = model as ViewCoordinationInformationCollectionViewModel;
+      var cm = model as ControllerCoordinatedInformationViewModel;
+      var rm = model as ResourceCoordinatedInformationViewModel;
+      this.logHandler("The model browser is not yet implemented");
     }
 
     private void Coordinate(Type controllerType)
@@ -224,9 +222,8 @@ namespace Nord.Nganga.WinApp
       (new AppDomainAssemblyListBrowser()).Show();
     }
 
-    private void controllerToolStripMenuItem_Click (object sender, EventArgs e)
+    private void controllerToolStripMenuItem_Click(object sender, EventArgs e)
     {
-
     }
   }
 }
