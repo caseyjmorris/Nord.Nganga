@@ -10,7 +10,7 @@ namespace Nord.Nganga.ObjectBrowser
   /// <summary>
   /// Summary description for PropertyControl.
   /// </summary>
-  class PropertyControl : UserControl
+  internal class PropertyControl : UserControl
   {
     public enum LabelPositionOption
     {
@@ -19,63 +19,23 @@ namespace Nord.Nganga.ObjectBrowser
       Default
     }
 
-    private LabelPositionOption pLabelPosition = LabelPositionOption.Default;
-    public LabelPositionOption LabelPosition
-    {
-      get
-      {
-        return this.pLabelPosition;
-      }
-      set
-      {
-        this.pLabelPosition = value;
-      }
-    }
+    public LabelPositionOption LabelPosition { get; set; } = LabelPositionOption.Default;
 
     private Color defaultValueControlBackColor;
-    private Label pLabelControl;
-    private Control pValueControl;
-    private bool pShowTypeName = false;
     private PropertyBinding pPropertyBinding;
-    private bool pAutoUpdate = true;
     private ToolTip toolTip1;
     private IContainer components;
 
-    public Label LabelControl
-    {
-      get
-      {
-        return this.pLabelControl;
-      }
-    }
+    public Label LabelControl { get; private set; }
 
-    public Control ValueControl
-    {
-      get
-      {
-        return this.pValueControl;
-      }
-    }
+    public Control ValueControl { get; private set; }
 
-    public bool ShowTypeName
-    {
-      get
-      {
-        return this.pShowTypeName;
-      }
-      set
-      {
-        this.pShowTypeName = value;
-      }
-    }
+    public bool ShowTypeName { get; set; } = false;
 
     public PropertyBinding PropertyBinding
     {
-      get
-      {
-        return this.pPropertyBinding;
-      }
-      set
+      get { return this.pPropertyBinding; }
+      private set
       {
         this.pPropertyBinding = value;
         this.InitializeControls();
@@ -86,12 +46,9 @@ namespace Nord.Nganga.ObjectBrowser
     {
       get
       {
-        object sEnum;
-        string enumName;
-        ComboBox cb;
-        cb = (ComboBox) this.ValueControl;
-        enumName = cb.Text;
-        sEnum = Enum.Parse(this.PropertyBinding.PropertyValueType, enumName);
+        var cb = (ComboBox) this.ValueControl;
+        var enumName = cb.Text;
+        var sEnum = Enum.Parse(this.PropertyBinding.PropertyValueType, enumName);
         return sEnum;
       }
     }
@@ -100,20 +57,20 @@ namespace Nord.Nganga.ObjectBrowser
     {
       get
       {
-        object o = null;
+        object o;
         switch (this.PropertyBinding.BindingType)
         {
           case PropertyBinding.BindingTypes.Boolean:
             var cb = (CheckBox) this.ValueControl;
             o = Convert.ChangeType(
-                cb.Checked,
-                this.PropertyBinding.PropertyValueType);
+              cb.Checked,
+              this.PropertyBinding.PropertyValueType);
             break;
 
           case PropertyBinding.BindingTypes.Number:
             o = Convert.ChangeType(
-                this.ValueControl.Text,
-                this.PropertyBinding.PropertyValueType);
+              this.ValueControl.Text,
+              this.PropertyBinding.PropertyValueType);
             break;
 
           case PropertyBinding.BindingTypes.String:
@@ -122,6 +79,10 @@ namespace Nord.Nganga.ObjectBrowser
 
           case PropertyBinding.BindingTypes.Enum:
             o = this.SelectedEnum;
+            break;
+
+          case PropertyBinding.BindingTypes.Enumerable:
+            o = this.ValueControl;
             break;
 
           case PropertyBinding.BindingTypes.DateTime:
@@ -135,69 +96,75 @@ namespace Nord.Nganga.ObjectBrowser
             break;
 
           default:
-            {
-              throw new Exception(
-                  "Unable to bind type " + this.PropertyBinding.PropertyValueTypeName + ".");
-            }
+          {
+            throw new Exception(
+              "Unable to bind type " + this.PropertyBinding.PropertyValueTypeName + ".");
+          }
         }
         return o;
       }
       set
       {
-        CheckBox ck;
         TextBox tb;
-        ComboBox cb;
-        ObjectControl oc;
 
         switch (this.PropertyBinding.BindingType)
         {
           case PropertyBinding.BindingTypes.Object:
             var nestedObj = this.PropertyBinding.PropertyValue;
-            oc = new ObjectControl(nestedObj);
-            oc.Location = new Point(this.CumulativeWidth, 0);
-            oc.Name = "ocValue";
+            var oc = new ObjectControl(nestedObj)
+            {
+              Location = new Point(this.CumulativeWidth, 0),
+              Name = "ocValue"
+            };
             this.Controls.Add(oc);
-            this.pValueControl = oc;
+            this.ValueControl = oc;
             break;
 
           case PropertyBinding.BindingTypes.Boolean:
-            ck = (CheckBox) this.ValueControl;
-            ck.Checked = (Boolean) Convert.ChangeType(
-                value, //this.PropertyBinding.PropertyValue, 
-                this.PropertyBinding.PropertyValueType);
+            var ck = (CheckBox) this.ValueControl;
+            var changeType = Convert.ChangeType(
+              value,
+              this.PropertyBinding.PropertyValueType);
+            if (changeType != null)
+              ck.Checked = (Boolean) changeType;
             break;
 
           case PropertyBinding.BindingTypes.Number:
             tb = (TextBox) this.ValueControl;
-            tb.Text = value.ToString(); // this.PropertyBinding.PropertyValue.ToString() ; 
+            tb.Text = value.ToString();
             break;
 
           case PropertyBinding.BindingTypes.String:
             tb = (TextBox) this.ValueControl;
-            tb.Text = value.ToString(); // this.PropertyBinding.PropertyValue.ToString() ; 
+            tb.Text = value.ToString();
             break;
 
           case PropertyBinding.BindingTypes.Enum:
-            cb = (ComboBox) this.ValueControl;
+            var cb = (ComboBox) this.ValueControl;
             // select the current value from the combo based on the sourceValue
             // the ToString function on enums returns the value name so 
             // the IndexOf function will work for this 
-            cb.SelectedItem = cb.Items[cb.Items.IndexOf(value.ToString())]; // this.PropertyBinding.PropertyValue.ToString() ) ]  ; 
+            cb.SelectedItem = cb.Items[cb.Items.IndexOf(value.ToString())];
+            break;
+
+          case PropertyBinding.BindingTypes.Enumerable:
+            var c = new Control();
+//            tb.Text = value.ToString();
             break;
 
           default:
-            {
-              throw new Exception(
-                  this.PropertyBinding.BindingType.ToString() + " binding type " +
-                  " encountered in " + this.GetType().FullName + ".Value+Set");
-            }
+          {
+            throw new Exception(
+              this.PropertyBinding.BindingType + " binding type " +
+              " encountered in " + this.GetType().FullName + ".Value+Set");
+          }
         }
       }
     }
 
-    public PropertyControl (
-        object anObject,
-        PropertyInfo aPropertyInfo)
+    public PropertyControl(
+      object anObject,
+      PropertyInfo aPropertyInfo)
     {
       var aPropertyBinding = new PropertyBinding(anObject, aPropertyInfo);
 
@@ -214,51 +181,33 @@ namespace Nord.Nganga.ObjectBrowser
       this.PropertyBinding.Control = this;
     }
 
-    public PropertyControl (PropertyBinding aPropertyBinding)
+    public PropertyControl()
     {
       // This call is required by the Windows.Forms Form Designer.
       this.InitializeComponent();
 
       // TODO: Add any initialization after the InitializeComponent call
-      if (!aPropertyBinding.Property.CanRead)
-      {
-        throw new Exception("Property " + aPropertyBinding.PropertyName + " is not marked as CanRead. ");
-      }
-      //aPropertyBinding.Control = this; 
-      this.PropertyBinding = aPropertyBinding;
-      this.PropertyBinding.Control = this;
-    }
-
-    public PropertyControl ()
-    {
-      // This call is required by the Windows.Forms Form Designer.
-      this.InitializeComponent();
-
-      // TODO: Add any initialization after the InitializeComponent call
-
     }
 
     /// <summary> 
     /// Clean up any resources being used.
     /// </summary>
-    protected override void Dispose (bool disposing)
+    protected override void Dispose(bool disposing)
     {
       if (disposing)
       {
-        if (this.components != null)
-        {
-          this.components.Dispose();
-        }
+        this.components?.Dispose();
       }
       base.Dispose(disposing);
     }
 
     #region Component Designer generated code
+
     /// <summary> 
     /// Required method for Designer support - do not modify 
     /// the contents of this method with the code editor.
     /// </summary>
-    private void InitializeComponent ()
+    private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
@@ -267,208 +216,78 @@ namespace Nord.Nganga.ObjectBrowser
       // 
       this.Name = "PropertyControl";
       this.Load += new System.EventHandler(this.PropertyControl_Load);
-
     }
+
     #endregion
 
-    private void PropertyControl_Load (object sender, EventArgs e)
+    private void PropertyControl_Load(object sender, EventArgs e)
     {
-
     }
 
-    public bool AutoUpdate
-    {
-      get
-      {
-        return this.pAutoUpdate;
-      }
-      set
-      {
-        this.pAutoUpdate = value;
-      }
-    }
+    public bool AutoUpdate { get; set; } = true;
 
-    private void InitializeControls ()
+    private void InitializeControls()
     {
-
       this.Controls.Clear();
 
-      this.pLabelControl = ControlFactory.CreateLabel(this.PropertyBinding);
-      this.pLabelControl.Location = new Point(0, 0);
-      this.pLabelControl.SizeChanged += new EventHandler(this.LabelControl_SizeChanged);
-      this.Controls.Add(this.pLabelControl);
+      this.LabelControl = ControlFactory.CreateLabel(this.PropertyBinding);
+      this.LabelControl.Location = new Point(0, 0);
+      this.LabelControl.SizeChanged += this.LabelControl_SizeChanged;
+      this.Controls.Add(this.LabelControl);
 
-      this.pValueControl = ControlFactory.CreateControl(this.PropertyBinding);
+      this.ValueControl = ControlFactory.CreateControl(this.PropertyBinding);
       switch (this.LabelPosition)
       {
         case LabelPositionOption.Default:
-          this.pValueControl.Location = new Point(this.CumulativeWidth, 0);
+          this.ValueControl.Location = new Point(this.CumulativeWidth, 0);
           break;
         case LabelPositionOption.Left:
-          this.pValueControl.Location = new Point(this.CumulativeWidth, 0);
+          this.ValueControl.Location = new Point(this.CumulativeWidth, 0);
           break;
         case LabelPositionOption.Top:
-          this.pValueControl.Location = new Point(0, this.CumulativeHeight);
+          this.ValueControl.Location = new Point(0, this.CumulativeHeight);
           break;
       }
 
-      this.Controls.Add(this.pValueControl);
+      this.Controls.Add(this.ValueControl);
 
-      #region old
-      /*
- * 
- OBS.Nord.Nganga.ObjectBrowser.ObjectControl oc ; 
-System.Windows.Forms.TextBox tb ; 
-System.Windows.Forms.ComboBox cb ;
-System.Windows.Forms.CheckBox ck ; 
-switch ( this.PropertyBinding.BindingType ) 
-{
-#region bind bool
-  case PropertyBinding.BindingTypes.Boolean :
-    ck = new CheckBox() ; 
-    ck.Location = new System.Drawing.Point(CumulativeWidth, 0);
-    ck.Name = "chkValue";
-    //tb.Size = new System.Drawing.Size(0, 16);
-    ck.TabIndex = 0;
-    ck.Checked = (bool) System.Convert.ChangeType(
-      this.PropertyBinding.PropertyValue, 
-      this.PropertyBinding.PropertyValueType ) ; 
-    ck.Visible = true ;
-    ck.CheckStateChanged +=new EventHandler(ck_CheckStateChanged); 
-    this.Controls.Add(ck);
-    pValueControl = ck ; 
-    break ; 
-#endregion
-#region bind number 				
-  case PropertyBinding.BindingTypes.Number : 
-    tb = new System.Windows.Forms.TextBox();
-    tb.AutoSize = true ;
-    tb.Location = new System.Drawing.Point(CumulativeWidth, 0);
-    tb.Name = "txtValue";
-    //tb.Size = new System.Drawing.Size(0, 16);
-    tb.TabIndex = 0;
-    tb.Text = this.PropertyBinding.PropertyValue.ToString() ; 
-    tb.Visible = true ;
-    tb.KeyDown += new KeyEventHandler(txtValue_KeyDown);
-    this.Controls.Add(tb);
-    pValueControl = tb ; 
-    break ;
-#endregion
-#region bind string 				
-  case PropertyBinding.BindingTypes.String :
-    tb = new System.Windows.Forms.TextBox();
-    tb.AutoSize = true ;
-    tb.Location = new System.Drawing.Point(CumulativeWidth, 0);
-    tb.Name = "txtValue";
-    //tb.Size = new System.Drawing.Size(0, 16);
-    tb.TabIndex = 0;
-    tb.Text = this.PropertyBinding.PropertyValue.ToString() ; 
-    tb.Visible = true ;
-    tb.KeyDown += new KeyEventHandler(txtValue_KeyDown);
-    this.Controls.Add(tb);
-    pValueControl = tb ; 
-    break ; 
-#endregion
-#region bind enum
-  case PropertyBinding.BindingTypes.Enum  :
-    // create the combo box 
-    cb = new System.Windows.Forms.ComboBox();
-    cb.Location = new System.Drawing.Point(CumulativeWidth, 0);
-    cb.Name = "cmbValue";
-    //cb.Width = 500 ; 
-    //tb.Size = new System.Drawing.Size(0, 16);
-    cb.TabIndex = 0;
-    cb.Visible = true ;
-
-    // load the combo box with the defined enumeration value names 
-    // DumpObject( this.SourceType ) ; 
-    foreach( FieldInfo f in this.PropertyBinding.PropertyValueType.GetFields() ) 
-    {
-      if ( f.FieldType.Name.Equals( this.PropertyBinding.PropertyValueType.Name ) )
-      {						
-        // DumpObject( f ) ; 
-        cb.Items.Add( f.Name ) ;
-      }
-    }
-
-    // select the current value from the combo based on the sourceValue
-    // the ToString function on enums returns the value name so 
-    // the IndexOf function will work for this 
-    cb.SelectedItem = cb.Items[ cb.Items.IndexOf( this.PropertyBinding.PropertyValue.ToString() ) ]  ; 
-    cb.SelectedValueChanged += new EventHandler(cb_SelectedValueChanged);
-    this.Controls.Add(cb);
-    pValueControl = cb ; 
-    break ; 
-#endregion
-#region bind object
-  case PropertyBinding.BindingTypes.Object  :
-    object nestedObj = this.PropertyBinding.PropertyValue  ;
-    oc = new ObjectControl( nestedObj ) ;
-    oc.Location = new System.Drawing.Point(CumulativeWidth, 0);
-    oc.Name = "ocValue";
-    this.Controls.Add(oc);
-    pValueControl = oc ; 
-    break ;  
-#endregion
-#region unsupported bind
-  case PropertyBinding.BindingTypes.Unsupported : 
-    tb = new System.Windows.Forms.TextBox();
-    tb.Enabled = false ;
-    tb.AutoSize = true ;
-    tb.Location = new System.Drawing.Point(CumulativeWidth, 0);
-    tb.Name = "txtValue";
-    //tb.Size = new System.Drawing.Size(0, 16);
-    tb.TabIndex = 0;
-    tb.Text = "* Unsupported Type *" ; 
-    tb.Visible = true ;
-    //tb.KeyDown += new KeyEventHandler(txtValue_KeyDown);
-    this.Controls.Add(tb);
-    pValueControl = tb ;
-    break ; 
-#endregion
-  default :
-  {
-    throw new System.Exception( "Unsupported bind" ) ; 
-  }
-}	
-
-*/
-      #endregion
-
-      if (this.pValueControl != null)
+      if (this.ValueControl != null)
       {
-        this.pValueControl.Move += new EventHandler(this.ValueControl_Move);
-        this.pValueControl.SizeChanged += new EventHandler(this.ValueControl_SizeChanged);
-        this.pValueControl.TextChanged += new EventHandler(this.ValueControl_TextChanged);
-        this.pValueControl.LostFocus += new EventHandler(this.ValueControl_LostFocus);
+        this.ValueControl.Move += this.ValueControl_Move;
+        this.ValueControl.SizeChanged += this.ValueControl_SizeChanged;
+        this.ValueControl.TextChanged += this.ValueControl_TextChanged;
+        this.ValueControl.LostFocus += this.ValueControl_LostFocus;
 
-        if (this.pValueControl.GetType().Name.Equals("TextBox"))
+        if (this.ValueControl.GetType().Name.Equals("TextBox"))
         {
-          ((TextBox) this.pValueControl).KeyDown += new KeyEventHandler(this.ValueControl_KeyDown);
+          ((TextBox) this.ValueControl).KeyDown += this.ValueControl_KeyDown;
         }
-        else if (this.pValueControl.GetType().Name.Equals("ComboBox"))
+        else if (this.ValueControl.GetType().Name.Equals("ComboBox"))
         {
-          ((ComboBox) this.pValueControl).SelectedValueChanged += new EventHandler(this.ValueControl_SelectedValueChanged);
+          ((ComboBox) this.ValueControl).SelectedValueChanged += this.ValueControl_SelectedValueChanged;
         }
-        else if (this.pValueControl.GetType().Name.Equals("CheckBox"))
+        else if (this.ValueControl.GetType().Name.Equals("CheckBox"))
         {
-          ((CheckBox) this.pValueControl).CheckStateChanged += new EventHandler(this.ValueControl_CheckStateChanged);
+          ((CheckBox) this.ValueControl).CheckStateChanged += this.ValueControl_CheckStateChanged;
         }
 
         // we can only edit properties marked as CanWrite 
-        this.pValueControl.Enabled = this.PropertyBinding.Property.CanWrite;
-        this.pValueControl.TabStop = this.PropertyBinding.Property.CanWrite;
+        this.ValueControl.Enabled = this.PropertyBinding.Property.CanWrite;
+        this.ValueControl.TabStop = this.PropertyBinding.Property.CanWrite;
         this.TabStop = this.PropertyBinding.Property.CanWrite;
 
-        this.defaultValueControlBackColor = this.pValueControl.BackColor;
+        this.defaultValueControlBackColor = this.ValueControl.BackColor;
       }
 
-      this.toolTip1.SetToolTip(this.LabelControl,
+      if (this.PropertyBinding.PropertyValueType != null)
+      {
+        this.toolTip1.SetToolTip(this.LabelControl,
           this.PropertyBinding.PropertyValueType.FullName);
+      }
 
       this.UpdateClientSize();
 
-      this.SizeChanged += new EventHandler(this.PropertyControl_SizeChanged);
+      this.SizeChanged += this.PropertyControl_SizeChanged;
 
       //this.Width = CumulativeWidth ; 
       //this.Height = MaxHeight ; 
@@ -513,16 +332,11 @@ switch ( this.PropertyBinding.BindingType )
       }
     }
 
-    public bool IsDirty
-    {
-      get
-      {
-        return !this.Value.Equals(this.PropertyBinding.PropertyValue);
-      }
-    }
+    public bool IsDirty => !this.Value.Equals(this.PropertyBinding.PropertyValue);
 
-    private void UpdateBoundProperty ()
+    private void UpdateBoundProperty()
     {
+      return; // todo we only want browse - so no updates to the underlying object! 
       if (this.ValueControl != null)
       {
         if (this.ValueControl.Enabled)
@@ -531,63 +345,64 @@ switch ( this.PropertyBinding.BindingType )
           {
             var o = this.PropertyBinding.PropertyValue;
 
-            if (Comparer.Default.Compare(o, this.Value) != 0)
-            {
-              this.PropertyBinding.PropertyValue = this.Value;
-              this.SetColors();
-            }
+            if (Comparer.Default.Compare(o, this.Value) == 0) return;
+            this.PropertyBinding.PropertyValue = this.Value;
+            this.SetColors();
           }
           catch (Exception e)
           {
             MessageBox.Show(
-                "UpdateBoundProperty failed for " +
-                this.PropertyBinding.PropertyValueTypeName + " " +
-                this.PropertyBinding.BoundObject.GetType().FullName + "." +
-                this.PropertyBinding.PropertyName +
-                " due to: " + e.Message);
+              "UpdateBoundProperty failed for " +
+              this.PropertyBinding.PropertyValueTypeName + " " +
+              this.PropertyBinding.BoundObject.GetType().FullName + "." +
+              this.PropertyBinding.PropertyName +
+              " due to: " + e.Message);
           }
         }
       }
     }
 
-    private void SetColors ()
+    private void SetColors()
     {
       try
       {
         if (this.IsDirty)
         {
-          this.pValueControl.BackColor = Color.LightCyan;
+          this.ValueControl.BackColor = Color.LightCyan;
           this.toolTip1.SetToolTip(this.LabelControl,
-              "Data changed.");
+            "Data changed.");
           this.toolTip1.Active = true;
         }
         else
         {
-          this.pValueControl.BackColor = this.defaultValueControlBackColor;
+          this.ValueControl.BackColor = this.defaultValueControlBackColor;
           this.toolTip1.SetToolTip(this.LabelControl,
-              this.PropertyBinding.PropertyValueType.FullName);
+            this.PropertyBinding.PropertyValueType.FullName);
         }
       }
       catch (FormatException fe)
       {
-        this.pValueControl.BackColor = Color.Red;
+        this.ValueControl.BackColor = Color.Red;
         this.toolTip1.SetToolTip(this.LabelControl,
-            fe.Message +
-            "  Cannot convert to " +
-            this.PropertyBinding.PropertyValueType.FullName);
+          fe.Message +
+          "  Cannot convert to " +
+          this.PropertyBinding.PropertyValueType.FullName);
       }
     }
 
-    private int SizeOf (string text)
+    private int SizeOf(string text)
     {
-      var l = new Label();
-      l.AutoSize = true;
-      l.Text = text;
+      var l = new Label
+      {
+        AutoSize = true,
+        Text = text
+      };
       return l.Width;
     }
 
     #region Event Handlers
-    private void ValueControl_SelectedValueChanged (object sender, EventArgs e)
+
+    private void ValueControl_SelectedValueChanged(object sender, EventArgs e)
     {
       //if ( !bindInProcess && !refreshInProgress  ) 
       //{
@@ -598,15 +413,16 @@ switch ( this.PropertyBinding.BindingType )
       //}
     }
 
-    private bool clientAreaResizeInProcess = false;
-    private void UpdateClientSize ()
+    private bool clientAreaResizeInProcess;
+
+    private void UpdateClientSize()
     {
       this.clientAreaResizeInProcess = true;
       this.ClientSize = new Size(this.CumulativeWidth + 2, this.MaxHeight);
       this.clientAreaResizeInProcess = false;
     }
 
-    private void LabelControl_SizeChanged (object sender, EventArgs e)
+    private void LabelControl_SizeChanged(object sender, EventArgs e)
     {
       if (this.ValueControl != null)
       {
@@ -616,43 +432,44 @@ switch ( this.PropertyBinding.BindingType )
       //this.Width = this.CumulativeWidth ; 
     }
 
-    private void ValueControl_Move (object sender, EventArgs e)
+    private void ValueControl_Move(object sender, EventArgs e)
     {
       //this.Width = this.CumulativeWidth ; 
       this.UpdateClientSize();
     }
 
-    private void ValueControl_SizeChanged (object sender, EventArgs e)
+    private void ValueControl_SizeChanged(object sender, EventArgs e)
     {
       //this.Width = this.CumulativeWidth ; 
       this.UpdateClientSize();
     }
 
-    private void ValueControl_TextChanged (object sender, EventArgs e)
+    private void ValueControl_TextChanged(object sender, EventArgs e)
     {
       this.SetColors();
     }
-    private void ValueControl_KeyDown (object sender, KeyEventArgs e)
+
+    private void ValueControl_KeyDown(object sender, KeyEventArgs e)
     {
       switch (e.KeyCode)
       {
         case Keys.Enter:
+        {
+          //if ( !bindInProcess && !refreshInProgress  ) 
+          //{
+          if (this.AutoUpdate)
           {
-            //if ( !bindInProcess && !refreshInProgress  ) 
-            //{
-            if (this.AutoUpdate)
-            {
-              this.UpdateBoundProperty();
-            }
-            //}
+            this.UpdateBoundProperty();
           }
+          //}
+        }
           break;
       }
     }
 
     #endregion
 
-    private void ValueControl_LostFocus (object sender, EventArgs e)
+    private void ValueControl_LostFocus(object sender, EventArgs e)
     {
       if (this.AutoUpdate)
       {
@@ -660,7 +477,7 @@ switch ( this.PropertyBinding.BindingType )
       }
     }
 
-    private void PropertyControl_SizeChanged (object sender, EventArgs e)
+    private void PropertyControl_SizeChanged(object sender, EventArgs e)
     {
       if (!this.clientAreaResizeInProcess)
       {
@@ -668,7 +485,7 @@ switch ( this.PropertyBinding.BindingType )
       }
     }
 
-    private void ValueControl_CheckStateChanged (object sender, EventArgs e)
+    private void ValueControl_CheckStateChanged(object sender, EventArgs e)
     {
       if (this.AutoUpdate)
       {

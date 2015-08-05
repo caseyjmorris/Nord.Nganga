@@ -22,7 +22,7 @@ namespace Nord.Nganga.ObjectBrowser
     /// </summary>
     private readonly System.ComponentModel.Container components = null;
 
-    public ObjectControl (object anObject)
+    public ObjectControl(object anObject)
     {
       // This call is required by the Windows.Forms Form Designer.
       this.InitializeComponent();
@@ -30,9 +30,8 @@ namespace Nord.Nganga.ObjectBrowser
       this.LoadElements(anObject);
     }
 
-    private void LoadElements (object anObject)
+    private void LoadElements(object anObject)
     {
-      PropertyControl pc;
       var width = 0;
       if (controlMap.ContainsKey(anObject.GetHashCode())) return;
       System.Diagnostics.Debug.WriteLine(anObject.GetType().FullName + " " + anObject.GetHashCode());
@@ -46,22 +45,16 @@ namespace Nord.Nganga.ObjectBrowser
         // we can only open a property control on properties marked as CanRead
         if (!pi.CanRead) continue;
         System.Diagnostics.Debug.WriteLine("	" + pi.PropertyType + " " + pi.Name);
-        try
+
+        var pc = new PropertyControl(anObject, pi) {Top = this.stackHeight};
+        this.stackHeight += pc.Size.Height + 2;
+        if (pc.ValueControl.TabStop)
         {
-          pc = new PropertyControl(anObject, pi) {Top = this.stackHeight};
-          this.stackHeight += pc.Size.Height + 2;
-          if (pc.ValueControl.TabStop)
-          {
-            pc.TabIndex = tabIndex++;
-          }
-          this.Controls.Add(pc);
-          this.PropertyControls.Add(pc.PropertyBinding.PropertyName, pc);
-          width = Math.Max(pc.Width, width);
+          pc.TabIndex = tabIndex++;
         }
-        catch (Exception exx)
-        {
-          var stop = "stop";
-        }
+        this.Controls.Add(pc);
+        this.PropertyControls.Add(pc.PropertyBinding.PropertyName, pc);
+        width = Math.Max(pc.Width, width);
       }
       this.Height = this.stackHeight;
       this.Width = width;
@@ -70,7 +63,7 @@ namespace Nord.Nganga.ObjectBrowser
 
       this.ConformControlWidths();
 
-      this.SizeChanged += new EventHandler(this.ObjectControl_SizeChanged);
+      this.SizeChanged += this.ObjectControl_SizeChanged;
 
       controlMap = new Hashtable();
     }
@@ -101,7 +94,7 @@ namespace Nord.Nganga.ObjectBrowser
       }
     }
 
-    public void ConformLabelWidths ()
+    public void ConformLabelWidths()
     {
       var width = this.MaxLabelSize;
       foreach (PropertyControl aPropertyControl in this.PropertyControls.Values)
@@ -112,7 +105,7 @@ namespace Nord.Nganga.ObjectBrowser
       }
     }
 
-    public void ConformControlWidths ()
+    public void ConformControlWidths()
     {
       var width = this.MaxControlSize;
       foreach (PropertyControl aPropertyControl in this.PropertyControls.Values)
@@ -125,7 +118,7 @@ namespace Nord.Nganga.ObjectBrowser
     /// <summary> 
     /// Clean up any resources being used.
     /// </summary>
-    protected override void Dispose (bool disposing)
+    protected override void Dispose(bool disposing)
     {
       if (disposing)
       {
@@ -138,23 +131,23 @@ namespace Nord.Nganga.ObjectBrowser
     }
 
     #region Component Designer generated code
+
     /// <summary> 
     /// Required method for Designer support - do not modify 
     /// the contents of this method with the code editor.
     /// </summary>
-    private void InitializeComponent ()
+    private void InitializeComponent()
     {
       // 
       // ObjectControl
       // 
       this.Name = "ObjectControl";
       this.Load += new System.EventHandler(this.ObjectControl_Load);
-
     }
+
     #endregion
 
-
-    public void RefreshView ()
+    public void RefreshView()
     {
       foreach (PropertyControl aPropertyControl in this.PropertyControls.Values)
       {
@@ -169,12 +162,11 @@ namespace Nord.Nganga.ObjectBrowser
     }
 
 
-    private void ObjectControl_Load (object sender, EventArgs e)
+    private void ObjectControl_Load(object sender, EventArgs e)
     {
-
     }
 
-    private void ObjectControl_SizeChanged (object sender, EventArgs e)
+    private void ObjectControl_SizeChanged(object sender, EventArgs e)
     {
       foreach (PropertyControl aPropertyControl in this.PropertyControls.Values)
       {

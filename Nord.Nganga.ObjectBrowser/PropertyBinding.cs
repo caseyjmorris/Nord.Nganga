@@ -1,8 +1,23 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Reflection;
 
 namespace Nord.Nganga.ObjectBrowser
 {
+  internal static class TypeTools
+  {
+    public static bool IsIEnumerable(this Type objectType)
+    {
+      if (objectType.IsPrimitive)
+        return false;
+      if (objectType.GetConstructor(Type.EmptyTypes) == null) return false;
+      var tempObject = Activator.CreateInstance(objectType);
+      return tempObject is IEnumerable;
+    }
+  }
+
   /// <summary>
   /// Summary description for PropertyBinding.
   /// </summary>
@@ -16,149 +31,90 @@ namespace Nord.Nganga.ObjectBrowser
       Number,
       Boolean,
       Object,
+      Enumerable,
       Color,
       List,
-      Unsupported
+      Unsupported,
+      Unknown
     }
 
-    private System.Windows.Forms.Control pControl;
-    public System.Windows.Forms.Control Control
-    {
-      get
-      {
-        return this.pControl;
-      }
-      set
-      {
-        this.pControl = value;
-      }
-    }
+    public System.Windows.Forms.Control Control { get; set; }
 
     private int pIndex;
+
     public int Index
     {
-      get
-      {
-        return this.pIndex;
-      }
+      get { return this.pIndex; }
       set
       {
         this.pIndex = value;
-        this.pIsIndexed = true;
+        this.IsIndexed = true;
       }
     }
 
-    private bool pIsIndexed = false;
-    public bool IsIndexed
+    public bool IsIndexed { get; private set; }
+
+    public bool? IsGeneric => this.PropertyValueType?.IsGenericType;
+    public Type GenericType => this.IsGeneric.HasValue && this.IsGeneric.Value  ? this.PropertyValueType.GetGenericTypeDefinition() : null;
+    public bool? IsEnumerable => this.PropertyValueType?.IsIEnumerable();
+    public string PropertyValueTypeName => this.PropertyValueType?.Name;
+
+    public string PropertyValueBaseTypeName => this.PropertyValueType?.BaseType?.Name ?? string.Empty;
+    private Dictionary<Type,BindingTypes> propertyTypeBindingTypesDictionary = new Dictionary<Type, BindingTypes>
     {
-      get
-      {
-        return this.pIsIndexed;
-      }
-    }
-
-    public string PropertyValueTypeName
-    {
-      get
-      {
-        return this.PropertyValueType.Name;
-
-      }
-    }
-
-    public string PropertyValueBaseTypeName
-    {
-      get
-      {
-        if (this.PropertyValueType.BaseType != null)
-        {
-          return this.PropertyValueType.BaseType.Name;
-        }
-        else
-        {
-          return string.Empty;
-        }
-
-      }
-    }
+      {typeof(string), BindingTypes.String },
+            {typeof(DateTime), BindingTypes.DateTime  },
+            {typeof(bool), BindingTypes.Boolean },
+            {typeof(short), BindingTypes.Number },
+            {typeof(int), BindingTypes.Number },
+            {typeof(long), BindingTypes.Number },
+            {typeof(float), BindingTypes.Number },
+            {typeof(double), BindingTypes.Number },
+            {typeof(Color), BindingTypes.Number },
+            {typeof(byte), BindingTypes.Number },
+            {typeof(IntPtr), BindingTypes.Number },
+                        {typeof(Size), BindingTypes.Object  },
+                        {typeof(Rectangle), BindingTypes.Object },
+                        {typeof(Enum), BindingTypes.Enum },
+    };
 
     public BindingTypes BindingType
     {
       get
       {
-        BindingTypes bindingType;
-
-        if (this.PropertyValueTypeName.Equals("String"))
+        if (this.PropertyValue == null)
         {
-          bindingType = BindingTypes.String;
+          return BindingTypes.Unknown;
         }
-        else if (this.PropertyValueTypeName.Equals("DateTime"))
+        if (this.PropertyValueType == null)
         {
-          bindingType = BindingTypes.DateTime;
+          return BindingTypes.Unsupported;
         }
 
-        else if (this.PropertyValueTypeName.Equals("Boolean"))
-        {
-          bindingType = BindingTypes.Boolean;
-        }
-        else if (
-            this.PropertyValueTypeName.Equals("Int16") ||
-            this.PropertyValueTypeName.Equals("Int32") ||
-            this.PropertyValueTypeName.Equals("Int64") ||
-            this.PropertyValueTypeName.Equals("Single") ||
-            this.PropertyValueTypeName.Equals("Double") ||
-            this.PropertyValueTypeName.Equals("Color") ||
-            this.PropertyValueTypeName.Equals("Byte") ||
-            this.PropertyValueTypeName.Equals("IntPtr")
-            )
-        {
-          bindingType = BindingTypes.Number;
-        }
-        else if (
-            this.PropertyValueTypeName.Equals("Size") ||
-            this.PropertyValueTypeName.Equals("Rectangle") ||
-            this.PropertyValueTypeName.Equals("Point") ||
-            this.PropertyValueTypeName.Equals("MainMenu") ||
-            this.PropertyValueTypeName.Equals("Font")
-            )
-        {
-          bindingType = BindingTypes.Object;
-        }
-        //				else if ( typeName.Equals( "ArrayList" ) ) 
-        //				{
-        //					bindingType = BindingTypes.List ; 
-        //				}
-        else if (this.PropertyValueBaseTypeName.Equals("Enum"))
-        {
-          bindingType = BindingTypes.Enum;
-        }
-        else
-        {
-          //bindingType = BindingTypes.Object ;
+        Func<Type, BindingTypes> resolver =
+          type => (this.IsEnumerable ?? false) ? BindingTypes.Enumerable : BindingTypes.Unsupported;
 
-          bindingType = BindingTypes.Unsupported;
+        var bindingType = this.propertyTypeBindingTypesDictionary.ContainsKey(this.PropertyValueType)
+          ? this.propertyTypeBindingTypesDictionary[this.PropertyValueType]
+          : resolver(this.PropertyValueType);
 
-          //System.Diagnostics.Debug.WriteLine( 
-          //    "Unsupported binding type Type: Hash:" + this.pBoundObject.GetHashCode().ToString() + 
-          //    " Base:" + PropertyValueBaseTypeName + " Type:" + PropertyValueTypeName  ) ;
-        }
         return bindingType;
       }
     }
 
-    public PropertyBinding (
-        object anObject,
-        PropertyInfo aProperty)
+    public PropertyBinding(
+      object anObject,
+      PropertyInfo aProperty)
     {
       this.BoundObject = anObject;
       this.Property = aProperty;
       //System.Diagnostics.Debug.WriteLine( this.PropertyName + " " + this.PropertyValueType.Name + " " + this.BindingType.ToString() ) ; 
     }
 
-    public PropertyBinding (
-        object anObject,
-        PropertyInfo aProperty,
-        int anIndex)
+    public PropertyBinding(
+      object anObject,
+      PropertyInfo aProperty,
+      int anIndex)
     {
       this.BoundObject = anObject;
       this.Property = aProperty;
@@ -194,47 +150,12 @@ namespace Nord.Nganga.ObjectBrowser
       }
     }
 
-    public PropertyInfo PProperty;
-    public PropertyInfo Property
-    {
-      get
-      {
-        return this.PProperty;
-      }
-      set
-      {
-        this.PProperty = value;
-      }
-    }
+    public PropertyInfo Property { get; set; }
 
-    public string PropertyName
-    {
-      get
-      {
-        return this.Property.Name;
-      }
-    }
+    public string PropertyName => this.Property?.Name;
 
-    public Type PropertyValueType
-    {
-      get
-      {
-        return this.PropertyValue.GetType();
-      }
-    }
+    public Type PropertyValueType => this.PropertyValue?.GetType();
 
-    private object pBoundObject;
-    public object BoundObject
-    {
-      get
-      {
-        return this.pBoundObject;
-      }
-      set
-      {
-        this.pBoundObject = value;
-      }
-    }
-
+    public object BoundObject { get; set; }
   }
 }
