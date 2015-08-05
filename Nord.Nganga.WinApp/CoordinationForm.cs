@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
@@ -150,6 +151,11 @@ namespace Nord.Nganga.WinApp
       //this.Close();
     }
 
+    private void VisitModel(object model)
+    {
+     // Debugger.Launch();
+    }
+
     private void Coordinate(Type controllerType)
     {
       try
@@ -161,9 +167,10 @@ namespace Nord.Nganga.WinApp
         this.resultVisitor(new List<CoordinationResult>
         {
           this.resourceOnly.Checked
-            ? (new GenerationCoordinator(wasp, fileSettings)).CoordinateResourceGeneration(controllerType,
+            ? (new GenerationCoordinator(wasp, fileSettings, this.VisitModel)).CoordinateResourceGeneration(
+              controllerType,
               this.directorySelector1.SelectedPath)
-            : (new GenerationCoordinator(wasp, fileSettings)).CoordinateUiGeneration(controllerType,
+            : (new GenerationCoordinator(wasp, fileSettings, this.VisitModel)).CoordinateUiGeneration(controllerType,
               this.directorySelector1.SelectedPath)
         });
       }

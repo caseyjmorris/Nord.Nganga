@@ -26,6 +26,28 @@ namespace Nord.Nganga.Mappers
 
     private readonly ViewCoordinationMapper viewCoordinationMapper;
 
+    private static readonly Dictionary<Type, string> ClientTypes =
+      new Dictionary<Type, string>
+      {
+        {typeof(bool), "bool"},
+        {typeof(bool?), "bool"},
+        {typeof(long), "number"},
+        {typeof(long?), "number"},
+        {typeof(int), "number"},
+        {typeof(int?), "number"},
+        {typeof(decimal), "number"},
+        {typeof(decimal?), "number"},
+        {typeof(float), "number"},
+        {typeof(float?), "number"},
+        {typeof(double), "number"},
+        {typeof(double?), "number"},
+        {typeof(string), "string"},
+        {typeof(DateTime), "date"},
+        {typeof(DateTime?), "date"},
+        {typeof(UserExpansibleSelectChoice), "selectcommon"},
+      };
+
+
     private static readonly ICollection<Type> PrimitiveTypes =
       new HashSet<Type>(new[]
       {
@@ -203,7 +225,16 @@ namespace Nord.Nganga.Mappers
     {
       var fields = wrapper.Model.Scalars.Where(s => !s.IsHidden);
 
-      var fieldsDesc = fields.Select(f => new {name = f.FieldName, label = f.DisplayName});
+      var fieldsDesc =
+        fields.Select(
+          f =>
+            new
+            {
+              name = f.FieldName,
+              label = f.DisplayName,
+              clientType = f.SelectCommon != null ? "selectcommon" : ClientTypes[f.DataType],
+              filterArguments = f.SelectCommon?.QualifiedName
+            });
 
       var sb = new StringBuilder();
       using (var sw = new StringWriter(sb))

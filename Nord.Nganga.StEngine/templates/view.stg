@@ -20,13 +20,14 @@ childView(model) ::= <<
 <nord-row>
   <form name="%model.NgFormName%" id="%model.NgFormName%" ng-submit="%model.NgSubmitAction%" class="user-edit-form form-horizontal" novalidate>
     %childViewNested(model)%
-
+    %if(!model.ViewModel.IsViewOnly)%    
     <nord-row-simple>
       %! issues with checking for invalid... model.NgFormNvame.$invalid !%
       <button class="btn btn-primary pull-right" type="submit" ng-disabled="%model.NgFormName%.$pristine">
         <span class="glyphicon glyphicon-floppy-save"></span> %model.SaveButtonText%
       </button>
     </nord-row-simple>
+    %endif%
   </form>
 </nord-row>
 >>
