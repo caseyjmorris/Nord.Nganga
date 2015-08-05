@@ -8,15 +8,15 @@ namespace Nord.Nganga.ObjectBrowser
   /// Summary description for ObjectEditor.
   /// </summary>
 
-  public class ObjectEditor : System.Windows.Forms.Form
+  public class ObjectEditor : Form
   {
     private ObjectControl pObjectControl;
-    private System.Windows.Forms.VScrollBar vScrollBar1;
-    private System.Windows.Forms.MainMenu mainMenu1;
-    private System.Windows.Forms.MenuItem mnuFile;
-    private System.Windows.Forms.MenuItem mnuFileExit;
-    private System.Windows.Forms.MenuItem mnuView;
-    private System.Windows.Forms.MenuItem mnuViewRefresh;
+    private VScrollBar vScrollBar1;
+    private MainMenu mainMenu1;
+    private MenuItem mnuFile;
+    private MenuItem mnuFileExit;
+    private MenuItem mnuView;
+    private MenuItem mnuViewRefresh;
     private MenuItem menuItem1;
     private MenuItem menuItem2;
     private IContainer components;
@@ -163,17 +163,17 @@ namespace Nord.Nganga.ObjectBrowser
     }
     #endregion
 
-    private bool ClientAreaResizeInProcess = false;
+    private bool clientAreaResizeInProcess = false;
 
     private void ObjectEditor_SizeChanged (object sender, EventArgs e)
     {
-      if (!this.ClientAreaResizeInProcess)
+      if (!this.clientAreaResizeInProcess)
       {
-        this.ClientAreaResizeInProcess = true;
+        this.clientAreaResizeInProcess = true;
 
         this.AdjustSizes();
 
-        this.ClientAreaResizeInProcess = false;
+        this.clientAreaResizeInProcess = false;
       }
     }
 
@@ -210,17 +210,17 @@ namespace Nord.Nganga.ObjectBrowser
       this.AdjustSizes();
     }
 
-    private void ObjectEditor_Load (object sender, System.EventArgs e)
+    private void ObjectEditor_Load (object sender, EventArgs e)
     {
 
     }
 
-    private void mnuFileExit_Click (object sender, System.EventArgs e)
+    private void mnuFileExit_Click (object sender, EventArgs e)
     {
       this.Close();
     }
 
-    private void mnuViewRefresh_Click (object sender, System.EventArgs e)
+    private void mnuViewRefresh_Click (object sender, EventArgs e)
     {
       this.pObjectControl.RefreshView();
     }

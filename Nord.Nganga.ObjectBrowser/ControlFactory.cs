@@ -1,6 +1,5 @@
 using System.Reflection;
 using System.Windows.Forms;
-using OBS.Nord.Nganga.ObjectBrowser;
 
 namespace Nord.Nganga.ObjectBrowser
 {
@@ -16,10 +15,10 @@ namespace Nord.Nganga.ObjectBrowser
       //
     }
 
-    public static System.Windows.Forms.Label CreateLabel (
+    public static Label CreateLabel (
         PropertyBinding aPropertyBidning)
     {
-      System.Windows.Forms.Label aLabel;
+      Label aLabel;
       aLabel = new Label();
       aLabel.AutoSize = true;
       aLabel.Name = "labName";
@@ -28,10 +27,10 @@ namespace Nord.Nganga.ObjectBrowser
       aLabel.Visible = true;
       return aLabel;
     }
-    private static System.Windows.Forms.CheckBox CreateCheckBox (
+    private static CheckBox CreateCheckBox (
         PropertyBinding aPropertyBinding)
     {
-      System.Windows.Forms.CheckBox checkBox;
+      CheckBox checkBox;
       checkBox = new CheckBox();
       checkBox.Visible = true;
       checkBox.Name = "chkValue";
@@ -42,11 +41,11 @@ namespace Nord.Nganga.ObjectBrowser
       return checkBox;
     }
 
-    private static System.Windows.Forms.TextBox CreateTextBox (
+    private static TextBox CreateTextBox (
         PropertyBinding aPropertyBinding)
     {
-      System.Windows.Forms.TextBox textBox;
-      textBox = new System.Windows.Forms.TextBox();
+      TextBox textBox;
+      textBox = new TextBox();
       textBox.AutoSize = true;
       textBox.Name = "txtValue";
       textBox.TabIndex = 0;
@@ -55,19 +54,19 @@ namespace Nord.Nganga.ObjectBrowser
       return textBox;
     }
 
-    private static System.Windows.Forms.ComboBox CreateComboBox (
+    private static ComboBox CreateComboBox (
         PropertyBinding aPropertyBinding)
     {
-      System.Windows.Forms.ComboBox comboBox;
+      ComboBox comboBox;
       // create the combo box 
-      comboBox = new System.Windows.Forms.ComboBox();
+      comboBox = new ComboBox();
       comboBox.Name = "cmbValue";
       comboBox.TabIndex = 0;
       comboBox.Visible = true;
 
       // load the combo box with the defined enumeration value names 
       // DumpObject( this.SourceType ) ; 
-      foreach (FieldInfo f in aPropertyBinding.PropertyValueType.GetFields())
+      foreach (var f in aPropertyBinding.PropertyValueType.GetFields())
       {
         if (f.FieldType.Name.Equals(aPropertyBinding.PropertyValueType.Name))
         {
@@ -84,22 +83,22 @@ namespace Nord.Nganga.ObjectBrowser
       return comboBox;
     }
 
-    private static System.Windows.Forms.Control CreateObjectControl (
+    private static Control CreateObjectControl (
         PropertyBinding aPropertyBinding)
     {
-      System.Windows.Forms.Control objectControl;
+      Control objectControl;
 
-      object nestedObj = aPropertyBinding.PropertyValue;
+      var nestedObj = aPropertyBinding.PropertyValue;
       objectControl = new ObjectControl(nestedObj);
       objectControl.Name = "ocValue";
       return objectControl;
     }
 
-    private static System.Windows.Forms.TextBox CreateUnsupportedControl (
+    private static TextBox CreateUnsupportedControl (
         PropertyBinding aPropertyBinding)
     {
-      System.Windows.Forms.TextBox textBox;
-      textBox = new System.Windows.Forms.TextBox();
+      TextBox textBox;
+      textBox = new TextBox();
       textBox.Enabled = false;
       textBox.AutoSize = true;
       textBox.Name = "txtValue";
@@ -109,10 +108,10 @@ namespace Nord.Nganga.ObjectBrowser
       return textBox;
     }
 
-    public static System.Windows.Forms.Label xCreateUnsupportedControl (
+    public static Label XCreateUnsupportedControl (
         PropertyBinding aPropertyBidning)
     {
-      System.Windows.Forms.Label aLabel;
+      Label aLabel;
       aLabel = new Label();
       aLabel.AutoSize = true;
       aLabel.Name = "txtValue";
@@ -122,38 +121,38 @@ namespace Nord.Nganga.ObjectBrowser
       return aLabel;
     }
 
-    public static System.Windows.Forms.Control CreateControl (
+    public static Control CreateControl (
         PropertyBinding aPropertyBinding)
     {
-      System.Windows.Forms.Control aControl = null;
+      Control aControl = null;
       switch (aPropertyBinding.BindingType)
       {
         case PropertyBinding.BindingTypes.Boolean:
-          aControl = ControlFactory.CreateCheckBox(aPropertyBinding);
+          aControl = CreateCheckBox(aPropertyBinding);
           break;
 
         case PropertyBinding.BindingTypes.DateTime:
-          aControl = ControlFactory.CreateTextBox(aPropertyBinding);
+          aControl = CreateTextBox(aPropertyBinding);
           break;
 
         case PropertyBinding.BindingTypes.Number:
-          aControl = ControlFactory.CreateTextBox(aPropertyBinding);
+          aControl = CreateTextBox(aPropertyBinding);
           break;
 
         case PropertyBinding.BindingTypes.String:
-          aControl = ControlFactory.CreateTextBox(aPropertyBinding);
+          aControl = CreateTextBox(aPropertyBinding);
           break;
 
         case PropertyBinding.BindingTypes.Enum:
-          aControl = ControlFactory.CreateComboBox(aPropertyBinding);
+          aControl = CreateComboBox(aPropertyBinding);
           break;
 
         case PropertyBinding.BindingTypes.Object:
-          aControl = ControlFactory.CreateObjectControl(aPropertyBinding);
+          aControl = CreateObjectControl(aPropertyBinding);
           break;
 
         case PropertyBinding.BindingTypes.Unsupported:
-          aControl = ControlFactory.CreateUnsupportedControl(aPropertyBinding);
+          aControl = CreateUnsupportedControl(aPropertyBinding);
           break;
 
         default:

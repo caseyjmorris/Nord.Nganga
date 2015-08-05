@@ -15,12 +15,12 @@ namespace Nord.Nganga.ObjectBrowser
     }
     private static void DumpObject (object o)
     {
-      System.Type t = o.GetType();
+      var t = o.GetType();
 
       System.Diagnostics.Debug.WriteLine("Dumping instance of " + t.FullName);
       System.Diagnostics.Debug.WriteLine("Value is " + o.ToString());
       System.Diagnostics.Debug.WriteLine("Properties are:");
-      foreach (PropertyInfo pi in t.GetProperties())
+      foreach (var pi in t.GetProperties())
       {
         try
         {

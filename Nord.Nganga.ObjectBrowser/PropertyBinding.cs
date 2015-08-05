@@ -194,16 +194,16 @@ namespace Nord.Nganga.ObjectBrowser
       }
     }
 
-    public PropertyInfo pProperty;
+    public PropertyInfo PProperty;
     public PropertyInfo Property
     {
       get
       {
-        return this.pProperty;
+        return this.PProperty;
       }
       set
       {
-        this.pProperty = value;
+        this.PProperty = value;
       }
     }
 
@@ -215,7 +215,7 @@ namespace Nord.Nganga.ObjectBrowser
       }
     }
 
-    public System.Type PropertyValueType
+    public Type PropertyValueType
     {
       get
       {

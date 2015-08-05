@@ -64,9 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CallbackClient.cs" />
     <Compile Include="ControlFactory.cs" />
-    <Compile Include="ICallbackClient.cs" />
     <Compile Include="ObjectControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

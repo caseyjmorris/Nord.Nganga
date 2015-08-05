@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using OBS.Nord.Nganga.ObjectBrowser;
 
 namespace Nord.Nganga.ObjectBrowser
 {
@@ -10,31 +9,18 @@ namespace Nord.Nganga.ObjectBrowser
   /// </summary>
   public class ObjectControl : System.Windows.Forms.UserControl
   {
-    private static System.Collections.Hashtable controlMap = new Hashtable();
+    private static Hashtable controlMap = new Hashtable();
 
-    private int StackHeight = 0;
+    private int stackHeight = 0;
     private object pObject;
-    public object DataSource
-    {
-      get
-      {
-        return this.pObject;
-      }
-    }
+    public object DataSource => this.pObject;
 
-    private System.Collections.Hashtable pPropertyControls = new Hashtable();
-    public System.Collections.Hashtable PropertyControls
-    {
-      get
-      {
-        return this.pPropertyControls;
-      }
-    }
+    public Hashtable PropertyControls { get; } = new Hashtable();
 
     /// <summary> 
     /// Required designer variable.
     /// </summary>
-    private System.ComponentModel.Container components = null;
+    private readonly System.ComponentModel.Container components = null;
 
     public ObjectControl (object anObject)
     {
@@ -47,63 +33,56 @@ namespace Nord.Nganga.ObjectBrowser
     private void LoadElements (object anObject)
     {
       PropertyControl pc;
-      int width = 0;
-      if (!controlMap.ContainsKey(anObject.GetHashCode()))
+      var width = 0;
+      if (controlMap.ContainsKey(anObject.GetHashCode())) return;
+      System.Diagnostics.Debug.WriteLine(anObject.GetType().FullName + " " + anObject.GetHashCode());
+      controlMap.Add(anObject.GetHashCode(), anObject);
+      this.pObject = anObject;
+      var oType = this.pObject.GetType();
+      var piList = oType.GetProperties();
+      var tabIndex = 0;
+      foreach (var pi in piList)
       {
-        System.Diagnostics.Debug.WriteLine(anObject.GetType().FullName + " " + anObject.GetHashCode());
-        controlMap.Add(anObject.GetHashCode(), anObject);
-        this.pObject = anObject;
-        System.Type oType = this.pObject.GetType();
-        PropertyInfo[] piList = oType.GetProperties();
-        int tabIndex = 0;
-        foreach (PropertyInfo pi in piList)
+        // we can only open a property control on properties marked as CanRead
+        if (!pi.CanRead) continue;
+        System.Diagnostics.Debug.WriteLine("	" + pi.PropertyType + " " + pi.Name);
+        try
         {
-          // we can only open a property control on properties marked as CanRead
-          if (pi.CanRead)
+          pc = new PropertyControl(anObject, pi) {Top = this.stackHeight};
+          this.stackHeight += pc.Size.Height + 2;
+          if (pc.ValueControl.TabStop)
           {
-            System.Diagnostics.Debug.WriteLine("	" + pi.PropertyType + " " + pi.Name);
-            try
-            {
-              //PropertyBinding pb = new PropertyBinding( anObject, pi ) ; 
-              //PropertyControl pc = new PropertyControl( pb  ) ; 
-              pc = new PropertyControl(anObject, pi);
-              pc.Top = this.StackHeight;
-              this.StackHeight += pc.Size.Height + 2;
-              if (pc.ValueControl.TabStop)
-              {
-                pc.TabIndex = tabIndex++;
-              }
-              this.Controls.Add(pc);
-              this.PropertyControls.Add(pc.PropertyBinding.PropertyName, pc);
-              width = System.Math.Max(pc.Width, width);
-            }
-            catch (Exception exx)
-            {
-              string stop = "stop";
-            }
+            pc.TabIndex = tabIndex++;
           }
+          this.Controls.Add(pc);
+          this.PropertyControls.Add(pc.PropertyBinding.PropertyName, pc);
+          width = Math.Max(pc.Width, width);
         }
-        this.Height = this.StackHeight;
-        this.Width = width;
-
-        this.ConformLabelWidths();
-
-        this.ConformControlWidths();
-
-        this.SizeChanged += new EventHandler(this.ObjectControl_SizeChanged);
-
-        controlMap = new Hashtable();
+        catch (Exception exx)
+        {
+          var stop = "stop";
+        }
       }
+      this.Height = this.stackHeight;
+      this.Width = width;
+
+      this.ConformLabelWidths();
+
+      this.ConformControlWidths();
+
+      this.SizeChanged += new EventHandler(this.ObjectControl_SizeChanged);
+
+      controlMap = new Hashtable();
     }
 
     public int MaxControlSize
     {
       get
       {
-        int m = 0;
+        var m = 0;
         foreach (PropertyControl aPropertyControl in this.PropertyControls.Values)
         {
-          m = System.Math.Max(aPropertyControl.ValueControl.Width, m);
+          m = Math.Max(aPropertyControl.ValueControl.Width, m);
         }
         return m;
       }
@@ -113,10 +92,10 @@ namespace Nord.Nganga.ObjectBrowser
     {
       get
       {
-        int m = 0;
+        var m = 0;
         foreach (PropertyControl aPropertyControl in this.PropertyControls.Values)
         {
-          m = System.Math.Max(aPropertyControl.LabelControl.Width, m);
+          m = Math.Max(aPropertyControl.LabelControl.Width, m);
         }
         return m;
       }
@@ -124,7 +103,7 @@ namespace Nord.Nganga.ObjectBrowser
 
     public void ConformLabelWidths ()
     {
-      int width = this.MaxLabelSize;
+      var width = this.MaxLabelSize;
       foreach (PropertyControl aPropertyControl in this.PropertyControls.Values)
       {
         aPropertyControl.LabelControl.AutoSize = false;
@@ -135,7 +114,7 @@ namespace Nord.Nganga.ObjectBrowser
 
     public void ConformControlWidths ()
     {
-      int width = this.MaxControlSize;
+      var width = this.MaxControlSize;
       foreach (PropertyControl aPropertyControl in this.PropertyControls.Values)
       {
         aPropertyControl.ValueControl.Width = width;
@@ -190,7 +169,7 @@ namespace Nord.Nganga.ObjectBrowser
     }
 
 
-    private void ObjectControl_Load (object sender, System.EventArgs e)
+    private void ObjectControl_Load (object sender, EventArgs e)
     {
 
     }
