@@ -163,6 +163,9 @@ collection-name="%model.Member.FieldName%"
 child-field-name="%model.Member.CoordinatedInfo.ParentObjectName%" 
 panel-top-label="%model.Member.DisplayName%" 
 field-definitions="%model.Member.TableFieldsExpression%" 
+%if(model.Member.SubordinateActionsExpression)%
+additional-buttons="%model.Member.SubordinateActionsExpression%" 
+%endif
 %if(model.Member.Model.IsViewOnly)%
 view-only 
 %endif%

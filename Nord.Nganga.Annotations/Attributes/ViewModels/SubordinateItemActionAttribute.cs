@@ -7,10 +7,9 @@ namespace Nord.Nganga.Annotations.Attributes.ViewModels
   /// When placed on a an IEnumerable&lt;...ViewModel&gt; propery, 
   /// this attribute will result in an area element placed as the last field of each record (item). 
   /// </summary>
-  [AttributeUsage(AttributeTargets.Property)]
+  [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
   public class SubordinateItemActionAttribute : Attribute
   {
-
     /// <summary>
     /// the column heading for the action column
     /// </summary>

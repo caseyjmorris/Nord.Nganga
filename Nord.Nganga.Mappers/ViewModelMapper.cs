@@ -186,8 +186,9 @@ namespace Nord.Nganga.Mappers
     {
       var hasEnumerableItemAction = info.HasAttribute<SubordinateItemActionAttribute>();
       var itemActionAttribute = hasEnumerableItemAction
-        ? info.GetAttribute<SubordinateItemActionAttribute>()
-        : null;
+        ? info.GetCustomAttributes(typeof(SubordinateItemActionAttribute))
+          .Select(a => (SubordinateItemActionAttribute) a)
+        : new SubordinateItemActionAttribute[0];
       var wrapper = new ViewModelViewModel.SubordinateViewModelWrapper
       {
         FieldName = info.Name.Camelize(),
@@ -201,7 +202,7 @@ namespace Nord.Nganga.Mappers
         IsLedger = info.HasAttribute<LedgerAttribute>(),
         LedgerSumProperty =
           info.GetAttributePropertyValueOrDefault<LedgerAttribute, string>(a => a.SumPropertyName),
-        ItemActionAttribute = itemActionAttribute,
+        ItemActionAttributes = itemActionAttribute,
       };
 
       if (this.viewCoordinationMapper != null)
@@ -217,6 +218,8 @@ namespace Nord.Nganga.Mappers
       }
 
       wrapper.TableFieldsExpression = this.GetTableVisibleFieldsExpression(wrapper);
+
+      wrapper.SubordinateActionsExpression = this.GetAdditionalSubordinateActions(wrapper);
 
       return wrapper;
     }
@@ -236,6 +239,34 @@ namespace Nord.Nganga.Mappers
               filterArguments = f.SelectCommon?.QualifiedName
             });
 
+      return this.GetOneLineSerialization(fieldsDesc);
+    }
+
+    private string GetAdditionalSubordinateActions(ViewModelViewModel.SubordinateViewModelWrapper wrapper)
+    {
+      if (wrapper.ItemActionAttributes == null || !wrapper.ItemActionAttributes.Any())
+      {
+        return null;
+      }
+
+      var results =
+        wrapper.ItemActionAttributes.Select(
+          iaa =>
+            new
+            {
+              attributeName = iaa.AttributeName,
+              attributeValue = iaa.AttributeValue,
+              actionLabel = iaa.ActionText,
+              cssClass = iaa.AreaClass,
+              glyphicon = iaa.ActionClass
+            });
+
+
+      return this.GetOneLineSerialization(results);
+    }
+
+    private string GetOneLineSerialization(object input)
+    {
       var sb = new StringBuilder();
       using (var sw = new StringWriter(sb))
       using (var writer = new JsonTextWriter(sw))
@@ -244,7 +275,7 @@ namespace Nord.Nganga.Mappers
         writer.Formatting = Formatting.None;
 
         var ser = new JsonSerializer();
-        ser.Serialize(writer, fieldsDesc);
+        ser.Serialize(writer, input);
       }
 
       return sb.ToString();
