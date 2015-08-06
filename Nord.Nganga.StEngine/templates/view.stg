@@ -165,7 +165,7 @@ panel-top-label="%model.Member.DisplayName%"
 field-definitions="%model.Member.TableFieldsExpression%" 
 %if(model.Member.SubordinateActionsExpression)%
 additional-buttons="%model.Member.SubordinateActionsExpression%" 
-%endif
+%endif%
 %if(model.Member.Model.IsViewOnly)%
 view-only 
 %endif%
