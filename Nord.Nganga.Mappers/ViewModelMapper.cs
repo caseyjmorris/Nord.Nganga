@@ -250,16 +250,19 @@ namespace Nord.Nganga.Mappers
       }
 
       var results =
-        wrapper.ItemActionAttributes.Select(
-          iaa =>
-            new
-            {
-              attributeName = iaa.AttributeName,
-              attributeValue = iaa.AttributeValue,
-              actionLabel = iaa.ActionText,
-              cssClass = iaa.AreaClass,
-              glyphicon = iaa.ActionClass
-            });
+        wrapper.ItemActionAttributes
+          .GroupBy(iaa => iaa.ColumnHeadingText)
+          .ToDictionary(
+            g => g.Key,
+            g => g.ToList().Select(iaa => (object)
+              new
+              {
+                attributeName = iaa.AttributeName,
+                attributeValue = iaa.AttributeValue,
+                actionLabel = iaa.ActionText,
+                cssClass = iaa.AreaClass,
+                glyphicon = iaa.ActionClass
+              }));
 
 
       return this.GetOneLineSerialization(results);
