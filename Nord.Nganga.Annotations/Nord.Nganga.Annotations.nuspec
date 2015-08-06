@@ -8,11 +8,11 @@
     <owners>National Organization for Rare Diseases</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Annotations needed for an Nganga project.</description>
-    <releaseNotes>58ddf7e Published latest version to nuget package
-97d7fc8 Cap support.
-5a21efd Fix handling of cache in generation...
-4ea824b Template editing.
-5bd659b Re-open window on close...
+    <releaseNotes>52cd572 Assembly update.
+4698a74 fixed bug in template
+1870943 Merge branch 'master' of https://github.com/NationalOrganizationForRareDisorders/Nord.Nganga.git
+b18ce32 rewrote object browser as a generic enumerable aware  tree based viewer.
+bf9bb72 Merge branch 'master' of https://github.com/NationalOrganizationForRareDisorders/Nord.Nganga
 </releaseNotes>
     <copyright>Copyright 2015</copyright>
   </metadata>
