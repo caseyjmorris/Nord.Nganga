@@ -42,16 +42,13 @@
       this.loadedAssembliesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.logFusionEventsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.browseModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.resourceOnly = new System.Windows.Forms.CheckBox();
       this.allTypes = new System.Windows.Forms.CheckBox();
       this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
       this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
       this.splitContainer1 = new System.Windows.Forms.SplitContainer();
       this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-      this.browseModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.viewToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-      this.resourceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.controllerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.menuStrip1.SuspendLayout();
       this.tableLayoutPanel1.SuspendLayout();
       this.tableLayoutPanel2.SuspendLayout();
@@ -101,7 +98,7 @@
       // 
       this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.button1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.button1.Location = new System.Drawing.Point(807, 3);
+      this.button1.Location = new System.Drawing.Point(806, 3);
       this.button1.Name = "button1";
       this.button1.Size = new System.Drawing.Size(71, 29);
       this.button1.TabIndex = 3;
@@ -113,7 +110,7 @@
       // 
       this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
       this.button2.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.button2.Location = new System.Drawing.Point(31, 3);
+      this.button2.Location = new System.Drawing.Point(30, 3);
       this.button2.Name = "button2";
       this.button2.Size = new System.Drawing.Size(75, 29);
       this.button2.TabIndex = 4;
@@ -196,11 +193,18 @@
       this.logFusionEventsToolStripMenuItem.Text = "Log Fusion Events";
       this.logFusionEventsToolStripMenuItem.Click += new System.EventHandler(this.logFusionEventsToolStripMenuItem_Click);
       // 
+      // browseModelToolStripMenuItem
+      // 
+      this.browseModelToolStripMenuItem.CheckOnClick = true;
+      this.browseModelToolStripMenuItem.Name = "browseModelToolStripMenuItem";
+      this.browseModelToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+      this.browseModelToolStripMenuItem.Text = "Browse Models";
+      // 
       // resourceOnly
       // 
       this.resourceOnly.AutoSize = true;
       this.resourceOnly.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.resourceOnly.Location = new System.Drawing.Point(693, 3);
+      this.resourceOnly.Location = new System.Drawing.Point(692, 3);
       this.resourceOnly.Name = "resourceOnly";
       this.resourceOnly.Size = new System.Drawing.Size(108, 29);
       this.resourceOnly.TabIndex = 9;
@@ -284,7 +288,7 @@
       this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 581F));
       this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 114F));
       this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 77F));
-      this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 26F));
+      this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 27F));
       this.tableLayoutPanel3.Controls.Add(this.button1, 4, 0);
       this.tableLayoutPanel3.Controls.Add(this.resourceOnly, 3, 0);
       this.tableLayoutPanel3.Controls.Add(this.button2, 1, 0);
@@ -296,38 +300,6 @@
       this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
       this.tableLayoutPanel3.Size = new System.Drawing.Size(908, 96);
       this.tableLayoutPanel3.TabIndex = 10;
-      // 
-      // browseModelToolStripMenuItem
-      // 
-      this.browseModelToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.controllerToolStripMenuItem,
-            this.resourceToolStripMenuItem,
-            this.viewToolStripMenuItem1});
-      this.browseModelToolStripMenuItem.Name = "browseModelToolStripMenuItem";
-      this.browseModelToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
-      this.browseModelToolStripMenuItem.Text = "Browse Model";
-      // 
-      // viewToolStripMenuItem1
-      // 
-      this.viewToolStripMenuItem1.CheckOnClick = true;
-      this.viewToolStripMenuItem1.Name = "viewToolStripMenuItem1";
-      this.viewToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
-      this.viewToolStripMenuItem1.Text = "View";
-      // 
-      // resourceToolStripMenuItem
-      // 
-      this.resourceToolStripMenuItem.CheckOnClick = true;
-      this.resourceToolStripMenuItem.Name = "resourceToolStripMenuItem";
-      this.resourceToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-      this.resourceToolStripMenuItem.Text = "Resource";
-      // 
-      // controllerToolStripMenuItem
-      // 
-      this.controllerToolStripMenuItem.CheckOnClick = true;
-      this.controllerToolStripMenuItem.Name = "controllerToolStripMenuItem";
-      this.controllerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-      this.controllerToolStripMenuItem.Text = "Controller";
-      this.controllerToolStripMenuItem.Click += new System.EventHandler(this.controllerToolStripMenuItem_Click);
       // 
       // CoordinationForm
       // 
@@ -380,8 +352,5 @@
     private System.Windows.Forms.SplitContainer splitContainer1;
     private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
     private System.Windows.Forms.ToolStripMenuItem browseModelToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem controllerToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem resourceToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem1;
   }
 }

@@ -152,10 +152,15 @@ namespace Nord.Nganga.WinApp
 
     private void VisitModel(object model)
     {
-      var vm = model as ViewCoordinationInformationCollectionViewModel;
-      var cm = model as ControllerCoordinatedInformationViewModel;
-      var rm = model as ResourceCoordinatedInformationViewModel;
-      this.logHandler("The model browser is not yet implemented");
+      try
+      {
+        var obf = new ObjectBrowserForm {DataSource = model};
+        obf.Show();
+      }
+      catch (Exception e)
+      {
+        this.logHandler($"Error - Model bind failed for object browser: {e.Message} at {e.StackTrace}");
+      }
     }
 
     private void Coordinate(Type controllerType)
@@ -164,15 +169,17 @@ namespace Nord.Nganga.WinApp
       {
         if (controllerType == null) return;
 
+        var modelVisitor = this.browseModelToolStripMenuItem.Checked ? (Action<object>) this.VisitModel : null;
+
         var wasp = ConfigurationFactory.GetConfiguration<WebApiSettingsPackage>();
         var fileSettings = ConfigurationFactory.GetConfiguration<SystemPathSettingsPackage>();
         this.resultVisitor(new List<CoordinationResult>
         {
           this.resourceOnly.Checked
-            ? (new GenerationCoordinator(wasp, fileSettings, this.VisitModel)).CoordinateResourceGeneration(
+            ? (new GenerationCoordinator(wasp, fileSettings,modelVisitor )).CoordinateResourceGeneration(
               controllerType,
               this.directorySelector1.SelectedPath)
-            : (new GenerationCoordinator(wasp, fileSettings, this.VisitModel)).CoordinateUiGeneration(controllerType,
+            : (new GenerationCoordinator(wasp, fileSettings, modelVisitor)).CoordinateUiGeneration(controllerType,
               this.directorySelector1.SelectedPath)
         });
       }
@@ -224,6 +231,7 @@ namespace Nord.Nganga.WinApp
 
     private void controllerToolStripMenuItem_Click(object sender, EventArgs e)
     {
+
     }
   }
 }
