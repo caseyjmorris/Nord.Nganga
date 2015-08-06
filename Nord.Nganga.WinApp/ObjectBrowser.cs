@@ -9,6 +9,7 @@ namespace Nord.Nganga.WinApp
 {
   public partial class ObjectBrowser : TreeView
   {
+    private HashSet<int> hashCodes = new HashSet<int>();
     private object dataSource;
 
     public ObjectBrowser()
@@ -36,7 +37,9 @@ namespace Nord.Nganga.WinApp
       }
       else
       {
-        var piList = iType.GetProperties().Where(p => p.CanRead);
+        var piList =
+          iType.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
+            .Where(p => p.CanRead );
         foreach (var pi in piList)
         {
           this.BindProperty(pi, instance, parenTreeNodeCollection);
@@ -50,11 +53,22 @@ namespace Nord.Nganga.WinApp
       IEnumerable enumerableInstance)
     {
       var enumerable = enumerableInstance as IList<object> ?? enumerableInstance.Cast<object>().ToList();
-      var propertyNode = new TreeNode($"{text}: Count = {enumerable.Count()}") {Tag = enumerable};
+      var enumerableType = enumerableInstance.GetType();
+      var isGeneric = enumerableType.IsGenericType;
+      var enumerableTypeName = enumerableType.Name;
+      if (isGeneric)
+      {
+        var gta = enumerableType.GetGenericArguments();
+        enumerableTypeName = gta[0].Name;
+      }
+      var propertyNode = new TreeNode($"{text} {enumerableTypeName} Count = {enumerable.Count()}") {Tag = enumerable};
       parenTreeNodeCollection.Add(propertyNode);
+      var ix = 0;
       foreach (var member in enumerable)
       {
-        this.BindObject(member, propertyNode.Nodes);
+        var memberNode = new TreeNode($"[{ix++}] {member.GetType().Name}") {Tag = member};
+        propertyNode.Nodes.Add(memberNode);
+        this.BindObject(member, memberNode.Nodes);
       }
     }
 
@@ -65,7 +79,7 @@ namespace Nord.Nganga.WinApp
       var instanceType = instance.GetType();
       if ((!instanceType.IsClass) || instanceType == typeof(string))
       {
-        var propertyNode = new TreeNode($"{propertyName}: {instance}") {Tag = instance};
+        var propertyNode = new TreeNode($"{propertyName} {instance.GetType().Name}: {instance}") {Tag = instance};
         parenTreeNodeCollection.Add(propertyNode);
         return;
       }
@@ -79,8 +93,23 @@ namespace Nord.Nganga.WinApp
       }
       else
       {
-        var propertyNode = new TreeNode($"{propertyName}: {propertyValue}") {Tag = instance};
-        parenTreeNodeCollection.Add(propertyNode);
+        var pt = propertyValue?.GetType();
+        if (pt?.IsClass ?? false)
+        {
+          if (pt.FullName.StartsWith("System")) return;
+          var objectKey = propertyValue.GetHashCode();
+          if (this.hashCodes.Contains(objectKey)) return;
+          this.hashCodes.Add(objectKey);
+          this.BindObject(propertyValue, parenTreeNodeCollection);
+        }
+        else
+        {
+          var propertyNode = new TreeNode($"{propertyName} {propertyValue?.GetType().Name}: {propertyValue}")
+          {
+            Tag = propertyValue
+          };
+          parenTreeNodeCollection.Add(propertyNode);
+        }
       }
     }
   }
