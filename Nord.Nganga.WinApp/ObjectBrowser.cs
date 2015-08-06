@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
@@ -28,13 +29,10 @@ namespace Nord.Nganga.WinApp
     private void BindObject(object instance, TreeNodeCollection parenTreeNodeCollection)
     {
       var iType = instance.GetType();
-      var isEnumerable = iType.IsIEnumerable();
-      if (isEnumerable)
+      var enumerableInstance = instance as IEnumerable;
+      if (enumerableInstance != null)
       {
-        foreach (var member in (IEnumerable) instance)
-        {
-          this.BindObject(member, parenTreeNodeCollection);
-        }
+        this.BindEnumerable(iType.Name, parenTreeNodeCollection, enumerableInstance);
       }
       else
       {
@@ -43,6 +41,20 @@ namespace Nord.Nganga.WinApp
         {
           this.BindProperty(pi, instance, parenTreeNodeCollection);
         }
+      }
+    }
+
+    private void BindEnumerable(
+      string text,
+      TreeNodeCollection parenTreeNodeCollection,
+      IEnumerable enumerableInstance)
+    {
+      var enumerable = enumerableInstance as IList<object> ?? enumerableInstance.Cast<object>().ToList();
+      var propertyNode = new TreeNode($"{text}: Count = {enumerable.Count()}") {Tag = enumerable};
+      parenTreeNodeCollection.Add(propertyNode);
+      foreach (var member in enumerable)
+      {
+        this.BindObject(member, propertyNode.Nodes);
       }
     }
 
@@ -63,12 +75,7 @@ namespace Nord.Nganga.WinApp
       var enumerableValue = propertyValue as IEnumerable;
       if (enumerableValue != null && propertyInfo.PropertyType != typeof(string))
       {
-        var propertyNode = new TreeNode($"{propertyName}") {Tag = instance};
-        parenTreeNodeCollection.Add(propertyNode);
-        foreach (var member in enumerableValue)
-        {
-          this.BindObject(member, propertyNode.Nodes);
-        }
+        this.BindEnumerable(propertyName, parenTreeNodeCollection, enumerableValue);
       }
       else
       {
