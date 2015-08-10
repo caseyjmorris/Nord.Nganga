@@ -18,6 +18,8 @@ namespace Nord.Nganga.WinApp
       get { return LaxyLog.Value; }
     }
 
+    public int LogSize => this.rtbLog.TextLength;
+
     public NgangaLog()
     {
       this.InitializeComponent();

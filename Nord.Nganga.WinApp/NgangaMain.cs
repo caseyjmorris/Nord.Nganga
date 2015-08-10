@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using Nord.Nganga.Core;
 using Nord.Nganga.Fs.Coordination;
@@ -27,7 +28,11 @@ namespace Nord.Nganga.WinApp
 
     private void toolStripButton1_Click(object sender, EventArgs e)
     {
+      
+      this.toolStripButton1.Enabled = false;
       this.coordinationResultAcceptor(NgangaLog.Instance.Log, this.ResultRouter);
+      this.toolStripButton1.Enabled = true;
+      
     }
 
     private void toolStripButton2_Click(object sender, EventArgs e)

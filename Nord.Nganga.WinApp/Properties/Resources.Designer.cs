@@ -140,5 +140,15 @@ namespace Nord.Nganga.WinApp.Properties {
                 return ResourceManager.GetString("_The_selected_controller_has_not_been_generated", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap unnamed {
+            get {
+                object obj = ResourceManager.GetObject("unnamed", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

@@ -39,7 +39,7 @@ namespace Nord.Nganga.WinApp
       {
         var piList =
           iType.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
-            .Where(p => p.CanRead );
+            .Where(p => p.CanRead);
         foreach (var pi in piList)
         {
           this.BindProperty(pi, instance, parenTreeNodeCollection);

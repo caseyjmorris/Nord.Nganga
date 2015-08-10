@@ -72,6 +72,7 @@ namespace Nord.Nganga.WinApp
       this.directorySelector1.HistoryChanged += this.directorySelector1_HistoryChanged;
 
       this.SetOkButtonState();
+      this.logHandler($"{this.Text} ready.");
     }
 
     private void directorySelector1_HistoryChanged(object sender, EventArgs e)
@@ -136,6 +137,11 @@ namespace Nord.Nganga.WinApp
     }
 
     private void button1_Click(object sender, EventArgs e)
+    {
+      this.Coordinate();
+    }
+
+    private void Coordinate()
     {
       if (this.typeSelector1.SelectedType != null && !this.allTypes.Checked)
       {
@@ -232,6 +238,12 @@ namespace Nord.Nganga.WinApp
     private void controllerToolStripMenuItem_Click(object sender, EventArgs e)
     {
 
+    }
+
+    private void label3_Click (object sender, EventArgs e)
+    {
+          this.Coordinate();
+          this.Close();
     }
   }
 }
