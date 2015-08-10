@@ -390,7 +390,7 @@ namespace Nord.Nganga.Mappers
     {
       if (!type.Name.EndsWith("ViewModel"))
       {
-        throw new Exception(string.Format("{0} is not a view model", type.FullName));
+        throw new Exception($"{type.FullName} is not a view model");
       }
       // get the properties 
       var viewModelProperties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
@@ -401,20 +401,23 @@ namespace Nord.Nganga.Mappers
         let memberWrapper = this.GetWrappedMember(discriminator, pi)
         select new {pi, discriminator, memberWrapper}).ToList();
 
+
       var vm = new ViewModelViewModel
       {
         Name = type.Name.Replace("ViewModel", string.Empty).Camelize(),
         Scalars = this.GetFieldViewModelCollection(
           decoratedProperties.Where(p => p.discriminator == ViewModelViewModel.MemberDiscriminator.Scalar)
-            .Select(p => p.pi), false),
+            .Select(p => p.pi), false).ToList(),
         IsViewOnly = type.HasAttribute<NotUserEditableAttribute>(),
         ComplexCollections =
           decoratedProperties.Where(p => p.discriminator == ViewModelViewModel.MemberDiscriminator.ComplexCollection)
             .Select(p => p.pi)
-            .Select(this.GetSubordinateViewModelWrapper),
+            .Select(this.GetSubordinateViewModelWrapper)
+            .ToList(),
         PrimitiveCollections = this.GetFieldViewModelCollection(
           decoratedProperties.Where(p => p.discriminator == ViewModelViewModel.MemberDiscriminator.PrimitiveCollection)
-            .Select(p => p.pi), true),
+            .Select(p => p.pi), true)
+          .ToList(),
         Members = decoratedProperties.Select(dp => dp.memberWrapper).ToList()
       };
 
@@ -435,6 +438,37 @@ namespace Nord.Nganga.Mappers
 
       vm.SectionHtmlAttributeValues = sectionsDict;
 
+      if (!vm.IsViewOnly)
+      {
+        return vm;
+      }
+
+      foreach (var coll in vm.ComplexCollections)
+      {
+        coll.Model.IsViewOnly = true;
+      }
+
+      foreach (var coll in vm.PrimitiveCollections)
+      {
+        coll.IsViewOnly = true;
+      }
+
+      foreach (var memb in vm.Scalars)
+      {
+        memb.IsViewOnly = true;
+      }
+
+      foreach (var memb in vm.Members)
+      {
+        if (memb.Discriminator == ViewModelViewModel.MemberDiscriminator.ComplexCollection)
+        {
+          ((ViewModelViewModel.SubordinateViewModelWrapper) memb.Member).Model.IsViewOnly = true;
+        }
+        else
+        {
+          ((ViewModelViewModel.FieldViewModel) memb.Member).IsViewOnly = true;
+        }
+      }
 
       return vm;
     }
