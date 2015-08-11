@@ -39,7 +39,7 @@ namespace Nord.Nganga.StEngine.Test
     public void ExcerciseViewCoordinator()
     {
       var coord = new ViewCoordinationMapper(new ViewModelMapper(), new EndpointFilter(new ViewModelMapper()),
-        new EndpointMapper(this.webApiSettings));
+        new EndpointMapper(this.webApiSettings), this.webApiSettings);
 
       var coordinated = coord.GetViewCoordinatedInformationCollection(typeof(SponsorsController));
     }

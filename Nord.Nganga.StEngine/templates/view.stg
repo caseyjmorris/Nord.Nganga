@@ -40,11 +40,25 @@ ngModel(model, parentObjectName) ::= <<
 %if(parentObjectName)% ng-model="%parentObjectName%.%model.Member.FieldName%" %else% ng-model="%model.Member.FieldName%" %endif%
 >>
 
+injectHtml(model, key) ::= <%
+%model.HtmlIncludes.(key): {c| <!-- Injected HTML at context %key% --> 
+%c% 
+<!-- End injected HTML -->}; separator="%\n%"%
+%>
+
 childView(model) ::= <<
+%injectHtml(model, "BeforeHeader")%
+%injectHtml(model, "AfterHeader")%
+
 <nord-row>
   <form name="%model.NgFormName%" id="%model.NgFormName%" ng-submit="%model.NgSubmitAction%" class="user-edit-form form-horizontal" novalidate>
+    %injectHtml(model, "InsideFormAtBeginning")%
+
     %childViewNested(model)%
     %if(!model.ViewModel.IsViewOnly)%    
+
+    %injectHtml(model, "BeforeSaveButtons")%
+
     <nord-row-simple>
       %! issues with checking for invalid... model.NgFormNvame.$invalid !%
       <button class="btn btn-primary pull-right" type="submit" ng-disabled="%model.NgFormName%.$pristine">
@@ -52,7 +66,11 @@ childView(model) ::= <<
       </button>
     </nord-row-simple>
     %endif%
+
+    %injectHtml(model, "InsideFormAtEnd")%
   </form>
+
+  %injectHtml(model, "AfterContent")%
 </nord-row>
 >>
 

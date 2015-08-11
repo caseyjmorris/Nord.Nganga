@@ -12,7 +12,7 @@ namespace Nord.Nganga.Models.ViewModels
 
   public class ViewCoordinatedInformationViewModel
   {
-    public ViewModelViewModel ViewModel { get;set; }
+    public ViewModelViewModel ViewModel { get; set; }
     public string Title { get; set; }
 
     public IEnumerable<SectionViewModel> Sections { get; set; }
@@ -24,6 +24,8 @@ namespace Nord.Nganga.Models.ViewModels
     public string NgSubmitAction { get; set; }
 
     public string ParentObjectName { get; set; }
+
+    public Dictionary<string, IEnumerable<string>> HtmlIncludes { get; set; }
 
     public override string ToString()
     {
