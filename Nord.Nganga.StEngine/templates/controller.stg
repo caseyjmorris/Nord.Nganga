@@ -8,6 +8,7 @@ controller(model, marker) ::= <<
   ['$scope', '$state', '$stateParams', 'commonRecordsService', 'userInfoService', '<model.ServiceName>'<model.AdditionalNgServices:{svc|, '<svc>' }>,
   function($scope, $state, $stateParams, commonRecordsService, userInfoService, <model.ServiceName><model.AdditionalNgServices:{svc|, <svc>}>)
     {
+      <injectJavaScript(model, "Beginning")>
       <if(model.RouteIdParameter)><primeRouteId(model.RouteIdParameter)><endif>
       <if(model.EditRestricted)><authorizationInformation(model)>
       
@@ -17,6 +18,9 @@ controller(model, marker) ::= <<
 
       <commonRecordsSetup(model)>
       <endif>
+
+      <injectJavaScript(model, "AfterInitialization")>
+
       <if(model.RouteIdParameterIsNullable)>
       if (<model.RouteIdParameter> !== null)
         {
@@ -26,7 +30,11 @@ controller(model, marker) ::= <<
       <controllerRetrievals(model)>
       <endif>
 
+      <injectJavaScript(model, "AfterGet")>
+
       <postMethods(model)>
+
+      <injectJavaScript(model,"End")>
     }]);
 >>
 
@@ -56,6 +64,12 @@ var <rid> = $stateParams.<rid>;
 
 authorizationInformation(model) ::= <%
 $scope.canEdit = <model.EditRestrictedToRoles: {role |userInfoService.userIsInRole('<role>')}; separator=" || ">;
+%>
+
+injectJavaScript(model, key) ::= <%
+<model.InjectedJavaScript.(key): {c| // Injected JavaScript at context <key> <\n>
+<c> <\n>
+// End injected JavaScript}; separator="<\n>">
 %>
 
 commonRecordsObjectInit(model) ::= <<

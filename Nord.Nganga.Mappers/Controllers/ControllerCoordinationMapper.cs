@@ -49,7 +49,7 @@ namespace Nord.Nganga.Mappers.Controllers
         GetEndpoints = filteredInfo.GetEndpoints,
         PostEndpoints = filteredInfo.PostEndpoints,
         RetrievalTargetGetEndpoints = filteredInfo.GetEndpoints.Where(ge => ge.HasReturnValue),
-        EditRestrictedToRoles = filteredInfo.PrivilegedRoles == null ? null : filteredInfo.PrivilegedRoles.ToList(),
+        EditRestrictedToRoles = filteredInfo.PrivilegedRoles?.ToList(),
         ForViewOnlyData = controller.HasAttribute<PresentAsViewOnlyDataAttribute>(),
         ServiceName = controller.Name.Replace("Controller", "Service").Camelize(),
         AdditionalNgServices =
@@ -58,6 +58,7 @@ namespace Nord.Nganga.Mappers.Controllers
         CommonRecordsWithResolvers =
           this.GetCommonRecordsWithResolvers(filteredInfo.TargetComplexTypesWithChildren.ToList(), crObjects),
         CommonRecordObjects = crObjects,
+        InjectedJavaScript = this.GetInjectedJavaScriptDictionary(controller),
       };
 
       model.EditRestricted = model.EditRestrictedToRoles != null && model.EditRestrictedToRoles.Any();
@@ -89,8 +90,8 @@ namespace Nord.Nganga.Mappers.Controllers
         {
           if (result[item.QualifiedName] != item.ProviderExpression)
           {
-            var errorMsg = string.Format("Conflicting definitions for common record {0}:  ```{1}``` and ```{2}```",
-              item.QualifiedName, item.ProviderExpression, result[item.QualifiedName]);
+            var errorMsg =
+              $"Conflicting definitions for common record {item.QualifiedName}:  ```{item.ProviderExpression}``` and ```{result[item.QualifiedName]}```";
 
             throw new InvalidOperationException(errorMsg);
           }
@@ -101,6 +102,15 @@ namespace Nord.Nganga.Mappers.Controllers
       }
 
       return result;
+    }
+
+    private Dictionary<string, IEnumerable<string>> GetInjectedJavaScriptDictionary(Type controller)
+    {
+      var attrs = controller.GetCustomAttributes(inherit: true).OfType<InjectJavaScriptAttribute>();
+
+      var grouped = attrs.GroupBy(a => a.ControllerPosition.ToString());
+
+      return grouped.ToDictionary(g => g.Key, g => (IEnumerable<string>) g.Select(i => i.Content).ToList());
     }
   }
 }

@@ -40,6 +40,7 @@
     <Compile Include="Attributes\Angular\AngularRouteIdParameterAttribute.cs" />
     <Compile Include="Attributes\Angular\GenerateResourceOnlyAttribute.cs" />
     <Compile Include="Attributes\Angular\InjectAngularServicesAttribute.cs" />
+    <Compile Include="Attributes\Angular\InjectJavaScriptAttribute.cs" />
     <Compile Include="Attributes\Angular\JavaScriptOnPostCompleteAttribute.cs" />
     <Compile Include="Attributes\Angular\SuccessStateOnPostCompleteAttribute.cs" />
     <Compile Include="Attributes\Html\AngularControllerActionSectionHeaderAttribute.cs" />

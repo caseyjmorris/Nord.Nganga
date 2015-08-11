@@ -7,6 +7,9 @@ using Nord.Nganga.TestConsumer.Models;
 namespace Nord.Nganga.TestConsumer.Controllers.Api
 {
   [AngularRouteIdParameter("programPeriodId")]
+  [InjectJavaScript("alert('Hello world!');", ControllerPosition = InjectJavaScriptAttribute.Position.Beginning)]
+  [InjectJavaScript("alert('Isn\\'t this really annoying?');",
+    ControllerPosition = InjectJavaScriptAttribute.Position.End)]
   public class SponsorsController : BaseApiController
   {
     public SponsorsController() : base()
