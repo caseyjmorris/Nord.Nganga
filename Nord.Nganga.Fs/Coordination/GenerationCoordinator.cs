@@ -2,6 +2,7 @@
 using Nord.Nganga.Fs.Naming;
 using Nord.Nganga.Models;
 using Nord.Nganga.Models.Configuration;
+using Nord.Nganga.StEngine;
 
 namespace Nord.Nganga.Fs.Coordination
 {
@@ -10,7 +11,9 @@ namespace Nord.Nganga.Fs.Coordination
     private readonly SourceGenerator sourceGenerator;
     private readonly NameSuggester nameSuggester;
     private Action<object> modelVisitor;
-    public GenerationCoordinator(WebApiSettingsPackage webApiSettings, SystemPathSettingsPackage pathSettings, Action<object> modelVisitor = null )
+
+    public GenerationCoordinator(WebApiSettingsPackage webApiSettings, SystemPathSettingsPackage pathSettings,
+      Action<object> modelVisitor = null)
     {
       this.sourceGenerator = new SourceGenerator(webApiSettings, pathSettings, modelVisitor);
       this.nameSuggester = new NameSuggester();
@@ -34,7 +37,13 @@ namespace Nord.Nganga.Fs.Coordination
         VsProjectName = assemblyOps.CsProjectName,
         SourceAssemblyLocation = controllerType.Assembly.Location,
         ControllerTypeName = controllerType.FullName,
-        VsProjectPath = vsProjectPath
+        VsProjectPath = vsProjectPath,
+        ResourceChangesWillBeLostMarker =
+          this.sourceGenerator.GetChangesWillBeLostMarker(controllerType, TemplateFactory.Context.Resource),
+        ViewChangesWillBeLostMarker =
+          this.sourceGenerator.GetChangesWillBeLostMarker(controllerType, TemplateFactory.Context.View),
+        ControllerChangesWillBeLostMarker =
+          this.sourceGenerator.GetChangesWillBeLostMarker(controllerType, TemplateFactory.Context.Controller)
       };
 
       return result;
@@ -51,7 +60,9 @@ namespace Nord.Nganga.Fs.Coordination
         VsProjectName = assemblyOps.CsProjectName,
         SourceAssemblyLocation = controllerType.Assembly.Location,
         ControllerTypeName = controllerType.FullName,
-        VsProjectPath = vsProjectPath
+        VsProjectPath = vsProjectPath,
+        ResourceChangesWillBeLostMarker =
+          this.sourceGenerator.GetChangesWillBeLostMarker(controllerType, TemplateFactory.Context.Resource),
       };
 
       return result;

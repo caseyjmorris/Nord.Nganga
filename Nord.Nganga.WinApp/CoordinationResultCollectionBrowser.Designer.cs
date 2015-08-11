@@ -34,6 +34,7 @@
       this.allToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.autoIntegrateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.forceOverwriteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.SuspendLayout();
@@ -43,9 +44,10 @@
       this.dataGridView1.AllowUserToAddRows = false;
       this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
       this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.dataGridView1.Location = new System.Drawing.Point(0, 24);
+      this.dataGridView1.Location = new System.Drawing.Point(0, 25);
+      this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
       this.dataGridView1.Name = "dataGridView1";
-      this.dataGridView1.Size = new System.Drawing.Size(890, 222);
+      this.dataGridView1.Size = new System.Drawing.Size(1335, 353);
       this.dataGridView1.TabIndex = 0;
       this.dataGridView1.DoubleClick += new System.EventHandler(this.dataGridView1_DoubleClick);
       // 
@@ -56,7 +58,8 @@
             this.optionsToolStripMenuItem});
       this.menuStrip1.Location = new System.Drawing.Point(0, 0);
       this.menuStrip1.Name = "menuStrip1";
-      this.menuStrip1.Size = new System.Drawing.Size(890, 24);
+      this.menuStrip1.Padding = new System.Windows.Forms.Padding(9, 3, 0, 3);
+      this.menuStrip1.Size = new System.Drawing.Size(1335, 25);
       this.menuStrip1.TabIndex = 1;
       this.menuStrip1.Text = "menuStrip1";
       // 
@@ -65,7 +68,7 @@
       this.saveToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.allToolStripMenuItem});
       this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-      this.saveToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+      this.saveToolStripMenuItem.Size = new System.Drawing.Size(37, 19);
       this.saveToolStripMenuItem.Text = "File";
       // 
       // allToolStripMenuItem
@@ -78,9 +81,10 @@
       // optionsToolStripMenuItem
       // 
       this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.autoIntegrateToolStripMenuItem});
+            this.autoIntegrateToolStripMenuItem,
+            this.forceOverwriteToolStripMenuItem});
       this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-      this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+      this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 19);
       this.optionsToolStripMenuItem.Text = "Options";
       // 
       // autoIntegrateToolStripMenuItem
@@ -89,18 +93,26 @@
       this.autoIntegrateToolStripMenuItem.CheckOnClick = true;
       this.autoIntegrateToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
       this.autoIntegrateToolStripMenuItem.Name = "autoIntegrateToolStripMenuItem";
-      this.autoIntegrateToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+      this.autoIntegrateToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
       this.autoIntegrateToolStripMenuItem.Text = "Auto Integrate";
       this.autoIntegrateToolStripMenuItem.Click += new System.EventHandler(this.autoIntegrateToolStripMenuItem_Click);
       // 
+      // forceOverwriteToolStripMenuItem
+      // 
+      this.forceOverwriteToolStripMenuItem.CheckOnClick = true;
+      this.forceOverwriteToolStripMenuItem.Name = "forceOverwriteToolStripMenuItem";
+      this.forceOverwriteToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+      this.forceOverwriteToolStripMenuItem.Text = "Force Overwrite";
+      // 
       // CoordinationResultCollectionBrowser
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(890, 246);
+      this.ClientSize = new System.Drawing.Size(1335, 378);
       this.Controls.Add(this.dataGridView1);
       this.Controls.Add(this.menuStrip1);
       this.MainMenuStrip = this.menuStrip1;
+      this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
       this.Name = "CoordinationResultCollectionBrowser";
       this.Text = "CoordinationResultCollectionBrowser";
       this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CoordinationResultCollectionBrowser_FormClosing);
@@ -121,5 +133,6 @@
     private System.Windows.Forms.ToolStripMenuItem allToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem autoIntegrateToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem forceOverwriteToolStripMenuItem;
   }
 }

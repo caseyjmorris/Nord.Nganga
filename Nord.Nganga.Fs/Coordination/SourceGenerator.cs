@@ -37,7 +37,7 @@ namespace Nord.Nganga.Fs.Coordination
       var model = controllerCoordinatedInfoMapper.GetControllerCoordinatedInformationViewModel(controllerType);
       this.modelVisitor?.Invoke(model);
 
-      return this.ProcessModel(stringTemplate, model);
+      return this.ProcessModel(controllerType, stringTemplate, model);
     }
 
     public string GenerateResource(Type controllerType)
@@ -50,7 +50,7 @@ namespace Nord.Nganga.Fs.Coordination
 
       var model = resourceCoordMapper.GetResourceCoordinationInformationViewModel(controllerType);
       this.modelVisitor?.Invoke(model);
-      return this.ProcessModel(stringTemplate, model);
+      return this.ProcessModel(controllerType, stringTemplate, model);
     }
 
     public string GenerateView(Type controllerType)
@@ -60,12 +60,32 @@ namespace Nord.Nganga.Fs.Coordination
 
       var model = vcMapper.GetViewCoordinatedInformationCollection(controllerType);
       this.modelVisitor?.Invoke(model);
-      return this.ProcessModel(stringTemplate, model);
+      return this.ProcessModel(controllerType, stringTemplate, model);
     }
 
-    private string ProcessModel(Template template, object model)
+    public string GetChangesWillBeLostMarker(Type controllerType, TemplateFactory.Context markerContext)
+    {
+      var template = TemplateFactory.GetTemplate(this.pathSettings, markerContext, "changesWillBeLostMarker", false);
+      var sb = new StringBuilder();
+
+      var aiw = new AutoIndentWriter(new StringWriter(sb));
+
+      var s = template.Write(aiw);
+
+      return sb.ToString();
+    }
+
+    private string ProcessModel(Type controllerType, Template template, object model)
     {
       template.Add("model", model);
+
+      template.Add("marker", new
+      {
+        genDate = DateTime.Now.ToShortDateString(),
+        genTime = DateTime.Now.ToShortTimeString(),
+        controllerTypeName = controllerType.FullName,
+        templatesDirectory = this.pathSettings.TemplatesDirectory
+      });
 
       var sb = new StringBuilder();
 

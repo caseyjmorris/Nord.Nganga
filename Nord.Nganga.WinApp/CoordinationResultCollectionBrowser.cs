@@ -15,6 +15,7 @@ namespace Nord.Nganga.WinApp
   public partial class CoordinationResultCollectionBrowser : Form
   {
     private readonly IEnumerable<CoordinationResult> coordinationResultsColllection;
+
     public CoordinationResultCollectionBrowser(IEnumerable<CoordinationResult> coordinationResultsColllection)
     {
       this.coordinationResultsColllection = coordinationResultsColllection;
@@ -24,15 +25,14 @@ namespace Nord.Nganga.WinApp
 
     private void CoordinationResultCollectionBrowser_Load(object sender, EventArgs e)
     {
-         this.SetId("Coordination Result Collection Browser");
-      
+      this.SetId("Coordination Result Collection Browser");
     }
 
     private void dataGridView1_DoubleClick(object sender, EventArgs e)
     {
       foreach (DataGridViewRow row in this.dataGridView1.SelectedRows)
       {
-        (new CoordinationResultBrowser((CoordinationResult)row.DataBoundItem)).Show();
+        (new CoordinationResultBrowser((CoordinationResult) row.DataBoundItem)).Show();
       }
     }
 
@@ -45,7 +45,8 @@ namespace Nord.Nganga.WinApp
     {
       foreach (var c in this.coordinationResultsColllection)
       {
-        VsIntegrator.Save(c, this.autoIntegrateToolStripMenuItem.Checked, NgangaLog.Instance.Log);
+        VsIntegrator.Save(c, this.autoIntegrateToolStripMenuItem.Checked, NgangaLog.Instance.Log,
+          this.forceOverwriteToolStripMenuItem.Checked);
       }
     }
 

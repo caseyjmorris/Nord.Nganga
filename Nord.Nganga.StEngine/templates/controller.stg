@@ -1,5 +1,9 @@
-﻿controller(model) ::= <<
-// This is generated code.  Changes to this file will be lost if the file is regenerated.
+﻿templateVersion() ::=<%
+1.0.0
+%>
+
+controller(model, marker) ::= <<
+<generatedCodeMarker(marker)>
 <model.NgModuleName>.controller('<model.NgControllerName>', 
   ['$scope', '$state', '$stateParams', 'commonRecordsService', 'userInfoService', '<model.ServiceName>'<model.AdditionalNgServices:{svc|, '<svc>' }>,
   function($scope, $state, $stateParams, commonRecordsService, userInfoService, <model.ServiceName><model.AdditionalNgServices:{svc|, <svc>}>)
@@ -24,6 +28,26 @@
 
       <postMethods(model)>
     }]);
+>>
+
+generatedCodeMarker(marker) ::= <<
+/*
+  NGANGA - GENERATED CODE  
+    Generated on <marker.genDate> at <marker.genTime>
+    Controller type name: <marker.controllerTypeName>
+    Templates directory: <marker.templatesDirectory>
+    Template version: <templateVersion()>   
+  */
+<changesWillBeLostMarker()>
+>>
+
+changesWillBeLostMarker() ::= <<
+/* 
+  WARNING: 
+    Changes to this file will be lost if the code is regenerated 
+      To prevent silent overwrites, remove this warning.  
+      To overwrite a file without this warning, use the nGanga -Force option.
+  */
 >>
 
 primeRouteId(rid) ::= <<

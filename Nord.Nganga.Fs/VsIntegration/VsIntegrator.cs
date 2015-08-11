@@ -9,11 +9,11 @@ namespace Nord.Nganga.Fs.VsIntegration
 {
   public static class VsIntegrator
   {
-
     public static bool Save(
       IEnumerable<CoordinationResult> coordinationResults,
       bool integrate,
-      StringFormatProviderVisitor logHandler)
+      StringFormatProviderVisitor logHandler,
+      bool forceOverwrite)
     {
       var list = coordinationResults.ToList();
 
@@ -21,27 +21,31 @@ namespace Nord.Nganga.Fs.VsIntegration
 
       foreach (var cr in list)
       {
-        Save(cr, integrationDictionary, logHandler);
+        Save(cr, integrationDictionary, logHandler, forceOverwrite);
       }
 
       return !integrate || Integrate(list.First().VsProjectFileName, integrationDictionary, logHandler);
     }
 
-    public static bool Save(CoordinationResult coordinationResult, bool integrate, StringFormatProviderVisitor logHandler)
+    public static bool Save(
+      CoordinationResult coordinationResult,
+      bool integrate,
+      StringFormatProviderVisitor logHandler,
+      bool forceOverwrite)
     {
       if (!AssertArgumentQuality(coordinationResult, logHandler)) return false;
 
       var integrationDictionary = new Dictionary<string, string>();
 
-      Save(coordinationResult, integrationDictionary, logHandler);
+      Save(coordinationResult, integrationDictionary, logHandler, forceOverwrite);
 
       return !integrate || Integrate(coordinationResult.VsProjectFileName, integrationDictionary, logHandler);
     }
 
     private static bool Integrate(
-    string vsProjectFileName,
-    Dictionary<string, string> integrationDictionary,
-    StringFormatProviderVisitor logHandler)
+      string vsProjectFileName,
+      Dictionary<string, string> integrationDictionary,
+      StringFormatProviderVisitor logHandler)
     {
       logHandler("VS integration target is {0}", vsProjectFileName);
 
@@ -53,40 +57,43 @@ namespace Nord.Nganga.Fs.VsIntegration
 
         csProjEditor.AddFileToCsProj(
           vsProjectFileName, integrationDictionary.Values.ToList(),
-          (p) => logHandler("{0}{1}", '\t', p));
+          p => logHandler("{0}{1}", '\t', p));
 
         logHandler("Integration complete.");
       }
       catch (Exception ie)
       {
         logHandler("VS Integration failed due to {0}", ie.Message);
-        logHandler(string.Format("{0}", ie));
+        logHandler($"{ie}");
         return false;
       }
       return true;
     }
 
-    private static bool AssertArgumentQuality(CoordinationResult coordinationResult, StringFormatProviderVisitor logHandler)
+    private static bool AssertArgumentQuality(CoordinationResult coordinationResult,
+      StringFormatProviderVisitor logHandler)
     {
       if (logHandler == null)
       {
-        throw new ArgumentNullException("logHandler");
+        throw new ArgumentNullException(nameof(logHandler));
       }
 
       if (string.IsNullOrEmpty(coordinationResult.VsProjectPath) ||
-      string.IsNullOrEmpty(coordinationResult.VsProjectName) ||
-      !File.Exists(coordinationResult.VsProjectFileName))
+          string.IsNullOrEmpty(coordinationResult.VsProjectName) ||
+          !File.Exists(coordinationResult.VsProjectFileName))
       {
-        logHandler("Cannot find " + coordinationResult.VsProjectFileName + ".  Are you sure the specified path is correct?");
+        logHandler("Cannot find " + coordinationResult.VsProjectFileName +
+                   ".  Are you sure the specified path is correct?");
         return false;
       }
       return true;
     }
 
     public static void Save(
-    CoordinationResult coordinationResult,
-    Dictionary<string, string> integrationDictionary,
-    StringFormatProviderVisitor logHandler)
+      CoordinationResult coordinationResult,
+      Dictionary<string, string> integrationDictionary,
+      StringFormatProviderVisitor logHandler,
+      bool forceOverwrite)
     {
       if (!string.IsNullOrEmpty(coordinationResult.ViewBody))
       {
@@ -96,7 +103,9 @@ namespace Nord.Nganga.Fs.VsIntegration
           () => coordinationResult.NgViewsPath,
           () => coordinationResult.ViewPath,
           () => coordinationResult.ViewBody,
-          logHandler);
+          () => coordinationResult.ViewChangesWillBeLostMarker,
+          logHandler,
+          forceOverwrite);
       }
 
       if (!string.IsNullOrEmpty(coordinationResult.ControllerBody))
@@ -107,34 +116,55 @@ namespace Nord.Nganga.Fs.VsIntegration
           () => coordinationResult.NgControllersPath,
           () => coordinationResult.ControllerPath,
           () => coordinationResult.ControllerBody,
-          logHandler);
+          () => coordinationResult.ControllerChangesWillBeLostMarker,
+          logHandler,
+          forceOverwrite);
       }
       if (!string.IsNullOrEmpty(coordinationResult.ResourceBody))
       {
         SaveFile
-        (coordinationResult.VsProjectPath,
-        integrationDictionary,
-        () => coordinationResult.NgResourcesPath,
-        () => coordinationResult.ResourcePath,
-        () => coordinationResult.ResourceBody,
-        logHandler)
-        ;
+          (coordinationResult.VsProjectPath,
+            integrationDictionary,
+            () => coordinationResult.NgResourcesPath,
+            () => coordinationResult.ResourcePath,
+            () => coordinationResult.ResourceBody,
+            () => coordinationResult.ResourceChangesWillBeLostMarker,
+            logHandler,
+            forceOverwrite);
       }
     }
 
     public static void SaveFile(
-    string vsProjectPath,
-    Dictionary<string, string> integrationDictionary,
-  Func<string> rootProvider,
-  Func<string> nameProvider,
-  Func<string> dataProvider,
-   StringFormatProviderVisitor logHandler
-  )
+      string vsProjectPath,
+      Dictionary<string, string> integrationDictionary,
+      Func<string> rootProvider,
+      Func<string> nameProvider,
+      Func<string> dataProvider,
+      Func<string> markerProvider,
+      StringFormatProviderVisitor logHandler,
+      bool forceOverwrite
+      )
     {
       var relativeName = Path.Combine(rootProvider(), nameProvider());
       var targetFileName = Path.Combine(vsProjectPath, relativeName);
       CreatePathTree(targetFileName);
-      File.WriteAllText(targetFileName, dataProvider());
+      if (File.Exists(targetFileName))
+      {
+        var existingData = File.ReadAllText(targetFileName);
+        var markerFound = existingData.Contains(markerProvider());
+        if (!markerFound && !forceOverwrite)
+        {
+          logHandler(
+            $"WARNING: {Environment.NewLine}" +
+            $"  The lost changes marker was not found in the existing file: {targetFileName}.{Environment.NewLine}" +
+            $"  Force was not specified.{Environment.NewLine}" +
+            $"  The file was not overwritten and the generated results were not saved.{Environment.NewLine}" +
+            $"  Use the force option to overwrite this file.{Environment.NewLine}");
+          return;
+        }
+      }
+      var data = dataProvider();
+      File.WriteAllText(targetFileName, data);
       logHandler("{0} written to disk.", targetFileName);
       integrationDictionary[targetFileName] = relativeName;
     }

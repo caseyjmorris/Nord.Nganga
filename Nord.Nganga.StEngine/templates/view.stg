@@ -1,7 +1,11 @@
 ﻿delimiters "%","%"
 
-view(model) ::= <<
-<!-- GENERATED CODE -- changes to this file may be lost if the code is regenerated -->
+templateVersion() ::=<%
+1.0.0
+%>
+
+view(model,  marker) ::= <<
+%generatedCodeMarker(marker)% 
 <div ng-controller="%model.NgControllerName%">
   <nord-row>
     <h2>
@@ -10,6 +14,26 @@ view(model) ::= <<
   </nord-row>
   %model.ViewCoordinatedInfo:{vci|%childView(vci)%}%
 </div>
+>>
+
+generatedCodeMarker(marker) ::= <<
+<!-- 
+  NGANGA - GENERATED CODE  
+    Generated on %marker.genDate% at %marker.genTime% 
+    Controller type name: %marker.controllerTypeName%
+    Templates directory: %marker.templatesDirectory%
+    Template version: %templateVersion()%    
+  -->
+%changesWillBeLostMarker()%
+>>
+
+changesWillBeLostMarker() ::= <<
+<!-- 
+  WARNING: 
+    Changes to this file will be lost if the code is regenerated 
+      To prevent silent overwrites, remove this warning.  
+      To overwrite a file without this warning, use the nGanga -Force option.
+  -->
 >>
 
 ngModel(model, parentObjectName) ::= <<
