@@ -4,33 +4,12 @@ templateVersion() ::=<%
 1.0.0
 %>
 
-file(header, body) ::= <<
-%header%
-%body%
->>
+openComment() ::= <%
+<!--
+%>
 
-header(model) ::= <<
-%headerStart()%
-    Generated on %model.genDate% at %model.genTime% 
-    Controller type name: %model.controllerTypeName%
-    Templates directory: %model.templatesDirectory%
-    Template version: %templateVersion()%
-    Output signature: %model.md5Checksum%    
-%headerEnd()%
->>
-
-headerStart() ::= <<
-<!-- 
-  %headerTag()%
->>
-
-headerEnd() ::= <<
-  %headerTag()%
-  -->
->>
-
-headerTag() ::= <%
-NGANGA - GENERATED CODE
+closeComment() ::= <%
+-->
 %>
 
 body(model) ::= <<

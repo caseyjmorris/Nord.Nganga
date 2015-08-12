@@ -48,6 +48,7 @@
     <None Include="templates\controller.stg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="templates\master.stg" />
     <None Include="templates\resource.stg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

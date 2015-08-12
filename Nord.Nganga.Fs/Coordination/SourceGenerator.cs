@@ -1,5 +1,8 @@
 ﻿using System;
+using System.CodeDom;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -62,32 +65,56 @@ namespace Nord.Nganga.Fs.Coordination
     {
       var body = this.GetBody(context, model);
       var header = this.GetHeader(context, controllerType, body);
-      var template = TemplateFactory.GetTemplate(this.pathSettings, context, "file");
-      template.Add("header", header);
-      template.Add("body", body);
-      return template.Resolve();
+      var masterTemplate = TemplateFactory.GetTemplate(this.pathSettings, TemplateFactory.Context.Master, "file");
+      masterTemplate.Add("header", header);
+      masterTemplate.Add("body", body);
+      var source = masterTemplate.Resolve();
+      return source;
     }
 
     private string GetBody(TemplateFactory.Context context, object model)
     {
       var template = TemplateFactory.GetTemplate(this.pathSettings, context);
       template.Add("model", model);
-      return template.Resolve();
+      var body = template.Resolve();
+      return body;
     }
 
     private string GetHeader(TemplateFactory.Context context, Type controllerType, string source)
     {
-      var template = TemplateFactory.GetTemplate(this.pathSettings, context, "header");
+      var a = controllerType.Assembly;
+
+      var template = TemplateFactory.GetTemplate(this.pathSettings, TemplateFactory.Context.Master, "header");
+      var openComment = TemplateFactory.GetTemplate(this.pathSettings, context, "openComment").Render();
+      var closeComment = TemplateFactory.GetTemplate(this.pathSettings, context, "closeComment").Render();
+      var bodyVersionTemplate = TemplateFactory.GetTemplate(this.pathSettings, context, "templateVersion");
       template.Add("model", new
       {
         genDate = DateTime.Now.ToShortDateString(),
         genTime = DateTime.Now.ToShortTimeString(),
+        bodyTemplateVersion = bodyVersionTemplate.Render(),
+        context = context.ToString(),
         controllerTypeName = controllerType.FullName,
         templatesDirectory = this.pathSettings.TemplatesDirectory,
-        md5Checksum = source.CalculateMd5Hash()
+        md5Checksum = source.CalculateMd5Hash(),
+        openComment,
+        closeComment,
+        copyright = this.GetCustomAttributeValue<AssemblyCopyrightAttribute>(a)?.Copyright,
+        company = this.GetCustomAttributeValue<AssemblyCompanyAttribute>(a)?.Company
       });
-      return template.Resolve();
+      var header = template.Resolve();
+      return header;
+    }
+
+    private TAttribType GetCustomAttributeValue<TAttribType>(Assembly a)
+    {
+      var attribs = a.GetCustomAttributes(typeof(TAttribType), false);
+
+      if (attribs.Length > 0)
+      {
+        return (TAttribType) attribs[0];
+      }
+      return default(TAttribType);
     }
   }
-
 }

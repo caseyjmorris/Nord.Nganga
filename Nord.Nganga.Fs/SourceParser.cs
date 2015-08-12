@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Nord.Nganga.Core.Text;
 using Nord.Nganga.Fs.Coordination;
@@ -9,8 +10,7 @@ namespace Nord.Nganga.Fs
 {
   public class SourceParser
   {
-    private readonly Regex headerRegex = new Regex(@"^\s*Output signature:\s+(?<md5>[A-Fa-f0-9]{32})\s*$",
-      RegexOptions.Compiled);
+
 
     private readonly SystemPathSettingsPackage pathSettings;
 
@@ -21,13 +21,19 @@ namespace Nord.Nganga.Fs
 
     public GeneratorParseResult ParseFile(TemplateFactory.Context context, string source)
     {
-      var headerStartTemplate = TemplateFactory.GetTemplate(this.pathSettings, context, "headerStart");
-      var headerStart = headerStartTemplate.Resolve();
+      var openComment = TemplateFactory.GetTemplate(this.pathSettings, context, "openComment").Render();
+      var closeComment = TemplateFactory.GetTemplate(this.pathSettings, context, "closeComment").Render();
 
-      var headerEndTemplate = TemplateFactory.GetTemplate(this.pathSettings, context, "headerEnd");
-      var headerEnd = headerEndTemplate.Resolve();
+      var hs = TemplateFactory.GetTemplate(this.pathSettings, TemplateFactory.Context.Master, "headerStart");
+      hs.Add("model", new {openComment, closeComment});
+      var headerStart = hs.Resolve();
 
-      if (!source.Contains(headerStart) || !source.Contains(headerEnd))
+      var he = TemplateFactory.GetTemplate(this.pathSettings, TemplateFactory.Context.Master, "headerEnd");
+      he.Add("model", new {openComment, closeComment});
+      var headerEnd = he.Resolve();
+
+      if (string.IsNullOrEmpty(headerStart) || string.IsNullOrEmpty(headerEnd) || !source.Contains(headerStart) ||
+          !source.Contains(headerEnd))
       {
         return new GeneratorParseResult {Success = false};
       }
@@ -39,14 +45,19 @@ namespace Nord.Nganga.Fs
         return new GeneratorParseResult {Success = false};
       }
 
+      var headerRegex = new Regex(@"^\s*Output signature:\s+(?<md5>[A-Fa-f0-9]{32})\s*$" ,RegexOptions.Compiled);
+
       var header = source.Substring(start, end);
-      var body = source.Substring(end + 1);
+      var lines = header.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+      var declaredHeaderMd5 = (from line in lines select headerRegex.Matches(line) into matches where matches.Count != 0 select matches[0].Groups["md5"].Value).FirstOrDefault();
+
+      if (declaredHeaderMd5 == null)
+        {
+          return new GeneratorParseResult {Success = false};
+        } 
+
+      var body = source.Substring(end + Environment.NewLine.Length);
       var calculatedBodyMd5 = body.CalculateMd5Hash();
-      var matches = this.headerRegex.Matches(header);
-      if (matches.Count == 0)
-      {
-        return new GeneratorParseResult {Success = false};
-      }
 
       var result = new GeneratorParseResult
       {
@@ -56,7 +67,7 @@ namespace Nord.Nganga.Fs
         Header = header,
         Body = body,
         CalculatedBodyMd5 = calculatedBodyMd5,
-        DeclaredHeaderMd5 = matches[0].Groups["md5"].Value
+        DeclaredHeaderMd5 = declaredHeaderMd5
       };
 
       return result;
