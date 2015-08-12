@@ -179,15 +179,17 @@ namespace Nord.Nganga.WinApp
 
         var wasp = ConfigurationFactory.GetConfiguration<WebApiSettingsPackage>();
         var fileSettings = ConfigurationFactory.GetConfiguration<SystemPathSettingsPackage>();
-        this.resultVisitor(new List<CoordinationResult>
+        var coordinationResult = new List<CoordinationResult>
         {
           this.resourceOnly.Checked
-            ? (new GenerationCoordinator(wasp, fileSettings,modelVisitor )).CoordinateResourceGeneration(
+            ? (new GenerationCoordinator(wasp, fileSettings, modelVisitor)).CoordinateResourceGeneration(
               controllerType,
               this.directorySelector1.SelectedPath)
             : (new GenerationCoordinator(wasp, fileSettings, modelVisitor)).CoordinateUiGeneration(controllerType,
               this.directorySelector1.SelectedPath)
-        });
+        };
+
+        this.resultVisitor(coordinationResult);
       }
       catch (Exception ex)
       {
@@ -201,7 +203,7 @@ namespace Nord.Nganga.WinApp
       var iex = ex;
       while (iex != null)
       {
-        this.logHandler("Error: {0}", iex.Message);
+        this.logHandler(iex.ToString());
         iex = ex.InnerException;
       }
     }

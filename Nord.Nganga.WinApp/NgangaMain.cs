@@ -28,11 +28,9 @@ namespace Nord.Nganga.WinApp
 
     private void toolStripButton1_Click(object sender, EventArgs e)
     {
-      
       this.toolStripButton1.Enabled = false;
       this.coordinationResultAcceptor(NgangaLog.Instance.Log, this.ResultRouter);
       this.toolStripButton1.Enabled = true;
-      
     }
 
     private void toolStripButton2_Click(object sender, EventArgs e)
@@ -45,14 +43,14 @@ namespace Nord.Nganga.WinApp
       // this invoke is required to ensure that the CoordinationResultBrowser instance 
       // is created on the same thread, and in the same app domain 
       // as the one hosting this form... 
-      this.Invoke(new Action<IEnumerable<CoordinationResult>>(RouteResult), coordinationResults);
+      this.Invoke(new Action<IEnumerable<CoordinationResult>>(this.RouteResult), coordinationResults);
 
       // creating the browser on the INVOKING thread would have caused to to be owned by the 
       // thread (and associated app domain) hosting the assembly selection 
       // and therefore the coordination browsers would have closed when the assy selector was closed
     }
 
-    private static void RouteResult(IEnumerable<CoordinationResult> coordinationResults)
+    private void RouteResult(IEnumerable<CoordinationResult> coordinationResults)
     {
       var results = coordinationResults.ToList();
 
@@ -60,6 +58,12 @@ namespace Nord.Nganga.WinApp
       {
         return;
       }
+
+      //if (this.InvokeRequired)
+      //{
+      //  this.Invoke(new Action<IEnumerable<CoordinationResult>>(this.RouteResult), coordinationResults);
+      //  return;
+      //}
 
       if (results.Count() == 1)
       {

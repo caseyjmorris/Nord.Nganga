@@ -40,7 +40,10 @@ namespace Nord.Nganga.WinApp
 
     private void exitToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      this.Close();
+      // this invoke is required to ensure that the close 
+      // is invoked on the same thread, and in the same app domain 
+      // as the one hosting this form... 
+      this.Invoke(new Action(this.Close));
     }
 
     private void saveToolStripMenuItem_Click(object sender, EventArgs e)

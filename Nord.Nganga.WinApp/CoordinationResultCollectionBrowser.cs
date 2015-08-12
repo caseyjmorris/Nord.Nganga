@@ -43,6 +43,7 @@ namespace Nord.Nganga.WinApp
 
     private void allToolStripMenuItem_Click(object sender, EventArgs e)
     {
+
       foreach (var c in this.coordinationResultsColllection)
       {
         VsIntegrator.Save(c, this.autoIntegrateToolStripMenuItem.Checked, NgangaLog.Instance.Log,

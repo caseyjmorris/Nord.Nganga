@@ -2,7 +2,36 @@
 1.0.0
 %>
 
-resourceFile(model, marker) ::= <<
+file(header, body) ::= <<
+<header>
+<body>
+>>
+
+header(model) ::= <<
+<headerStart()>  
+    Generated on <model.genDate> at <model.genTime>
+    Controller type name: <model.controllerTypeName>
+    Templates directory: <model.templatesDirectory>
+    Template version: <templateVersion()> 
+    Output signature: <model.md5Checksum>
+<headerEnd()>
+>>
+
+headerStart() ::= <<
+/*
+  <headerTag()>
+>>
+
+headerEnd() ::= <<
+  <headerTag()>
+  */
+>>
+
+headerTag() ::= <%
+NGANGA - GENERATED CODE
+%> 
+
+body(model, marker) ::= <<
 <generatedCodeMarker(marker)>
 <model.AppName>.factory('<model.ServiceName>', ['$resource', <if(model.UseCustomCache)>'$cacheFactory', <endif>function($resource<if(model.UseCustomCache)>, $cacheFactory<endif>)
   {<if(model.UseCustomCache)>
@@ -14,26 +43,6 @@ resourceFile(model, marker) ::= <<
 ">
     };
   }]);
->>
-
-generatedCodeMarker(marker) ::= <<
-/*
-  NGANGA - GENERATED CODE  
-    Generated on <marker.genDate> at <marker.genTime>
-    Controller type name: <marker.controllerTypeName>
-    Templates directory: <marker.templatesDirectory>
-    Template version: <templateVersion()> 
-  */
-<changesWillBeLostMarker()>
->>
-
-changesWillBeLostMarker() ::= <<
-/* 
-  WARNING: 
-    Changes to this file will be lost if the code is regenerated 
-      To prevent silent overwrites, remove this warning.  
-      To overwrite a file without this warning, use the nGanga -Force option.
-  */
 >>
 
 cacheInit(model) ::= <<

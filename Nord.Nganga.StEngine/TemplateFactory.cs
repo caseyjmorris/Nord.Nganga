@@ -14,7 +14,10 @@ namespace Nord.Nganga.StEngine
       Resource
     }
 
-    public static Template GetTemplate(SystemPathSettingsPackage settings, Context context, string name,
+    public static Template GetTemplate(
+      SystemPathSettingsPackage settings,
+      Context context,
+      string name = "body",
       bool debug = false)
     {
       var filename = Path.Combine(settings.TemplatesDirectory, context.ToString() + ".stg");

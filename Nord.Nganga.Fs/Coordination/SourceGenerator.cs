@@ -1,7 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using Antlr4.StringTemplate;
+using Nord.Nganga.Core.Text;
 using Nord.Nganga.Mappers;
 using Nord.Nganga.Mappers.Controllers;
 using Nord.Nganga.Mappers.Resources;
@@ -15,7 +18,7 @@ namespace Nord.Nganga.Fs.Coordination
   {
     private readonly WebApiSettingsPackage webApiSettings;
     private readonly SystemPathSettingsPackage pathSettings;
-    private Action<object> modelVisitor;
+    private readonly Action<object> modelVisitor;
 
     public SourceGenerator(WebApiSettingsPackage settingsPackage, SystemPathSettingsPackage pathSettings,
       Action<object> modelVisitor = null)
@@ -27,73 +30,64 @@ namespace Nord.Nganga.Fs.Coordination
 
     public string GenerateController(Type controllerType)
     {
-      var stringTemplate = TemplateFactory.GetTemplate(this.pathSettings, TemplateFactory.Context.Controller,
-        "controller", false);
-
       var endpointMapper = new EndpointMapper(this.webApiSettings);
-      var controllerCoordinatedInfoMapper = new ControllerCoordinationMapper(endpointMapper,
+      var controllerCoordinatedInfoMapper = new ControllerCoordinationMapper(
+        endpointMapper,
         new EndpointFilter(new ViewModelMapper()));
-
       var model = controllerCoordinatedInfoMapper.GetControllerCoordinatedInformationViewModel(controllerType);
       this.modelVisitor?.Invoke(model);
 
-      return this.ProcessModel(controllerType, stringTemplate, model);
+      return this.ProcessModel(controllerType, TemplateFactory.Context.Controller, model);
     }
 
     public string GenerateResource(Type controllerType)
     {
-      var stringTemplate = TemplateFactory.GetTemplate(this.pathSettings, TemplateFactory.Context.Resource,
-        "resourceFile", false);
-
       var endpointMapper = new EndpointMapper(this.webApiSettings);
       var resourceCoordMapper = new ResourceCoordinationMapper(endpointMapper);
-
       var model = resourceCoordMapper.GetResourceCoordinationInformationViewModel(controllerType);
       this.modelVisitor?.Invoke(model);
-      return this.ProcessModel(controllerType, stringTemplate, model);
+      return this.ProcessModel(controllerType, TemplateFactory.Context.Resource, model);
     }
 
     public string GenerateView(Type controllerType)
     {
-      var stringTemplate = TemplateFactory.GetTemplate(this.pathSettings, TemplateFactory.Context.View, "view", false);
       var vcMapper = new ViewCoordinationMapper(this.webApiSettings);
-
       var model = vcMapper.GetViewCoordinatedInformationCollection(controllerType);
       this.modelVisitor?.Invoke(model);
-      return this.ProcessModel(controllerType, stringTemplate, model);
+      return this.ProcessModel(controllerType, TemplateFactory.Context.View, model);
     }
 
-    public string GetChangesWillBeLostMarker(Type controllerType, TemplateFactory.Context markerContext)
+
+    private string ProcessModel(Type controllerType, TemplateFactory.Context context, object model)
     {
-      var template = TemplateFactory.GetTemplate(this.pathSettings, markerContext, "changesWillBeLostMarker", false);
-      var sb = new StringBuilder();
-
-      var aiw = new AutoIndentWriter(new StringWriter(sb));
-
-      var s = template.Write(aiw);
-
-      return sb.ToString();
+      var body = this.GetBody(context, model);
+      var header = this.GetHeader(context, controllerType, body);
+      var template = TemplateFactory.GetTemplate(this.pathSettings, context, "file");
+      template.Add("header", header);
+      template.Add("body", body);
+      return template.Resolve();
     }
 
-    private string ProcessModel(Type controllerType, Template template, object model)
+    private string GetBody(TemplateFactory.Context context, object model)
     {
+      var template = TemplateFactory.GetTemplate(this.pathSettings, context);
       template.Add("model", model);
+      return template.Resolve();
+    }
 
-      template.Add("marker", new
+    private string GetHeader(TemplateFactory.Context context, Type controllerType, string source)
+    {
+      var template = TemplateFactory.GetTemplate(this.pathSettings, context, "header");
+      template.Add("model", new
       {
         genDate = DateTime.Now.ToShortDateString(),
         genTime = DateTime.Now.ToShortTimeString(),
         controllerTypeName = controllerType.FullName,
-        templatesDirectory = this.pathSettings.TemplatesDirectory
+        templatesDirectory = this.pathSettings.TemplatesDirectory,
+        md5Checksum = source.CalculateMd5Hash()
       });
-
-      var sb = new StringBuilder();
-
-      var aiw = new AutoIndentWriter(new StringWriter(sb));
-
-      var s = template.Write(aiw);
-
-      return sb.ToString();
+      return template.Resolve();
     }
   }
+
 }
