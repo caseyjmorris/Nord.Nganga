@@ -69,7 +69,7 @@ $scope.canEdit = <model.EditRestrictedToRoles: {role |userInfoService.userIsInRo
 injectJavaScript(model, key) ::= <%
 <model.InjectedJavaScript.(key): {c| // Injected JavaScript at context <key> <\n>
 <c> <\n>
-// End injected JavaScript}; separator="<\n>">
+// End injected JavaScript}; separator="\n">
 %>
 
 commonRecordsObjectInit(model) ::= <<
