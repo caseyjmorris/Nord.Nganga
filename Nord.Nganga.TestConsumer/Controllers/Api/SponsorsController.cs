@@ -6,7 +6,7 @@ using Nord.Nganga.TestConsumer.Models;
 
 namespace Nord.Nganga.TestConsumer.Controllers.Api
 {
-  [AngularRouteIdParameter("programPeriodId")]
+  [AngularRouteIdParameter("programPeriodId", IsNullable = true)]
   [InjectJavaScript("alert('Hello world!');", ControllerPosition = InjectJavaScriptAttribute.Position.Beginning)]
   [InjectJavaScript("alert('Isn\\'t this really annoying?');",
     ControllerPosition = InjectJavaScriptAttribute.Position.End)]
@@ -18,6 +18,7 @@ namespace Nord.Nganga.TestConsumer.Controllers.Api
 
     [HttpGet]
     [InjectHtmlInView("<p>Hello world!</p>")]
+    [DefaultClientObjectDefinition("{testProperty: 'testValue'}")]
     public SponsorProgramPeriodDetailCollectionViewModel GetProgramPeriodSponsors(int id)
     {
       return new SponsorProgramPeriodDetailCollectionViewModel();

@@ -127,8 +127,11 @@ namespace Nord.Nganga.Mappers
         ReturnPropertyCamelCase = m.hasReturnType ? m.returnType.GetFriendlyName().Camelize() : null,
         ReturnPropertyPascalCase = m.hasReturnType ? m.returnType.GetFriendlyName() : null,
         FirstArgDisplayNameCamelCase =
-          m.firstArg == null ? null : m.firstArg.ParameterType.GetFriendlyName().Camelize(),
-        FirstArgDisplayNamePascalCase = m.firstArg == null ? null : m.firstArg.ParameterType.GetFriendlyName(),
+          m.firstArg?.ParameterType.GetFriendlyName().Camelize(),
+        FirstArgDisplayNamePascalCase = m.firstArg?.ParameterType.GetFriendlyName(),
+        DefaultObjectDefinition =
+          m.methodInfo.GetAttributePropertyValueOrDefault<DefaultClientObjectDefinitionAttribute, string>(
+            a => a.Definition) ?? "{}",
       }).ToList();
 
       AppDomain.CurrentDomain.AssemblyResolve -= handler;
