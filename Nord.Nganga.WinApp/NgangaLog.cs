@@ -53,6 +53,8 @@ namespace Nord.Nganga.WinApp
         this.rtbLog.Select(0, 0);
         this.rtbLog.SelectedText = "Failing format provider:" + '"' + formatProvider + '"';
       }
+      Application.DoEvents();
+      System.Threading.Thread.Yield();
     }
 
     private void rtbLog_TextChanged(object sender, EventArgs e)

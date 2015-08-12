@@ -43,8 +43,9 @@ namespace Nord.Nganga.WinApp
       this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.autoVSIntegration = new System.Windows.Forms.ToolStripMenuItem();
       this.logFusionResolutionEventsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.dataGridView1 = new System.Windows.Forms.DataGridView();
       this.forceOverwriteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.enableVSDiffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.dataGridView1 = new System.Windows.Forms.DataGridView();
       this.menuStrip1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
       this.SuspendLayout();
@@ -57,8 +58,7 @@ namespace Nord.Nganga.WinApp
             this.optionsToolStripMenuItem});
       this.menuStrip1.Location = new System.Drawing.Point(0, 0);
       this.menuStrip1.Name = "menuStrip1";
-      this.menuStrip1.Padding = new System.Windows.Forms.Padding(9, 3, 0, 3);
-      this.menuStrip1.Size = new System.Drawing.Size(1420, 25);
+      this.menuStrip1.Size = new System.Drawing.Size(947, 24);
       this.menuStrip1.TabIndex = 0;
       this.menuStrip1.Text = "menuStrip1";
       // 
@@ -72,7 +72,7 @@ namespace Nord.Nganga.WinApp
             this.toolStripMenuItem1,
             this.exitToolStripMenuItem});
       this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-      this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 19);
+      this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
       this.fileToolStripMenuItem.Text = "File";
       // 
       // openAssemblyToolStripMenuItem
@@ -118,7 +118,7 @@ namespace Nord.Nganga.WinApp
       this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.loadedAssembliesToolStripMenuItem});
       this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-      this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 19);
+      this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
       this.viewToolStripMenuItem.Text = "View";
       // 
       // loadedAssembliesToolStripMenuItem
@@ -131,9 +131,10 @@ namespace Nord.Nganga.WinApp
       this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.autoVSIntegration,
             this.logFusionResolutionEventsToolStripMenuItem,
-            this.forceOverwriteToolStripMenuItem});
+            this.forceOverwriteToolStripMenuItem,
+            this.enableVSDiffToolStripMenuItem});
       this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-      this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 19);
+      this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
       this.optionsToolStripMenuItem.Text = "Options";
       // 
       // autoVSIntegration
@@ -153,18 +154,6 @@ namespace Nord.Nganga.WinApp
       this.logFusionResolutionEventsToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
       this.logFusionResolutionEventsToolStripMenuItem.Text = "Log Fusion Resolution Events";
       // 
-      // dataGridView1
-      // 
-      this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-      this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-      this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.dataGridView1.Location = new System.Drawing.Point(0, 25);
-      this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-      this.dataGridView1.Name = "dataGridView1";
-      this.dataGridView1.Size = new System.Drawing.Size(1420, 1046);
-      this.dataGridView1.TabIndex = 1;
-      this.dataGridView1.DoubleClick += new System.EventHandler(this.dataGridView1_DoubleClick);
-      // 
       // forceOverwriteToolStripMenuItem
       // 
       this.forceOverwriteToolStripMenuItem.CheckOnClick = true;
@@ -172,15 +161,33 @@ namespace Nord.Nganga.WinApp
       this.forceOverwriteToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
       this.forceOverwriteToolStripMenuItem.Text = "Force Overwrite";
       // 
+      // enableVSDiffToolStripMenuItem
+      // 
+      this.enableVSDiffToolStripMenuItem.CheckOnClick = true;
+      this.enableVSDiffToolStripMenuItem.Name = "enableVSDiffToolStripMenuItem";
+      this.enableVSDiffToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+      this.enableVSDiffToolStripMenuItem.Text = "Enable VS Diff";
+      this.enableVSDiffToolStripMenuItem.Click += new System.EventHandler(this.enableVSDiffToolStripMenuItem_Click);
+      // 
+      // dataGridView1
+      // 
+      this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+      this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+      this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.dataGridView1.Location = new System.Drawing.Point(0, 24);
+      this.dataGridView1.Name = "dataGridView1";
+      this.dataGridView1.Size = new System.Drawing.Size(947, 672);
+      this.dataGridView1.TabIndex = 1;
+      this.dataGridView1.DoubleClick += new System.EventHandler(this.dataGridView1_DoubleClick);
+      // 
       // CoordinationResultBrowser
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(1420, 1071);
+      this.ClientSize = new System.Drawing.Size(947, 696);
       this.Controls.Add(this.dataGridView1);
       this.Controls.Add(this.menuStrip1);
       this.MainMenuStrip = this.menuStrip1;
-      this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
       this.Name = "CoordinationResultBrowser";
       this.Text = "Nganga";
       this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.exitToolStripMenuItem_Click);
@@ -210,6 +217,7 @@ namespace Nord.Nganga.WinApp
     private System.Windows.Forms.ToolStripMenuItem openAssemblyToolStripMenuItem;
     private System.Windows.Forms.DataGridView dataGridView1;
     private System.Windows.Forms.ToolStripMenuItem forceOverwriteToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem enableVSDiffToolStripMenuItem;
   }
 }
 

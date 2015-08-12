@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using EnvDTE;
 using Nord.Nganga.Fs.Coordination;
 using Nord.Nganga.Fs.VsIntegration;
 
@@ -46,10 +47,20 @@ namespace Nord.Nganga.WinApp
       this.Invoke(new Action(this.Close));
     }
 
+    private DTE dte;
+
     private void saveToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      VsIntegrator.Save(this.coordinationResult, this.autoVSIntegration.Checked, Log,
-        this.forceOverwriteToolStripMenuItem.Checked);
+      VsIntegrator.Save(
+        this.coordinationResult,
+        this.autoVSIntegration.Checked,
+        Log,
+        this.forceOverwriteToolStripMenuItem.Checked,
+        this.dte);
+      if (this.dte != null)
+      {
+        this.dte.MainWindow.Visible = true;
+      }
     }
 
     private void autoVSIntegration_Click(object sender, EventArgs e)
@@ -83,6 +94,29 @@ namespace Nord.Nganga.WinApp
       };
 
       (new SourceBrowser(kvp.Key, () => value, updateAcceptor)).Show();
+    }
+
+    private void enableVSDiffToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      this.ManageDteInstance(this.enableVSDiffToolStripMenuItem.Checked);
+    }
+
+    private void ManageDteInstance(bool create)
+    {
+      if (this.dte == null && create)
+      {
+        this.Enabled = false;
+        var wait = new WaitDialog($"Starting Visual Studio instance{Environment.NewLine}Please wait...");
+        wait.Show();
+        this.dte = VsIntegrator.CreateIsolatedDTEInstance(Settings1.Default.DTEProgId);
+        wait.Close();
+        this.Enabled = true;
+        return;
+      }
+      if (this.dte != null && !create)
+      {
+        this.dte.ExecuteCommand("File.Close");
+      }
     }
   }
 }

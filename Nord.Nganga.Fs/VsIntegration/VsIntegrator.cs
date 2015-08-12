@@ -2,10 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
+using System.Threading;
+using EnvDTE;
+using Microsoft.VisualStudio.Shell;
 using Nord.Nganga.Core;
 using Nord.Nganga.Fs.Coordination;
 using Nord.Nganga.Models.Configuration;
 using Nord.Nganga.StEngine;
+using Process = System.Diagnostics.Process;
 
 namespace Nord.Nganga.Fs.VsIntegration
 {
@@ -17,7 +23,8 @@ namespace Nord.Nganga.Fs.VsIntegration
       IEnumerable<CoordinationResult> coordinationResults,
       bool integrate,
       StringFormatProviderVisitor logHandler,
-      bool forceOverwrite)
+      bool forceOverwrite,
+      DTE dteCompareInstance = null)
     {
       var list = coordinationResults.ToList();
 
@@ -25,7 +32,7 @@ namespace Nord.Nganga.Fs.VsIntegration
 
       foreach (var cr in list)
       {
-        Save(cr, integrationDictionary, logHandler, forceOverwrite);
+        Save(cr, integrationDictionary, logHandler, forceOverwrite, dteCompareInstance);
       }
 
       return !integrate || Integrate(list.First().VsProjectFileName, integrationDictionary, logHandler);
@@ -35,13 +42,14 @@ namespace Nord.Nganga.Fs.VsIntegration
       CoordinationResult coordinationResult,
       bool integrate,
       StringFormatProviderVisitor logHandler,
-      bool forceOverwrite)
+      bool forceOverwrite,
+      DTE dteCompareInstance = null)
     {
       if (!AssertArgumentQuality(coordinationResult, logHandler)) return false;
 
       var integrationDictionary = new Dictionary<string, string>();
 
-      Save(coordinationResult, integrationDictionary, logHandler, forceOverwrite);
+      Save(coordinationResult, integrationDictionary, logHandler, forceOverwrite, dteCompareInstance);
 
       return !integrate || Integrate(coordinationResult.VsProjectFileName, integrationDictionary, logHandler);
     }
@@ -74,7 +82,8 @@ namespace Nord.Nganga.Fs.VsIntegration
       return true;
     }
 
-    private static bool AssertArgumentQuality(CoordinationResult coordinationResult,
+    private static bool AssertArgumentQuality(
+      CoordinationResult coordinationResult,
       StringFormatProviderVisitor logHandler)
     {
       if (logHandler == null)
@@ -97,7 +106,8 @@ namespace Nord.Nganga.Fs.VsIntegration
       CoordinationResult coordinationResult,
       Dictionary<string, string> integrationDictionary,
       StringFormatProviderVisitor logHandler,
-      bool forceOverwrite)
+      bool forceOverwrite,
+      DTE dteCompareInstance)
     {
       if (!string.IsNullOrEmpty(coordinationResult.ViewBody))
       {
@@ -109,7 +119,8 @@ namespace Nord.Nganga.Fs.VsIntegration
           () => coordinationResult.ViewBody,
           TemplateFactory.Context.View,
           logHandler,
-          forceOverwrite);
+          forceOverwrite,
+          dteCompareInstance);
       }
 
       if (!string.IsNullOrEmpty(coordinationResult.ControllerBody))
@@ -122,7 +133,8 @@ namespace Nord.Nganga.Fs.VsIntegration
           () => coordinationResult.ControllerBody,
           TemplateFactory.Context.Controller,
           logHandler,
-          forceOverwrite);
+          forceOverwrite,
+          dteCompareInstance);
       }
       if (!string.IsNullOrEmpty(coordinationResult.ResourceBody))
       {
@@ -134,7 +146,8 @@ namespace Nord.Nganga.Fs.VsIntegration
             () => coordinationResult.ResourceBody,
             TemplateFactory.Context.Resource,
             logHandler,
-            forceOverwrite);
+            forceOverwrite,
+            dteCompareInstance);
       }
     }
 
@@ -146,8 +159,8 @@ namespace Nord.Nganga.Fs.VsIntegration
       Func<string> dataProvider,
       TemplateFactory.Context context,
       StringFormatProviderVisitor logHandler,
-      bool forceOverwrite
-      )
+      bool forceOverwrite,
+      DTE dteCompareInstance = null)
     {
       var relativeName = Path.Combine(rootProvider(), nameProvider());
       var targetFileName = Path.Combine(vsProjectPath, relativeName);
@@ -173,6 +186,17 @@ namespace Nord.Nganga.Fs.VsIntegration
           var msg = $"{msgPreamble}{Environment.NewLine}{msgClose}";
 
           logHandler(msg);
+          if (dteCompareInstance == null) return;
+          var ts = new ThreadStart(() =>
+          {
+            CompareStrings(
+              new KeyValuePair<string, string>("On Disk", source),
+              new KeyValuePair<string, string>("New", dataProvider()),
+              logHandler,
+              dteCompareInstance);
+          });
+          var t = new System.Threading.Thread(ts);
+          t.Start();
           return;
         }
       }
@@ -187,6 +211,72 @@ namespace Nord.Nganga.Fs.VsIntegration
       var dir = Path.GetDirectoryName(path);
       if (string.IsNullOrEmpty(dir)) return;
       Directory.CreateDirectory(dir);
+    }
+
+    private static void CompareStrings(
+      KeyValuePair<string, string> data1,
+      KeyValuePair<string, string> data2,
+      StringFormatProviderVisitor logHandler,
+      DTE dteCompareInstance)
+    {
+      var dte = CreateIsolatedDTEInstance(); // GetCurrentDTEInstance();
+      if (dte == null)
+      {
+        return;
+      }
+      var tempFolder = Path.GetTempPath();
+
+      var tempFile1 = Path.Combine(tempFolder, Guid.NewGuid().ToString());
+      File.WriteAllText(tempFile1, data1.Value);
+
+      var tempFile2 = Path.Combine(tempFolder, Guid.NewGuid().ToString());
+      File.WriteAllText(tempFile2, data2.Value);
+      logHandler($"Invoking VS diff between {tempFile1} and {tempFile2}");
+      dteCompareInstance?.ExecuteCommand("Tools.DiffFiles",
+        $"\"{tempFile1}\" \"{tempFile2}\" \"{data1.Key}\" \"{data2.Key}\"");
+    }
+
+    [DllImport("ole32.dll")]
+    private static extern void CreateBindCtx(int reserved, out IBindCtx ppbc);
+
+    [DllImport("ole32.dll")]
+    private static extern void GetRunningObjectTable(int reserved,
+      out IRunningObjectTable prot);
+
+    // ReSharper disable once InconsistentNaming
+    public static DTE CreateIsolatedDTEInstance(string progId = "VisualStudio.DTE.14.0")
+    {
+      var visualStudioType = Type.GetTypeFromProgID(progId);
+      var dte = Activator.CreateInstance(visualStudioType) as DTE;
+      return dte;
+    }
+
+    // ReSharper disable once InconsistentNaming
+    public static DTE GetCurrentDTEInstance()
+    {
+      //rot entry for visual studio running under current process.
+      string rotEntry = $"!VisualStudio.DTE";
+      IRunningObjectTable rot;
+      GetRunningObjectTable(0, out rot);
+      IEnumMoniker enumMoniker;
+      rot.EnumRunning(out enumMoniker);
+      enumMoniker.Reset();
+      IntPtr fetched = IntPtr.Zero;
+      IMoniker[] moniker = new IMoniker[1];
+      while (enumMoniker.Next(1, moniker, fetched) == 0)
+      {
+        IBindCtx bindCtx;
+        CreateBindCtx(0, out bindCtx);
+        string displayName;
+        moniker[0].GetDisplayName(bindCtx, null, out displayName);
+        if (displayName.StartsWith(rotEntry))
+        {
+          object comObject;
+          rot.GetObject(moniker[0], out comObject);
+          return (DTE) comObject;
+        }
+      }
+      return null;
     }
   }
 }

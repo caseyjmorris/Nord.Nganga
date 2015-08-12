@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -105,6 +108,12 @@
     <Compile Include="SourceBrowser.Designer.cs">
       <DependentUpon>SourceBrowser.cs</DependentUpon>
     </Compile>
+    <Compile Include="WaitDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WaitDialog.Designer.cs">
+      <DependentUpon>WaitDialog.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="AppDomainAssemblyListBrowser.resx">
       <DependentUpon>AppDomainAssemblyListBrowser.cs</DependentUpon>
     </EmbeddedResource>
@@ -141,6 +150,9 @@
     </Compile>
     <EmbeddedResource Include="SourceBrowser.resx">
       <DependentUpon>SourceBrowser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WaitDialog.resx">
+      <DependentUpon>WaitDialog.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

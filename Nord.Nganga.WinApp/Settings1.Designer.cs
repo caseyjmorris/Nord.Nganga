@@ -254,5 +254,17 @@ namespace Nord.Nganga.WinApp {
                 this["SourceBrowserFontSize"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("VisualStudio.DTE.14.0")]
+        public string DTEProgId {
+            get {
+                return ((string)(this["DTEProgId"]));
+            }
+            set {
+                this["DTEProgId"] = value;
+            }
+        }
     }
 }

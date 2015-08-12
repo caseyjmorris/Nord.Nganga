@@ -64,5 +64,8 @@
     <Setting Name="SourceBrowserFontSize" Type="System.Single" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
+    <Setting Name="DTEProgId" Type="System.String" Scope="User">
+      <Value Profile="(Default)">VisualStudio.DTE.14.0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
