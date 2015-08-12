@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="Attributes\Angular\AngularModuleNameAttribute.cs" />
     <Compile Include="Attributes\Angular\AngularRouteIdParameterAttribute.cs" />
+    <Compile Include="Attributes\Angular\DefaultClientObjectDefinitionAttribute.cs" />
     <Compile Include="Attributes\Angular\GenerateResourceOnlyAttribute.cs" />
     <Compile Include="Attributes\Angular\InjectAngularServicesAttribute.cs" />
     <Compile Include="Attributes\Angular\InjectJavaScriptAttribute.cs" />

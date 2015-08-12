@@ -54,6 +54,10 @@ body(model) ::= <<
         {
           <controllerRetrievals(model)>
         }
+      else
+        {
+          <defaultObjectSetup(model)>
+        }
       <else>
       <controllerRetrievals(model)>
       <endif>
@@ -95,6 +99,13 @@ controllerRetrievals(model) ::= <<
 $scope.<ge.ReturnPropertyCamelCase> = <model.ServiceName>.<ge.MethodName>(<model.RouteIdParameter>);
 }>
 >>
+
+defaultObjectSetup(model) ::= <%
+<model.RetrievalTargetGetEndpoints: {ge | 
+<\n>
+$scope.<ge.ReturnPropertyCamelCase> = <ge.DefaultObjectDefinition>;
+}; separator="\n">
+%>
 
 postMethods(model) ::= <<
 <model.PostEndpoints: {pe |

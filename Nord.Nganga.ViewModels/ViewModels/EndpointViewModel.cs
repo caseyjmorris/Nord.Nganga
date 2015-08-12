@@ -23,6 +23,7 @@ namespace Nord.Nganga.Models.ViewModels
     public string ReturnPropertyPascalCase { get; set; }
     public string FirstArgDisplayNameCamelCase { get; set; }
     public string FirstArgDisplayNamePascalCase { get; set; }
+    public string DefaultObjectDefinition { get; set; }
 
     public enum HttpMethodType
     {
