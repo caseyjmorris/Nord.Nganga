@@ -8,11 +8,11 @@
     <owners>National Organization for Rare Diseases</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Annotations needed for an Nganga project.</description>
-    <releaseNotes>bc94265 Added the ability to inject JavaScript into generated controllers
-1083675 Published latest version to nuget package
-ed273a0 Added support for injecting HTML into generated view.
-25c9402 Merge branch 'master' of https://github.com/NationalOrganizationForRareDisorders/Nord.Nganga.git
-e9be10e added change overwrite protection with Force option
+    <releaseNotes>5fd01f2 Support for default object values with nullable route ID controllers (resolves #5)
+e042270 Merge branch 'master' of https://github.com/NationalOrganizationForRareDisorders/Nord.Nganga
+0c0dba5 Fixed invalid separator declarations in templates.
+b980dda Merge branch 'master' of https://github.com/NationalOrganizationForRareDisorders/Nord.Nganga.git
+28068a8 automatic change detection and overwrite protection on save of generated source.
 </releaseNotes>
     <copyright>Copyright 2015</copyright>
   </metadata>
