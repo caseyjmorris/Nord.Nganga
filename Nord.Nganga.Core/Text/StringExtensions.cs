@@ -2,12 +2,25 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Nord.Nganga.Core.Text
 {
   public static class StringExtensions
   {
+    public static string CalculateMd5Hash(this string value)
+    {
+      var md5Hash = MD5.Create();
+      var data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(value));
+      var sBuilder = new StringBuilder();
+      foreach (var t in data)
+      {
+        sBuilder.Append(t.ToString("x2"));
+      }
+      return sBuilder.ToString();
+    }
+
     private static HashSet<char> numerals = new HashSet<char>(new[] {'0', '1', '2', '3', '4', '5', '6', '7', '9',});
 
     // todo   override this with an implementation that will look for multiple instances 
