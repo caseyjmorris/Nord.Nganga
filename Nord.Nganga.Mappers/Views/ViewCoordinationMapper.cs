@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Humanizer;
 using Nord.Nganga.Annotations;
+using Nord.Nganga.Annotations.Attributes.Html;
+using Nord.Nganga.Core.Reflection;
 using Nord.Nganga.Models;
 using Nord.Nganga.Models.Configuration;
 using Nord.Nganga.Models.ViewModels;
@@ -17,10 +20,15 @@ namespace Nord.Nganga.Mappers.Views
 
     private readonly EndpointMapper endpointMapper;
 
+    private readonly WebApiSettingsPackage webApiSettings;
+
+    private Type httpGetAttribute;
+
     public ViewCoordinationMapper(
       ViewModelMapper viewModelMapper,
       EndpointFilter endpointFilter,
-      EndpointMapper endpointMapper)
+      EndpointMapper endpointMapper,
+      WebApiSettingsPackage settings)
     {
       this.viewModelMapper = viewModelMapper;
       this.endpointFilter = endpointFilter;
@@ -29,6 +37,7 @@ namespace Nord.Nganga.Mappers.Views
 
     public ViewCoordinationMapper(WebApiSettingsPackage settings)
     {
+      this.webApiSettings = settings;
       var vmMapper = new ViewModelMapper(this);
       var filter = new EndpointFilter(vmMapper);
 
@@ -41,6 +50,9 @@ namespace Nord.Nganga.Mappers.Views
 
     public ViewCoordinationInformationCollectionViewModel GetViewCoordinatedInformationCollection(Type controller)
     {
+      this.httpGetAttribute = DependentTypeResolver.GetTypeByName(controller.Assembly,
+        this.webApiSettings.HttpGetAttributeName);
+
       this.viewModelMapper.AssemblyOptions = new AssemblyOptionsModel(controller);
 
       var endpoints = this.endpointMapper.GetEnpoints(controller);
@@ -48,7 +60,8 @@ namespace Nord.Nganga.Mappers.Views
       var filteredInfo = this.endpointFilter.ExamineEndpoints(endpoints);
 
       var coordinatedInfo =
-        filteredInfo.TargetComplexTypesAtRoot.Select(this.GetViewCoordinatedInformationSingleInternal).ToList();
+        filteredInfo.TargetComplexTypesAtRoot.Select(
+          t => this.GetViewCoordinatedInformationSingleInternal(t, 1, controller)).ToList();
 
       return new ViewCoordinationInformationCollectionViewModel
       {
@@ -60,7 +73,8 @@ namespace Nord.Nganga.Mappers.Views
       };
     }
 
-    public ViewCoordinatedInformationViewModel GetViewCoordinatedInformationSingle(Type vmType, int depthMultiplier = 1)
+    public ViewCoordinatedInformationViewModel GetViewCoordinatedInformationSingle(Type vmType, int depthMultiplier = 1,
+      Type controllerType = null)
     {
       var vmVm = this.viewModelMapper.GetViewModelViewModel(vmType);
 
@@ -68,7 +82,7 @@ namespace Nord.Nganga.Mappers.Views
     }
 
     private ViewCoordinatedInformationViewModel GetViewCoordinatedInformationSingleInternal(ViewModelViewModel vmVm,
-      int depthMultipler)
+      int depthMultipler, Type controllerType = null)
     {
       var coord = new ViewCoordinatedInformationViewModel
       {
@@ -81,11 +95,40 @@ namespace Nord.Nganga.Mappers.Views
           vmVm.Name.Humanize(
             CasingEnumMap.Instance[this.viewModelMapper.AssemblyOptions.GetOption(CasingOptionContext.Header)]),
         NgFormName = vmVm.Name.Camelize() + "Form",
-        NgSubmitAction = string.Format("saveChangesTo{0}()", vmVm.Name.Pascalize()),
+        NgSubmitAction = $"saveChangesTo{vmVm.Name.Pascalize()}()",
         ParentObjectName = vmVm.Name.Camelize(),
+        HtmlIncludes = this.GetIncludesFromControllerType(controllerType, vmVm),
       };
 
       return coord;
+    }
+
+    private Dictionary<string, IEnumerable<string>> GetIncludesFromControllerType(Type controllerType,
+      ViewModelViewModel vmVm)
+    {
+      if (controllerType == null)
+      {
+        return null;
+      }
+
+      if (vmVm == null)
+      {
+        throw new ArgumentException("VM VM can't be null", nameof(vmVm));
+      }
+
+      var returnTypeName = $"{vmVm.Name.Pascalize()}ViewModel";
+
+      var methods = controllerType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+        .Where(m => Attribute.IsDefined(m, this.httpGetAttribute))
+        .Where(m => m.ReturnType.Name == returnTypeName ||
+                    (m.ReturnType.IsGenericType && m.ReturnType.GetGenericArguments()[0].Name == returnTypeName))
+        .Where(m => m.HasAttribute<InjectHtmlInViewAttribute>());
+
+      var attrs = methods.SelectMany(m => m.GetCustomAttributes(inherit: true).OfType<InjectHtmlInViewAttribute>());
+
+      var grouped = attrs.GroupBy(a => a.HtmlPosition);
+
+      return grouped.ToDictionary(g => g.Key.ToString(), g => (IEnumerable<string>) g.Select(i => i.Content).ToList());
     }
 
     private IEnumerable<ViewCoordinatedInformationViewModel.SectionViewModel> SplitSections(ViewModelViewModel vmVm,

@@ -19,5 +19,7 @@ namespace Nord.Nganga.Models.ViewModels
     public bool HasCommonRecords { get; set; }
     public Dictionary<string, string> CommonRecordsWithResolvers { get; set; }
     public IEnumerable<string> CommonRecordObjects { get; set; }
+
+    public Dictionary<string, IEnumerable<string>> InjectedJavaScript { get; set; }
   }
 }

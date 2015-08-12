@@ -8,11 +8,11 @@
     <owners>National Organization for Rare Diseases</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Annotations needed for an Nganga project.</description>
-    <releaseNotes>a51d1bb Add support for ledger, support for exporting XML documentation.
-3f23206 Push NotUserEditable attribute declaration down to members
-75acc3a debugging object browser
-8701a49 Merge branch 'master' of https://github.com/NationalOrganizationForRareDisorders/Nord.Nganga.git
-bb83603 debugging object browser
+    <releaseNotes>bc94265 Added the ability to inject JavaScript into generated controllers
+1083675 Published latest version to nuget package
+ed273a0 Added support for injecting HTML into generated view.
+25c9402 Merge branch 'master' of https://github.com/NationalOrganizationForRareDisorders/Nord.Nganga.git
+e9be10e added change overwrite protection with Force option
 </releaseNotes>
     <copyright>Copyright 2015</copyright>
   </metadata>
