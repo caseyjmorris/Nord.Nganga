@@ -30,7 +30,7 @@ ngModel(model, parentObjectName) ::= <<
 injectHtml(model, key) ::= <%
 %model.HtmlIncludes.(key): {c| <!-- Injected HTML at context %key% --> %\n%
 %c% %\n%
-<!-- End injected HTML -->}; separator="%\n%"%
+<!-- End injected HTML -->}; separator="\n"%
 %>
 
 childView(model) ::= <<
