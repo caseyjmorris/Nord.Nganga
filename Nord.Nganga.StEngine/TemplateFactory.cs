@@ -11,7 +11,8 @@ namespace Nord.Nganga.StEngine
     {
       View,
       Controller,
-      Resource
+      Resource,
+      Master
     }
 
     public static Template GetTemplate(

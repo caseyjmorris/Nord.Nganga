@@ -1,0 +1,35 @@
+﻿templateVersion() ::=<%
+1.0.0
+%>
+
+file(header, body) ::= <<
+<header>
+<body>
+>>
+
+header(model) ::= <<
+<headerStart(model)> 
+    Generated on <model.genDate> at <model.genTime>
+    Context: <model.context>      
+    Controller type name: <model.controllerTypeName>    
+    <if(model.company)>Company: <model.company><endif>
+    <if(model.copyright)>Copyright: <model.copyright><endif>
+    Templates directory: <model.templatesDirectory>
+    Master Template version: <templateVersion()> 
+    Body Template version: <model.bodyTemplateVersion> 
+    Output signature: <model.md5Checksum>    
+    <headerEnd(model)>
+>>
+
+headerStart(model) ::= <%
+<model.openComment> <ngangaGenerated(true)>
+%>
+
+headerEnd(model) ::= <<
+<ngangaGenerated(false)> 
+<model.closeComment>
+>>
+
+ngangaGenerated(begin) ::= <%
+NGANGA - GENERATED CODE - <if(begin)>BEGIN<else>END<endif> HEADER 
+%>

@@ -43,13 +43,20 @@ namespace Nord.Nganga.WinApp
     // returns the coordination result
     public static void  Coordinate(StringFormatProviderVisitor logHandler, Action<IEnumerable<CoordinationResult>> resutlAcceptor)
     {
-      var domain = CreateAppDomain();
-      var exeAssembly = Assembly.GetEntryAssembly().FullName;
-      var host = (CoordinatorHost) domain.CreateInstanceAndUnwrap(
-        exeAssembly,
-        typeof(CoordinatorHost).FullName);
-      host.Run(logHandler, resutlAcceptor);
-      AppDomain.Unload(domain);
+      try
+      {
+        var domain = CreateAppDomain();
+        var exeAssembly = Assembly.GetEntryAssembly().FullName;
+        var host = (CoordinatorHost) domain.CreateInstanceAndUnwrap(
+          exeAssembly,
+          typeof(CoordinatorHost).FullName);
+        host.Run(logHandler, resutlAcceptor);
+        AppDomain.Unload(domain);
+      }
+      catch (Exception e)
+      {
+        logHandler($"{e}");
+      }
     }
   }
 
