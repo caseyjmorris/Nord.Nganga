@@ -8,19 +8,17 @@ namespace Nord.Nganga.Fs.Coordination
   public class CoordinationResult
   {
     public string SourceAssemblyLocation { get; set; }
+
     public string ControllerTypeName { get; set; }
 
     public string ControllerBody { get; set; }
     public string ControllerPath { get; set; }
-    public string ControllerChangesWillBeLostMarker { get; set; }
 
     public string ViewBody { get; set; }
     public string ViewPath { get; set; }
-    public string ViewChangesWillBeLostMarker { get; set; }
 
     public string ResourceBody { get; set; }
     public string ResourcePath { get; set; }
-    public string ResourceChangesWillBeLostMarker { get; set; }
 
     public string NgControllersPath { get; set; }
     public string NgViewsPath { get; set; }

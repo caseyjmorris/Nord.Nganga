@@ -37,13 +37,7 @@ namespace Nord.Nganga.Fs.Coordination
         VsProjectName = assemblyOps.CsProjectName,
         SourceAssemblyLocation = controllerType.Assembly.Location,
         ControllerTypeName = controllerType.FullName,
-        VsProjectPath = vsProjectPath,
-        ResourceChangesWillBeLostMarker =
-          this.sourceGenerator.GetChangesWillBeLostMarker(controllerType, TemplateFactory.Context.Resource),
-        ViewChangesWillBeLostMarker =
-          this.sourceGenerator.GetChangesWillBeLostMarker(controllerType, TemplateFactory.Context.View),
-        ControllerChangesWillBeLostMarker =
-          this.sourceGenerator.GetChangesWillBeLostMarker(controllerType, TemplateFactory.Context.Controller)
+        VsProjectPath = vsProjectPath
       };
 
       return result;
@@ -60,9 +54,7 @@ namespace Nord.Nganga.Fs.Coordination
         VsProjectName = assemblyOps.CsProjectName,
         SourceAssemblyLocation = controllerType.Assembly.Location,
         ControllerTypeName = controllerType.FullName,
-        VsProjectPath = vsProjectPath,
-        ResourceChangesWillBeLostMarker =
-          this.sourceGenerator.GetChangesWillBeLostMarker(controllerType, TemplateFactory.Context.Resource),
+        VsProjectPath = vsProjectPath
       };
 
       return result;
