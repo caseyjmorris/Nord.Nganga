@@ -43,8 +43,8 @@ namespace Nord.Nganga.WinApp
       this.rtbLog.Select(0, 0);
       try
       {
-        this.rtbLog.SelectedText = string.Format("{0}{1} - {2}", Environment.NewLine,
-          DateTime.Now.ToString("hh:mm:ss.fff"), string.Format(formatProvider, parms));
+        this.rtbLog.SelectedText =
+          $"{Environment.NewLine}{DateTime.Now.ToString("hh:mm:ss.fff")} - {string.Format(formatProvider, parms)}";
           this.Show();
       }
       catch (Exception ex)

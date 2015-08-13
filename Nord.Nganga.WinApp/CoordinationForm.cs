@@ -42,6 +42,7 @@ namespace Nord.Nganga.WinApp
     private void NgangaGenParmsForm_Load(object sender, EventArgs e)
     {
       this.SetId("Assembly Selection");
+      this.logHandler($"{this.Text} ready.");
 
       this.logFusionEventsToolStripMenuItem.Checked = Settings1.Default.LogFusionResolutionEvents;
 

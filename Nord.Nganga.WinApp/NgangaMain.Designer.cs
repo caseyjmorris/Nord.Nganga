@@ -42,8 +42,7 @@
             this.toolStripButton2});
       this.toolStrip1.Location = new System.Drawing.Point(0, 0);
       this.toolStrip1.Name = "toolStrip1";
-      this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-      this.toolStrip1.Size = new System.Drawing.Size(648, 25);
+      this.toolStrip1.Size = new System.Drawing.Size(432, 25);
       this.toolStrip1.TabIndex = 2;
       this.toolStrip1.Text = "toolStrip1";
       // 
@@ -69,14 +68,14 @@
       // 
       // NgangaMain
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(648, 103);
+      this.ClientSize = new System.Drawing.Size(432, 67);
       this.Controls.Add(this.toolStrip1);
-      this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
       this.Name = "NgangaMain";
       this.Text = "NgangaMain";
       this.Load += new System.EventHandler(this.NgangaMain_Load);
+      this.Move += new System.EventHandler(this.NgangaMain_Move);
       this.toolStrip1.ResumeLayout(false);
       this.toolStrip1.PerformLayout();
       this.ResumeLayout(false);

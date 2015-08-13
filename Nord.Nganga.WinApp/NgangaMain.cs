@@ -24,6 +24,16 @@ namespace Nord.Nganga.WinApp
     private void NgangaMain_Load(object sender, EventArgs e)
     {
       this.SetId("Main");
+      NgangaLog.Instance.Log($"{this.Text} ready.");
+      this.Top = Settings1.Default.MainTop;
+      this.Left = Settings1.Default.MainLeft;
+      this.TrackLog();
+    }
+
+    private void TrackLog()
+    {
+      ((Form) NgangaLog.Instance).Top = this.Top + this.Height;
+      ((Form) NgangaLog.Instance).Left = this.Left;
     }
 
     private void toolStripButton1_Click(object sender, EventArgs e)
@@ -73,6 +83,13 @@ namespace Nord.Nganga.WinApp
       {
         (new CoordinationResultCollectionBrowser(results)).Show();
       }
+    }
+
+    private void NgangaMain_Move(object sender, EventArgs e)
+    {
+      Settings1.Default.MainTop = this.Top;
+      Settings1.Default.MainLeft = this.Left;
+      this.TrackLog();
     }
   }
 }

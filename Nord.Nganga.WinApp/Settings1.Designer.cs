@@ -266,5 +266,29 @@ namespace Nord.Nganga.WinApp {
                 this["DTEProgId"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int MainTop {
+            get {
+                return ((int)(this["MainTop"]));
+            }
+            set {
+                this["MainTop"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int MainLeft {
+            get {
+                return ((int)(this["MainLeft"]));
+            }
+            set {
+                this["MainLeft"] = value;
+            }
+        }
     }
 }

@@ -67,5 +67,11 @@
     <Setting Name="DTEProgId" Type="System.String" Scope="User">
       <Value Profile="(Default)">VisualStudio.DTE.14.0</Value>
     </Setting>
+    <Setting Name="MainTop" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="MainLeft" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
