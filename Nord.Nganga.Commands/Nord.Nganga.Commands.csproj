@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{05BE09F0-7640-405A-A76F-755B6A5B5167}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nord.Nganga.Commands</RootNamespace>
+    <AssemblyName>Nord.Nganga.Commands</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Commands.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nord.Nganga.Annotations\Nord.Nganga.Annotations.csproj">
+      <Project>{d77415e5-25a4-4ceb-8e08-a2d7b82eb1a9}</Project>
+      <Name>Nord.Nganga.Annotations</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nord.Nganga.Core\Nord.Nganga.Core.csproj">
+      <Project>{d57b30bf-6e21-4c47-a06c-2155f6c2c8ca}</Project>
+      <Name>Nord.Nganga.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nord.Nganga.DataTypes\Nord.Nganga.DataTypes.csproj">
+      <Project>{db2c0ba3-c238-4a77-a5c8-d4ef8eed3c25}</Project>
+      <Name>Nord.Nganga.DataTypes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nord.Nganga.Fs\Nord.Nganga.Fs.csproj">
+      <Project>{d1ed0121-e79e-42b8-81e5-1cfca011b18d}</Project>
+      <Name>Nord.Nganga.Fs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nord.Nganga.Mappers\Nord.Nganga.Mappers.csproj">
+      <Project>{8aa252ad-ce48-421d-bf83-4a5a7367f968}</Project>
+      <Name>Nord.Nganga.Mappers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nord.Nganga.ViewModels\Nord.Nganga.Models.csproj">
+      <Project>{7ccea467-e8b3-4c22-8420-cf1851c96824}</Project>
+      <Name>Nord.Nganga.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
