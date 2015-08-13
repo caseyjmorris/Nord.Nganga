@@ -8,7 +8,6 @@ using Nord.Nganga.Core.Reflection;
 using Nord.Nganga.Fs.Coordination;
 using Nord.Nganga.Models;
 using Nord.Nganga.Models.Configuration;
-using Nord.Nganga.Models.ViewModels;
 using Nord.Nganga.WinControls;
 
 namespace Nord.Nganga.WinApp
@@ -29,20 +28,15 @@ namespace Nord.Nganga.WinApp
 
     private AssemblyOptionsModel AssemblyOptionsModel { get; set; }
 
-    private Assembly SelectedAssembly
-    {
-      get { return this.assemblySelector1.SelectedAssembly; }
-    }
+    private Assembly SelectedAssembly => this.assemblySelector1.SelectedAssembly;
 
-    private Type SelectedType
-    {
-      get { return this.typeSelector1.SelectedType; }
-    }
+    private Type SelectedType => this.typeSelector1.SelectedType;
 
     private void NgangaGenParmsForm_Load(object sender, EventArgs e)
     {
       this.SetId("Assembly Selection");
       this.logHandler($"{this.Text} ready.");
+      this.Top = Settings1.Default.MainTop;
 
       this.logFusionEventsToolStripMenuItem.Checked = Settings1.Default.LogFusionResolutionEvents;
 
@@ -238,15 +232,10 @@ namespace Nord.Nganga.WinApp
       (new AppDomainAssemblyListBrowser()).Show();
     }
 
-    private void controllerToolStripMenuItem_Click(object sender, EventArgs e)
+    private void label3_Click(object sender, EventArgs e)
     {
-
-    }
-
-    private void label3_Click (object sender, EventArgs e)
-    {
-          this.Coordinate();
-          this.Close();
+      this.Coordinate();
+      this.Close();
     }
   }
 }
