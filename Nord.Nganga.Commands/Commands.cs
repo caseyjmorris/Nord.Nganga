@@ -4,8 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Nord.Nganga.Core.Reflection;
+using Nord.Nganga.Fs;
 using Nord.Nganga.Fs.Coordination;
+using Nord.Nganga.Fs.VsIntegration;
 using Nord.Nganga.Models.Configuration;
 
 namespace Nord.Nganga.Commands
@@ -24,16 +25,11 @@ namespace Nord.Nganga.Commands
       return name.ToUpperInvariant().Replace(SettingsPackage.ToUpperInvariant(), string.Empty);
     }
 
-    private static string StripControllerName(string name)
-    {
-      return Regex.Replace(name, $"{Controller}$", string.Empty).ToUpperInvariant();
-    }
-
     private static IEnumerable<Type> GetSettingsTypes()
     {
-      var asm = Assembly.GetAssembly(typeof(IConfigurationPackage));
+      var asm = Assembly.GetAssembly(typeof (IConfigurationPackage));
 
-      return asm.GetTypes().Where(t => typeof(IConfigurationPackage).IsAssignableFrom(t)).ToList();
+      return asm.GetTypes().Where(t => typeof (IConfigurationPackage).IsAssignableFrom(t)).ToList();
     }
 
     public static IEnumerable<string> ListOptionTypes()
@@ -52,64 +48,44 @@ namespace Nord.Nganga.Commands
         throw new KeyNotFoundException($"Setting type {name} not recognized.");
       }
 
-      var method = typeof(ConfigurationFactory).GetMethod("GetConfiguration").MakeGenericMethod(type);
+      var method = typeof (ConfigurationFactory).GetMethod("GetConfiguration").MakeGenericMethod(type);
 
       return (IConfigurationPackage) method.Invoke(null, new object[0]);
     }
 
     public static void SetOptions(IConfigurationPackage pkg)
     {
-      var method = typeof(ConfigurationFactory).GetMethod("UpdateSettings").MakeGenericMethod(pkg.GetType());
+      var method = typeof (ConfigurationFactory).GetMethod("UpdateSettings").MakeGenericMethod(pkg.GetType());
 
       method.Invoke(null, new object[] {pkg});
     }
 
-    public static IEnumerable<Type> GetEligibleWebApiControllers(Assembly asm, bool resourceOnly)
+    public static IEnumerable<string> GetEligibleWebApiControllers(string assemblyFileLocation, bool resourceOnly,
+      bool verbose)
     {
-      return asm.FindWebApiControllers("ApiController", true, true, assertAngularRouteIdParmAttribute: !resourceOnly);
+      return verbose
+        ? CoordinationExecutor.GetControllerList(assemblyFileLocation, resourceOnly, Console.Write)
+        : CoordinationExecutor.GetControllerList(assemblyFileLocation, resourceOnly, (provider, parms) => { });
     }
 
-    public static Type ResolveController(Assembly asm, string controllerName, bool resourceOnly)
+    public static CoordinationResult GenerateCode(string assemblyLocation, string controllerName, string vsProjectPath,
+      bool verbose)
     {
-      var scrubbed = StripControllerName(controllerName);
-
-      var noNs = !scrubbed.Contains(".");
-
-      var ctrl = GetEligibleWebApiControllers(asm, resourceOnly);
-
-      var matching = (noNs
-        ? ctrl.Where(c => StripControllerName(c.Name).StartsWith(scrubbed))
-        : ctrl.Where(c => StripControllerName(c.FullName).EndsWith(scrubbed)))
-        .ToList();
-
-      if (matching.Count > 1)
-      {
-        throw new InvalidOperationException(
-          $"Ambiguous match:  {controllerName} could refer to the following controllers in {asm.FullName}:  {string.Join(", ", matching.Select(c => c.FullName))}");
-      }
-      if (matching.Count == 0)
-      {
-        throw new KeyNotFoundException(
-          $"No eligible controller matching {controllerName} could be found in {asm.FullName}");
-      }
-
-      return matching.Single();
+      return verbose
+        ? CoordinationExecutor.Coordinate(assemblyLocation, controllerName, vsProjectPath, resourceOnly: false,
+          logHandler: Console.Write)
+        : CoordinationExecutor.Coordinate(assemblyLocation, controllerName, vsProjectPath, resourceOnly: false,
+          logHandler: (x, y) => { });
     }
 
-    public static CoordinationResult GenerateCode(Type controller, string vsProjectPath)
+    public static CoordinationResult GenerateResource(string assemblyLocation, string controllerName,
+      string vsProjectPath, bool verbose)
     {
-      var coordinator = new GenerationCoordinator(ConfigurationFactory.GetConfiguration<WebApiSettingsPackage>(),
-        ConfigurationFactory.GetConfiguration<SystemPathSettingsPackage>());
-
-      return coordinator.CoordinateUiGeneration(controller, vsProjectPath);
-    }
-
-    public static CoordinationResult GenerateResource(Type controller, string vsProjectPath)
-    {
-      var coordinator = new GenerationCoordinator(ConfigurationFactory.GetConfiguration<WebApiSettingsPackage>(),
-        ConfigurationFactory.GetConfiguration<SystemPathSettingsPackage>());
-
-      return coordinator.CoordinateResourceGeneration(controller, vsProjectPath);
+      return verbose
+        ? CoordinationExecutor.Coordinate(assemblyLocation, controllerName, vsProjectPath, resourceOnly: false,
+          logHandler: Console.Write)
+        : CoordinationExecutor.Coordinate(assemblyLocation, controllerName, vsProjectPath, resourceOnly: false,
+          logHandler: (x, y) => { });
     }
 
     public static bool WriteUiGenerationResult(CoordinationResult coordinationResult, bool force)
@@ -145,6 +121,13 @@ namespace Nord.Nganga.Commands
       File.WriteAllText(coordinationResult.ResourcePath, coordinationResult.ResourceBody);
 
       return true;
+    }
+
+    public static void EditCsProj(string csprojPath, params string[] newFiles)
+    {
+      var csprojEditor = new CsProjEditor();
+
+      csprojEditor.AddFileToCsProj(csprojPath, newFiles, x => { });
     }
   }
 }
