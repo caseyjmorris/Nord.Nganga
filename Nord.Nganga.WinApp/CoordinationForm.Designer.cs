@@ -99,7 +99,7 @@
       // 
       this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.button1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.button1.Location = new System.Drawing.Point(803, 3);
+      this.button1.Location = new System.Drawing.Point(802, 3);
       this.button1.Name = "button1";
       this.button1.Size = new System.Drawing.Size(71, 29);
       this.button1.TabIndex = 3;
@@ -111,7 +111,7 @@
       // 
       this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
       this.button2.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.button2.Location = new System.Drawing.Point(30, 3);
+      this.button2.Location = new System.Drawing.Point(29, 3);
       this.button2.Name = "button2";
       this.button2.Size = new System.Drawing.Size(72, 29);
       this.button2.TabIndex = 4;
@@ -205,7 +205,7 @@
       // 
       this.resourceOnly.AutoSize = true;
       this.resourceOnly.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.resourceOnly.Location = new System.Drawing.Point(689, 3);
+      this.resourceOnly.Location = new System.Drawing.Point(688, 3);
       this.resourceOnly.Name = "resourceOnly";
       this.resourceOnly.Size = new System.Drawing.Size(108, 29);
       this.resourceOnly.TabIndex = 9;
@@ -289,7 +289,7 @@
       this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 581F));
       this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 114F));
       this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 77F));
-      this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+      this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 31F));
       this.tableLayoutPanel3.Controls.Add(this.button1, 4, 0);
       this.tableLayoutPanel3.Controls.Add(this.resourceOnly, 3, 0);
       this.tableLayoutPanel3.Controls.Add(this.button2, 1, 0);
@@ -307,9 +307,9 @@
       // 
       this.label3.AutoSize = true;
       this.label3.Dock = System.Windows.Forms.DockStyle.Bottom;
-      this.label3.Location = new System.Drawing.Point(880, 83);
+      this.label3.Location = new System.Drawing.Point(879, 83);
       this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(25, 13);
+      this.label3.Size = new System.Drawing.Size(26, 13);
       this.label3.TabIndex = 10;
       this.label3.Click += new System.EventHandler(this.label3_Click);
       // 
