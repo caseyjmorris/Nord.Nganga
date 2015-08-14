@@ -28,6 +28,16 @@ namespace Nord.Nganga.Fs.Coordination
       this.modelVisitor = modelVisitor;
     }
 
+    public IEnumerable<string> GetControllerList(
+      string assemlbyFileName,
+      StringFormatProviderVisitor logHandler)
+    {
+      if (string.IsNullOrEmpty(assemlbyFileName)) return null;
+      var types = DependentTypeResolver.GetTypesFrom(assemlbyFileName,
+        DependentTypeResolver.CreateResolveEventLogger(logHandler));
+      return types.Select(t => t.FullName);
+    }
+
     public CoordinationResult Coordinate(
       string assemlbyFileName,
       string fuzzyControllerTypeName,
