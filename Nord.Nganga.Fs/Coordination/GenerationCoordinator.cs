@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Microsoft.Internal.VisualStudio.PlatformUI;
 using Nord.Nganga.Core;
 using Nord.Nganga.Core.Reflection;
 using Nord.Nganga.Fs.Naming;
 using Nord.Nganga.Models;
 using Nord.Nganga.Models.Configuration;
-using Nord.Nganga.StEngine;
 
 namespace Nord.Nganga.Fs.Coordination
 {
@@ -17,7 +15,6 @@ namespace Nord.Nganga.Fs.Coordination
   {
     private readonly SourceGenerator sourceGenerator;
     private readonly NameSuggester nameSuggester;
-    private Action<object> modelVisitor;
     private const string Controller = "Controller";
 
     public GenerationCoordinator(WebApiSettingsPackage webApiSettings, SystemPathSettingsPackage pathSettings,
@@ -25,28 +22,32 @@ namespace Nord.Nganga.Fs.Coordination
     {
       this.sourceGenerator = new SourceGenerator(webApiSettings, pathSettings, modelVisitor);
       this.nameSuggester = new NameSuggester();
-      this.modelVisitor = modelVisitor;
     }
 
     public IEnumerable<string> GetControllerList(
-      string assemlbyFileName,
+      string assemblyFileName,
+      bool resourceOnly,
       StringFormatProviderVisitor logHandler)
     {
-      if (string.IsNullOrEmpty(assemlbyFileName)) return null;
-      var types = DependentTypeResolver.GetTypesFrom(assemlbyFileName,
-        DependentTypeResolver.CreateResolveEventLogger(logHandler));
+      if (string.IsNullOrEmpty(assemblyFileName)) return null;
+
+      var asm = Assembly.LoadFile(assemblyFileName);
+
+      var types = asm.FindWebApiControllers("ApiController", true, true,
+        assertAngularRouteIdParmAttribute: resourceOnly);
+
       return types.Select(t => t.FullName);
     }
 
     public CoordinationResult Coordinate(
-      string assemlbyFileName,
+      string assemblyFileName,
       string fuzzyControllerTypeName,
       string projectPath,
       bool resourceOnly,
       StringFormatProviderVisitor logHandler)
     {
-      if (string.IsNullOrEmpty(assemlbyFileName)) return null;
-      var types = DependentTypeResolver.GetTypesFrom(assemlbyFileName,
+      if (string.IsNullOrEmpty(assemblyFileName)) return null;
+      var types = DependentTypeResolver.GetTypesFrom(assemblyFileName,
         DependentTypeResolver.CreateResolveEventLogger(logHandler));
       var assy = types[0].Assembly;
       var type = ResolveController(assy, fuzzyControllerTypeName, resourceOnly);
