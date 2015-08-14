@@ -61,14 +61,14 @@ Function List-NgangaEligibleControllers
 {
   param(
     [switch] $ResourceOnly,
-    [switch] $Verbose
+    [switch] $UseVerboseOutput
   )
 
   Build-ControllerType
 
   $asmLoc = Get-ControllerDllLocation
 
-  return [Nord.Nganga.Commands.Commands]::GetEligibleWebApiControllers($asmLoc, $ResourceOnly.IsPresent, $Verbose.IsPresent)
+  return [Nord.Nganga.Commands.Commands]::GetEligibleWebApiControllers($asmLoc, $ResourceOnly.IsPresent, $UseVerboseOutput.IsPresent)
 }
 
 Function Generate-NgangaCode
@@ -78,7 +78,7 @@ Function Generate-NgangaCode
             Mandatory = $true)]
             [string] $Controller,
        [switch] $ResourceOnly,
-       [switch] $Verbose,
+       [switch] $UseVerboseOutput,
        [switch] $Preview,
        [switch] $Force
     )
@@ -93,11 +93,11 @@ Function Generate-NgangaCode
 
     if ($ResourceOnly.IsPresent)
     {
-      $result = [Nord.Nganga.Commands.Commands]::GenerateResource($asmLoc, $Controller, $proj.FullName, $Verbose.IsPresent)
+      $result = [Nord.Nganga.Commands.Commands]::GenerateResource($asmLoc, $Controller, $proj.FullName, $UseVerboseOutput.IsPresent)
     }
     else
     {
-      $result = [Nord.Nganga.Commands.Commands]::GenerateResource($asmLoc, $Controller, $proj.FullName, $Verbose.IsPresent)
+      $result = [Nord.Nganga.Commands.Commands]::GenerateResource($asmLoc, $Controller, $proj.FullName, $UseVerboseOutput.IsPresent)
     }
 
     if ($Preview.IsPresent)
