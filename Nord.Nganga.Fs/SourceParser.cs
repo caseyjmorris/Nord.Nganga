@@ -41,9 +41,16 @@ namespace Nord.Nganga.Fs
         // OPEN COMMENT + HEADERSTART 
         //  and 
         // HEADER END + CLOSE COMMENT 
-          
-      var headerStartRegex = new Regex("\\s*" + openComment + "\\s*" + headerStart + "\\s+",RegexOptions.Compiled);
-      var headerEndRegex = new Regex("\\s*" + headerEnd + "\\s*" + closeComment ,RegexOptions.Compiled);
+
+      if (closeComment.StartsWith(@"*"))
+      {
+        closeComment = @"\" + closeComment;
+      }
+      var openPattern = "\\s*" + openComment + "\\s*" + headerStart + "\\s+";
+      var closePattern = "\\s*" + headerEnd + "\\s*" + closeComment + "\\s*";
+
+      var headerStartRegex = new Regex(openPattern, RegexOptions.Compiled);
+      var headerEndRegex = new Regex(closePattern ,RegexOptions.Compiled);
 
       var headerStartMatch = headerStartRegex.Match(source);
       var headerEndMatch = headerEndRegex.Match(source);
@@ -60,18 +67,19 @@ namespace Nord.Nganga.Fs
         return new GeneratorParseResult {Success = false};
       }
 
-      var headerRegex = new Regex(@"^\s*Output signature:\s+(?<md5>[A-Fa-f0-9]{32})\s*$" ,RegexOptions.Compiled);
-
       var header = source.Substring(0, headerEndPosition);
       var lines = header.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+
+      var headerRegex = new Regex(@"^\s*Output signature:\s+(?<md5>[A-Fa-f0-9]{32})\s*$" ,RegexOptions.Compiled);
       var declaredHeaderMd5 = (from line in lines select headerRegex.Matches(line) into matches where matches.Count != 0 select matches[0].Groups["md5"].Value).FirstOrDefault();
 
       if (declaredHeaderMd5 == null)
         {
           return new GeneratorParseResult {Success = false};
-        } 
+        }
 
-      var body = source.Substring(headerEndPosition + Environment.NewLine.Length);
+      var body = source.Replace(header, string.Empty);
+
       var calculatedBodyMd5 = body.CalculateMd5Hash();
 
       var result = new GeneratorParseResult
@@ -86,6 +94,7 @@ namespace Nord.Nganga.Fs
       };
 
       return result;
+
     }
   }
 }
