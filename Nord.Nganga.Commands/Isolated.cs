@@ -25,16 +25,11 @@ namespace Nord.Nganga.Commands
         });
 
       var type = typeof(T);
-      //string basePath;
-      //var resolveEventHandler = DependentTypeResolver.CreateResolutionEventHandler(typeof(T).Assembly, out basePath);
-      //AppDomain.CurrentDomain.TypeResolve +=  resolveEventHandler;
 
-      // this.value = (T) this.domain.CreateInstanceAndUnwrap(type.Assembly.FullName, type.FullName);
+      var typeAssy = type.Assembly;
+      var host = (T) this.domain.CreateInstanceAndUnwrap(typeAssy.FullName, type.FullName);
 
-        var typeAssy = type.Assembly;
-        var host = (T) this.domain.CreateInstanceAndUnwrap( typeAssy.FullName, type.FullName);
-
-        this.value = host;
+      this.value = host;
     }
 
     public T Value

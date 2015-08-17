@@ -59,21 +59,21 @@ namespace Nord.Nganga.Commands
     }
 
     public static IEnumerable<string> GetEligibleWebApiControllers(
-      string assebmlyFileName,
+      string assyFileName,
       bool resourceOnly,
       bool verbose)
     {
       if (!File.Exists(assebmlyFileName))
       {
         throw new Exception(
-          $"The specified assembly file name {assebmlyFileName} does not exist - there is an error in ngangainterface.psm1!");
+          $"The specified assembly file name {assyFileName} does not exist - there is an error in ngangainterface.psm1!");
       }
 
       var logs = new List<string>();
       IEnumerable<string> results = null;
       try
       {
-        results = CoordinationExecutor.GetControllerList(assebmlyFileName, logs, resourceOnly);
+        results = CoordinationExecutor.GetControllerList(assyFileName, logs, resourceOnly);
       }
       catch (Exception e)
       {
@@ -91,11 +91,27 @@ namespace Nord.Nganga.Commands
       return results;
     }
 
-    public static CoordinationResult GenerateCode(string assemblyLocation, string controllerName, string vsProjectPath,
+    public static CoordinationResult GenerateCode(string assyFileName, string controllerName, string vsProjectPath,
       bool verbose)
     {
+      if (!File.Exists(assyFileName))
+      {
+        throw new Exception(
+          $"The specified assembly file name {assyFileName} does not exist - there is an error in ngangainterface.psm1!");
+      }
+
       var logs = new List<string>();
-      var results = CoordinationExecutor.Coordinate(assemblyLocation, controllerName, vsProjectPath, logs, false);
+
+      CoordinationResult results = null;
+      try
+      {
+        results = CoordinationExecutor.Coordinate(assyFileName, controllerName, vsProjectPath, logs, false);
+      }
+      catch (Exception e)
+      {
+        logs.Add(e.ToString());
+      }
+
       if (verbose)
       {
         foreach (var log in logs)
