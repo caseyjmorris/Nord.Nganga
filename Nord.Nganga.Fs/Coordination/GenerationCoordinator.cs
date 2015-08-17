@@ -25,19 +25,15 @@ namespace Nord.Nganga.Fs.Coordination
     }
 
     public IEnumerable<string> GetControllerList(
-      string assemblyFileName,
-      bool resourceOnly,
+      string assemlbyFileName,
       StringFormatProviderVisitor logHandler)
     {
-      if (string.IsNullOrEmpty(assemblyFileName)) return null;
-
-      var asm = Assembly.LoadFile(assemblyFileName);
-
-      var types = asm.FindWebApiControllers("ApiController", true, true,
-        assertAngularRouteIdParmAttribute: resourceOnly);
-
+      if (string.IsNullOrEmpty(assemlbyFileName)) return null;
+      var types = DependentTypeResolver.GetTypesFrom(assemlbyFileName,
+        DependentTypeResolver.CreateResolveEventLogger(logHandler));
       return types.Select(t => t.FullName);
     }
+
 
     public CoordinationResult Coordinate(
       string assemblyFileName,
