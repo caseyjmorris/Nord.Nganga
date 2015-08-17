@@ -118,11 +118,13 @@ namespace Nord.Nganga.Mappers
         OnPostFailureExpressions =
           m.methodInfo.GetCustomAttributes<JavaScriptOnPostCompleteAttribute>()
             .Where(a => a.Context == JavaScriptOnPostCompleteAttribute.ContextType.Failure)
-            .Select(a => a.Expression),
+            .Select(a => a.Expression)
+            .ToList(),
         OnPostSuccessExpressions =
           m.methodInfo.GetCustomAttributes<JavaScriptOnPostCompleteAttribute>()
             .Where(a => a.Context == JavaScriptOnPostCompleteAttribute.ContextType.Success)
-            .Select(a => a.Expression),
+            .Select(a => a.Expression)
+            .ToList(),
         ResourceOnly = m.methodInfo.HasAttribute<GenerateResourceOnlyAttribute>(),
         ReturnPropertyCamelCase = m.hasReturnType ? m.returnType.GetFriendlyName().Camelize() : null,
         ReturnPropertyPascalCase = m.hasReturnType ? m.returnType.GetFriendlyName() : null,

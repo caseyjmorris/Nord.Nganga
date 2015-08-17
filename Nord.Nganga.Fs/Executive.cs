@@ -9,7 +9,7 @@ namespace Nord.Nganga.Fs
 {
   public static class Executive
   {
-    public IEnumerable<string> GetControllerList(string assemlbyFileName, StringFormatProviderVisitor logHandler)
+    public static IEnumerable<string> GetControllerList(string assemlbyFileName, StringFormatProviderVisitor logHandler)
     {
       var l = new List<string>();
       using (var host = new Isolated<Host>())
@@ -39,7 +39,7 @@ namespace Nord.Nganga.Fs
   // this ensures that any loaded assemblies are freed upon completion
   public class Host : MarshalByRefObject
   {
-      public void GetControllerList(
+    public void GetControllerList(
       string assemlbyFileName,
       StringFormatProviderVisitor logHandler,
       Action<string> acceptor)
@@ -50,6 +50,7 @@ namespace Nord.Nganga.Fs
       var r = g.GetControllerList(assemlbyFileName, logHandler);
       r.ToList().ForEach(acceptor);
     }
+
     public void Coordinate(
       string assemlbyFileName,
       string fuzzyControllerTypeName,

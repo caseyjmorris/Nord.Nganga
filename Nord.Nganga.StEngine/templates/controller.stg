@@ -1,5 +1,5 @@
 ﻿templateVersion() ::=<%
-1.0.0
+1.1.0
 %>
 
 openComment() ::= <%
@@ -97,7 +97,12 @@ $scope.saveChangesTo<pe.FirstArgDisplayNamePascalCase> = function()
         <if(pe.HasReturnValue)>
         $scope.<pe.ReturnPropertyCamelCase> = result;
         <endif>
-      \})
+
+        <pe.OnPostSuccessExpressions : {ose |<ose>}; separator="\n">
+      \}<if(pe.OnPostFailureExpressions)>, function(result)
+        {
+          <pe.OnPostFailureExpressions: {ofe |<ofe>}; separator="\n">
+        \}<endif>)
   \}
 }>
 >>
