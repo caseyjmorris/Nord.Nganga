@@ -199,6 +199,12 @@ namespace Nord.Nganga.Fs.VsIntegration
           t.Start();
           return;
         }
+        if (parseResult.Success && parseResult.CalculatedBodyMd5 == parseResult.DeclaredHeaderMd5)
+        {
+          logHandler("Generated output for {0} is unchanged from previous version, use FORCE to overwrite!",
+            targetFileName);
+          return;
+        }
       }
       var data = dataProvider();
       File.WriteAllText(targetFileName, data);

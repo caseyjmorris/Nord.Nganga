@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Antlr4.StringTemplate;
 using Nord.Nganga.Core.Text;
 using Nord.Nganga.Fs.Coordination;
 using Nord.Nganga.Models.Configuration;
@@ -25,29 +26,43 @@ namespace Nord.Nganga.Fs
       var closeComment = TemplateFactory.GetTemplate(this.pathSettings, context, "closeComment").Render();
 
       var hs = TemplateFactory.GetTemplate(this.pathSettings, TemplateFactory.Context.Master, "headerStart");
-      hs.Add("model", new {openComment, closeComment});
-      var headerStart = hs.Resolve();
+      hs.Add("model", new {openComment=string.Empty, closeComment=string.Empty});
+      var headerStart = hs.Resolve(); // get the HEADER START text WITHOUT open or close tokens
 
       var he = TemplateFactory.GetTemplate(this.pathSettings, TemplateFactory.Context.Master, "headerEnd");
-      he.Add("model", new {openComment, closeComment});
-      var headerEnd = he.Resolve();
+      he.Add("model", new {openComment=string.Empty, closeComment=string.Empty});
+      var headerEnd = he.Resolve(); // get the HEADER END text WITHOUT open or close tokens
 
-      if (string.IsNullOrEmpty(headerStart) || string.IsNullOrEmpty(headerEnd) || !source.Contains(headerStart) ||
-          !source.Contains(headerEnd))
+      if (string.IsNullOrEmpty(headerStart) || string.IsNullOrEmpty(headerEnd) )
       {
         return new GeneratorParseResult {Success = false};
       }
-      var start = source.IndexOf(headerStart, StringComparison.Ordinal);
-      var end = source.IndexOf(headerEnd, StringComparison.Ordinal) + headerEnd.Length;
+            // now build whitespace agnostic expressions to match 
+        // OPEN COMMENT + HEADERSTART 
+        //  and 
+        // HEADER END + CLOSE COMMENT 
+          
+      var headerStartRegex = new Regex("\\s*" + openComment + "\\s*" + headerStart + "\\s+",RegexOptions.Compiled);
+      var headerEndRegex = new Regex("\\s*" + headerEnd + "\\s*" + closeComment ,RegexOptions.Compiled);
 
-      if (start < 0 || end > source.Length)
+      var headerStartMatch = headerStartRegex.Match(source);
+      var headerEndMatch = headerEndRegex.Match(source);
+
+      if (!headerStartMatch.Success ||!headerEndMatch.Success  )
+      {
+        return new GeneratorParseResult {Success = false};
+      }
+      var matchedEnd = headerEndMatch.Value;
+
+      var headerEndPosition = source.IndexOf(matchedEnd, StringComparison.Ordinal) + matchedEnd.Length ;
+      if (headerEndPosition > source.Length)
       {
         return new GeneratorParseResult {Success = false};
       }
 
       var headerRegex = new Regex(@"^\s*Output signature:\s+(?<md5>[A-Fa-f0-9]{32})\s*$" ,RegexOptions.Compiled);
 
-      var header = source.Substring(start, end);
+      var header = source.Substring(0, headerEndPosition);
       var lines = header.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
       var declaredHeaderMd5 = (from line in lines select headerRegex.Matches(line) into matches where matches.Count != 0 select matches[0].Groups["md5"].Value).FirstOrDefault();
 
@@ -56,7 +71,7 @@ namespace Nord.Nganga.Fs
           return new GeneratorParseResult {Success = false};
         } 
 
-      var body = source.Substring(end + Environment.NewLine.Length);
+      var body = source.Substring(headerEndPosition + Environment.NewLine.Length);
       var calculatedBodyMd5 = body.CalculateMd5Hash();
 
       var result = new GeneratorParseResult
