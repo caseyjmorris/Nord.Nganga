@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nord.Nganga.Core;
 using Nord.Nganga.Fs.Coordination;
@@ -13,32 +14,27 @@ namespace Nord.Nganga.Fs
   /// </summary>
   public class CoordinationFacade : MarshalByRefObject
   {
-      public void GetControllerList(
+    public IEnumerable<string> GetControllerList(
       string assemblyFileName,
-      bool resourceOnly,
-      StringFormatProviderVisitor logHandler,
-      Action<string> acceptor)
+      ICollection<string> logRecords,
+      bool resourceOnly = false 
+     )
     {
-      var wasp = ConfigurationFactory.GetConfiguration<WebApiSettingsPackage>();
-      var fileSettings = ConfigurationFactory.GetConfiguration<SystemPathSettingsPackage>();
-      var g = new GenerationCoordinator(wasp, fileSettings);
-      var r = g.GetControllerList(assemblyFileName, resourceOnly, logHandler);
-      r.ToList().ForEach(acceptor);
+      var g = new GenerationCoordinator();
+      var result = g.GetControllerList(assemblyFileName, logRecords, resourceOnly ).ToList();
+      return result; 
     }
 
-    public void Coordinate(
+    public CoordinationResult Coordinate(
       string assemblyFileName,
       string fuzzyControllerTypeName,
       string projectPath,
-      bool resourceOnly,
-      StringFormatProviderVisitor logHandler,
-      Action<CoordinationResult> resultAcceptor)
+       ICollection<string> logRecords,
+       bool resourceOnly = false )
     {
-      var wasp = ConfigurationFactory.GetConfiguration<WebApiSettingsPackage>();
-      var fileSettings = ConfigurationFactory.GetConfiguration<SystemPathSettingsPackage>();
-      var g = new GenerationCoordinator(wasp, fileSettings);
-      var r = g.Coordinate(assemblyFileName, fuzzyControllerTypeName, projectPath, resourceOnly, logHandler);
-      resultAcceptor(r);
+      var g = new GenerationCoordinator();
+      var result = g.Coordinate(assemblyFileName, fuzzyControllerTypeName, projectPath, logRecords, resourceOnly );
+      return result;
     }
   }
 }
