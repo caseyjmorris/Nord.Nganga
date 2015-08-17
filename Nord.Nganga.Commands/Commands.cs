@@ -63,9 +63,10 @@ namespace Nord.Nganga.Commands
     public static IEnumerable<string> GetEligibleWebApiControllers(string assemblyFileLocation, bool resourceOnly,
       bool verbose)
     {
+      var logs = new List<string>();
       return verbose
-        ? CoordinationExecutor.GetControllerList(assemblyFileLocation, resourceOnly, Console.Write)
-        : CoordinationExecutor.GetControllerList(assemblyFileLocation, resourceOnly, (provider, parms) => { });
+        ? CoordinationExecutor.GetControllerList(assemblyFileLocation, resourceOnly, logs)
+        : CoordinationExecutor.GetControllerList(assemblyFileLocation, resourceOnly, null);
     }
 
     public static CoordinationResult GenerateCode(string assemblyLocation, string controllerName, string vsProjectPath,

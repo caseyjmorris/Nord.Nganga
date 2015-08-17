@@ -8,32 +8,36 @@ namespace Nord.Nganga.Fs
 {
   public static class CoordinationExecutor
   {
-    public static IEnumerable<string> GetControllerList(string assemblyFileName, bool resourceOnly,
-      StringFormatProviderVisitor logHandler)
+    public static IEnumerable<string> GetControllerList(
+    string assemblyFileName, 
+      ICollection<string> logRecords,
+      bool resourceOnly = false )
     {
-      var l = new List<string>();
       using (var host = new Isolated<CoordinationFacade>())
       {
-        host.Value.GetControllerList(assemblyFileName, resourceOnly, logHandler, l.Add);
+        var result = host.Value.GetControllerList(assemblyFileName, logRecords, resourceOnly);
+        return result;
       }
-      return l;
     }
 
     public static CoordinationResult Coordinate(
       string assemblyFileName,
       string fuzzyControllerTypeName,
       string projectPath,
-      bool resourceOnly,
-      StringFormatProviderVisitor logHandler)
+      ICollection<string> logRecords,
+      bool resourceOnly = false )
     {
-      var list = new List<CoordinationResult>(1);
       using (var host = new Isolated<CoordinationFacade>())
       {
-        host.Value.Coordinate(assemblyFileName, fuzzyControllerTypeName, projectPath, resourceOnly, logHandler,
-          list.Add);
+        var result = host.Value.Coordinate(
+        assemblyFileName, 
+        fuzzyControllerTypeName, 
+        projectPath, 
+        logRecords,
+        resourceOnly  );
+        return result ; 
       }
 
-      return list.Single();
     }
   }
 }
