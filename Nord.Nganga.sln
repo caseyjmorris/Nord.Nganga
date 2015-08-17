@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.DataTypes", "No
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.Vsix", "Nord.Nganga.Vsix\Nord.Nganga.Vsix.csproj", "{20AE1B73-627E-4A0D-BF4D-5E6D89E3EE88}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.Commands", "Nord.Nganga.Commands\Nord.Nganga.Commands.csproj", "{05BE09F0-7640-405A-A76F-755B6A5B5167}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,6 +94,10 @@ Global
 		{20AE1B73-627E-4A0D-BF4D-5E6D89E3EE88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20AE1B73-627E-4A0D-BF4D-5E6D89E3EE88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20AE1B73-627E-4A0D-BF4D-5E6D89E3EE88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05BE09F0-7640-405A-A76F-755B6A5B5167}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05BE09F0-7640-405A-A76F-755B6A5B5167}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05BE09F0-7640-405A-A76F-755B6A5B5167}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05BE09F0-7640-405A-A76F-755B6A5B5167}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

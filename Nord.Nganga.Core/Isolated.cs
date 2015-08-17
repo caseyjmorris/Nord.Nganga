@@ -6,10 +6,10 @@ namespace Nord.Nganga.Core
     private AppDomain domain;
     private readonly T value;
 
-    public Isolated()
+    public Isolated(AppDomainSetup ads = null)
     {
       this.domain = AppDomain.CreateDomain("Isolated:" + Guid.NewGuid(),
-        null, AppDomain.CurrentDomain.SetupInformation);
+        null, ads ?? AppDomain.CurrentDomain.SetupInformation);
 
       var type = typeof(T);
 
