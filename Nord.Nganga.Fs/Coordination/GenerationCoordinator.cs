@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Microsoft.Internal.VisualStudio.PlatformUI;
 using Nord.Nganga.Core;
 using Nord.Nganga.Core.Reflection;
 using Nord.Nganga.Fs.Naming;
 using Nord.Nganga.Models;
 using Nord.Nganga.Models.Configuration;
-using Nord.Nganga.StEngine;
 
 namespace Nord.Nganga.Fs.Coordination
 {
@@ -17,37 +15,60 @@ namespace Nord.Nganga.Fs.Coordination
   {
     private readonly SourceGenerator sourceGenerator;
     private readonly NameSuggester nameSuggester;
-    private Action<object> modelVisitor;
     private const string Controller = "Controller";
 
-    public GenerationCoordinator(WebApiSettingsPackage webApiSettings, SystemPathSettingsPackage pathSettings,
+    public GenerationCoordinator(Action<object> modelVisitor = null)
+    {
+      this.sourceGenerator = new SourceGenerator(
+        ConfigurationFactory.GetConfiguration<WebApiSettingsPackage>(),
+        ConfigurationFactory.GetConfiguration<SystemPathSettingsPackage>(),
+        modelVisitor);
+      this.nameSuggester = new NameSuggester();
+    }
+
+    public GenerationCoordinator(
+      WebApiSettingsPackage webApiSettings,
+      SystemPathSettingsPackage pathSettings,
       Action<object> modelVisitor = null)
     {
       this.sourceGenerator = new SourceGenerator(webApiSettings, pathSettings, modelVisitor);
       this.nameSuggester = new NameSuggester();
-      this.modelVisitor = modelVisitor;
     }
 
     public IEnumerable<string> GetControllerList(
       string assemlbyFileName,
-      StringFormatProviderVisitor logHandler)
+      ICollection<string> logRecords,
+      bool resourceOnly = false )
     {
       if (string.IsNullOrEmpty(assemlbyFileName)) return null;
-      var types = DependentTypeResolver.GetTypesFrom(assemlbyFileName,
-        DependentTypeResolver.CreateResolveEventLogger(logHandler));
-      return types.Select(t => t.FullName);
+      var allTypes = DependentTypeResolver.GetTypesFrom(assemlbyFileName,
+        DependentTypeResolver.CreateResolveEventLogger((s, p) => logRecords.Add(string.Format(s, p))));
+
+      if (!allTypes.Any())
+      {
+        return new List<string>();
+      }
+
+      var controllerTypes = allTypes.First().Assembly.FindWebApiControllers(
+        "ApiController",
+        true,
+        true,
+        !resourceOnly).ToList();
+
+      return controllerTypes.Select(t => t.FullName);
     }
 
+
     public CoordinationResult Coordinate(
-      string assemlbyFileName,
+      string assemblyFileName,
       string fuzzyControllerTypeName,
       string projectPath,
-      bool resourceOnly,
-      StringFormatProviderVisitor logHandler)
+      ICollection<string> logRecords,
+      bool resourceOnly =false)
     {
-      if (string.IsNullOrEmpty(assemlbyFileName)) return null;
-      var types = DependentTypeResolver.GetTypesFrom(assemlbyFileName,
-        DependentTypeResolver.CreateResolveEventLogger(logHandler));
+      if (string.IsNullOrEmpty(assemblyFileName)) return null;
+      var types = DependentTypeResolver.GetTypesFrom(assemblyFileName,
+        DependentTypeResolver.CreateResolveEventLogger((s, p) => logRecords.Add(string.Format(s, p))));
       var assy = types[0].Assembly;
       var type = ResolveController(assy, fuzzyControllerTypeName, resourceOnly);
       return this.Coordinate(type, projectPath, resourceOnly);
