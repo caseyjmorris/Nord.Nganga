@@ -13,6 +13,7 @@ namespace Nord.Nganga.WinApp
   public partial class NgangaLog : Form
   {
     private static readonly Lazy<NgangaLog> LaxyLog = new Lazy<NgangaLog>();
+
     public static NgangaLog Instance
     {
       get { return LaxyLog.Value; }
@@ -27,12 +28,12 @@ namespace Nord.Nganga.WinApp
 
     private void NgangaLog_Load(object sender, EventArgs e)
     {
-         this.SetId("Log");
-        this.fontSelector1.Bind(this.rtbLog, Settings1.Default.LogFontFamilyName, Settings1.Default.LogFontSize);
-        this.rtbLog.FontChanged += this.rtbLog_FontChanged;
+      this.SetId("Log");
+      this.fontSelector1.Bind(this.rtbLog, Settings1.Default.LogFontFamilyName, Settings1.Default.LogFontSize);
+      this.rtbLog.FontChanged += this.rtbLog_FontChanged;
     }
 
-    void rtbLog_FontChanged(object sender, EventArgs e)
+    private void rtbLog_FontChanged(object sender, EventArgs e)
     {
       Settings1.Default.LogFontFamilyName = this.rtbLog.Font.FontFamily.Name;
       Settings1.Default.LogFontSize = this.rtbLog.Font.Size;
@@ -40,12 +41,17 @@ namespace Nord.Nganga.WinApp
 
     public void Log(string formatProvider, params object[] parms)
     {
+      if (this.InvokeRequired)
+      {
+        this.Invoke(new Action<string, object[]>(this.Log), formatProvider, parms);
+        return;
+      }
       this.rtbLog.Select(0, 0);
       try
       {
         this.rtbLog.SelectedText =
           $"{Environment.NewLine}{DateTime.Now.ToString("hh:mm:ss.fff")} - {string.Format(formatProvider, parms)}";
-          this.Show();
+        this.Show();
       }
       catch (Exception ex)
       {
@@ -59,7 +65,6 @@ namespace Nord.Nganga.WinApp
 
     private void rtbLog_TextChanged(object sender, EventArgs e)
     {
-
     }
 
     private void NgangaLog_FormClosing(object sender, FormClosingEventArgs e)
