@@ -1,6 +1,8 @@
 ﻿if (-not ([System.Management.Automation.PSTypeName]'Nord.Nganga.Commands.Commands').Type)
 {
   Add-Type -Path "$($PSScriptRoot)\bin\Nord.Nganga.Commands.dll"
+  Add-Type -Path "$($PSScriptRoot)\bin\Nord.Nganga.Core.dll"
+  Add-Type -Path "$($PSScriptRoot)\bin\Nord.Nganga.Fs.dll"  
 }
 
 Function Get-NgangaSettingsTypes
@@ -54,7 +56,7 @@ Function Get-ControllerDllLocation
 
   $AsmName = [System.IO.Path]::GetFileNameWithoutExtension($proj.FullName)
 
-  return [System.IO.Path]::Combine($OutputPath, $Directory, $AsmName)
+  return [System.IO.Path]::Combine($Directory, $OutputPath, $AsmName ) + ".dll"
 }
 
 Function List-NgangaEligibleControllers

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Nord.Nganga.Core;
 using Nord.Nganga.Fs.Coordination;
 
-namespace Nord.Nganga.Fs
+namespace Nord.Nganga.Commands
 {
   public static class CoordinationExecutor
   {

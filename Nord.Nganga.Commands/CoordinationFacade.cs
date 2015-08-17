@@ -1,17 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nord.Nganga.Core;
 using Nord.Nganga.Fs.Coordination;
-using Nord.Nganga.Models.Configuration;
 
-namespace Nord.Nganga.Fs
+namespace Nord.Nganga.Commands
 {
   /// <summary>
   /// 
   // hosts the coordination form in a separate app domain 
   // this ensures that any loaded assemblies are freed upon completion
   /// </summary>
+  [Serializable]
   public class CoordinationFacade : MarshalByRefObject
   {
     public IEnumerable<string> GetControllerList(

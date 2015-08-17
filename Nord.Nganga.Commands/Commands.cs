@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -57,11 +58,27 @@ namespace Nord.Nganga.Commands
       method.Invoke(null, new object[] {pkg});
     }
 
-    public static IEnumerable<string> GetEligibleWebApiControllers(string assemblyFileLocation, bool resourceOnly,
+    public static IEnumerable<string> GetEligibleWebApiControllers(
+      string assebmlyFileName,
+      bool resourceOnly,
       bool verbose)
     {
+      if (!File.Exists(assebmlyFileName))
+      {
+        throw new Exception(
+          $"The specified assembly file name {assebmlyFileName} does not exist - there is an error in ngangainterface.psm1!");
+      }
+
       var logs = new List<string>();
-      var results = CoordinationExecutor.GetControllerList(assemblyFileLocation, logs, resourceOnly);
+      IEnumerable<string> results = null;
+      try
+      {
+        results = CoordinationExecutor.GetControllerList(assebmlyFileName, logs, resourceOnly);
+      }
+      catch (Exception e)
+      {
+        logs.Add(e.ToString());
+      }
 
       if (verbose)
       {

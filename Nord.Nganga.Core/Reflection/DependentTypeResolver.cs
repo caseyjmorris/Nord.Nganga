@@ -154,14 +154,8 @@ namespace Nord.Nganga.Core.Reflection
         var assyFileName = new AssemblyName(args.Name).Name;
         var module = basePathDirectoryInfo.GetFiles().FirstOrDefault(i => i.Name == assyFileName + ".dll");
         var assy = module != null ? Assembly.LoadFrom(module.FullName) : null;
-        if (resolveEventVistior != null)
-        {
-          resolveEventVistior(args, basePathDirectoryInfo, module, assy);
-        }
-        if (ResolveEventVisitor != null)
-        {
-          ResolveEventVisitor(args, basePathDirectoryInfo, module, assy);
-        }
+        resolveEventVistior?.Invoke(args, basePathDirectoryInfo, module, assy);
+        ResolveEventVisitor?.Invoke(args, basePathDirectoryInfo, module, assy);
         return assy;
       };
 

@@ -40,6 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands.cs" />
+    <Compile Include="CoordinationExecutor.cs" />
+    <Compile Include="CoordinationFacade.cs" />
+    <Compile Include="Isolated.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
