@@ -17,8 +17,6 @@ namespace Nord.Nganga.Commands
   {
     private const string SettingsPackage = "SettingsPackage";
 
-    private const string Controller = "Controller";
-
     private static string InsensitiveSettingsName(string name)
     {
       return name.ToUpperInvariant().Replace(SettingsPackage.ToUpperInvariant(), string.Empty);
