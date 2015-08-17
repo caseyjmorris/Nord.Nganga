@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using Nord.Nganga.Fs;
 using Nord.Nganga.Fs.Coordination;
 using Nord.Nganga.Fs.VsIntegration;
@@ -27,9 +26,9 @@ namespace Nord.Nganga.Commands
 
     private static IEnumerable<Type> GetSettingsTypes()
     {
-      var asm = Assembly.GetAssembly(typeof (IConfigurationPackage));
+      var asm = Assembly.GetAssembly(typeof(IConfigurationPackage));
 
-      return asm.GetTypes().Where(t => typeof (IConfigurationPackage).IsAssignableFrom(t)).ToList();
+      return asm.GetTypes().Where(t => typeof(IConfigurationPackage).IsAssignableFrom(t)).ToList();
     }
 
     public static IEnumerable<string> ListOptionTypes()
@@ -48,14 +47,14 @@ namespace Nord.Nganga.Commands
         throw new KeyNotFoundException($"Setting type {name} not recognized.");
       }
 
-      var method = typeof (ConfigurationFactory).GetMethod("GetConfiguration").MakeGenericMethod(type);
+      var method = typeof(ConfigurationFactory).GetMethod("GetConfiguration").MakeGenericMethod(type);
 
       return (IConfigurationPackage) method.Invoke(null, new object[0]);
     }
 
     public static void SetOptions(IConfigurationPackage pkg)
     {
-      var method = typeof (ConfigurationFactory).GetMethod("UpdateSettings").MakeGenericMethod(pkg.GetType());
+      var method = typeof(ConfigurationFactory).GetMethod("UpdateSettings").MakeGenericMethod(pkg.GetType());
 
       method.Invoke(null, new object[] {pkg});
     }
@@ -64,29 +63,49 @@ namespace Nord.Nganga.Commands
       bool verbose)
     {
       var logs = new List<string>();
-      return verbose
-        ? CoordinationExecutor.GetControllerList(assemblyFileLocation, resourceOnly, logs)
-        : CoordinationExecutor.GetControllerList(assemblyFileLocation, resourceOnly, null);
+      var results = CoordinationExecutor.GetControllerList(assemblyFileLocation, logs, resourceOnly);
+
+      if (verbose)
+      {
+        foreach (var log in logs)
+        {
+          Console.WriteLine(log);
+        }
+      }
+
+      return results;
     }
 
     public static CoordinationResult GenerateCode(string assemblyLocation, string controllerName, string vsProjectPath,
       bool verbose)
     {
-      return verbose
-        ? CoordinationExecutor.Coordinate(assemblyLocation, controllerName, vsProjectPath, resourceOnly: false,
-          logHandler: Console.Write)
-        : CoordinationExecutor.Coordinate(assemblyLocation, controllerName, vsProjectPath, resourceOnly: false,
-          logHandler: (x, y) => { });
+      var logs = new List<string>();
+      var results = CoordinationExecutor.Coordinate(assemblyLocation, controllerName, vsProjectPath, logs, false);
+      if (verbose)
+      {
+        foreach (var log in logs)
+        {
+          Console.WriteLine(log);
+        }
+      }
+
+      return results;
     }
 
     public static CoordinationResult GenerateResource(string assemblyLocation, string controllerName,
       string vsProjectPath, bool verbose)
     {
-      return verbose
-        ? CoordinationExecutor.Coordinate(assemblyLocation, controllerName, vsProjectPath, resourceOnly: false,
-          logHandler: Console.Write)
-        : CoordinationExecutor.Coordinate(assemblyLocation, controllerName, vsProjectPath, resourceOnly: false,
-          logHandler: (x, y) => { });
+      var logs = new List<string>();
+      var results = CoordinationExecutor.Coordinate(assemblyLocation, controllerName, vsProjectPath, logs, true);
+      if (verbose)
+      {
+        foreach (var log in logs)
+        {
+          Console.WriteLine(log);
+        }
+      }
+
+      return results;
     }
 
     public static bool WriteUiGenerationResult(CoordinationResult coordinationResult, bool force)
