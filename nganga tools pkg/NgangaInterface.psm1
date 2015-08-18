@@ -5,12 +5,12 @@
   Add-Type -Path "$($PSScriptRoot)\bin\Nord.Nganga.Fs.dll"  
 }
 
-Function Get-NgangaSettingsTypes
+Function nng-get-settings
 {
   return [Nord.Nganga.Commands.Commands]::ListOptionTypes()
 }
 
-Function Get-NgangaSettings
+Function nng-get-settings
 {
     param (
         [parameter(Position = 0,
@@ -21,7 +21,7 @@ Function Get-NgangaSettings
     return [Nord.Nganga.Commands.Commands]::GetOptions($SettingName)
 }
 
-Function Update-NgangaSettings
+Function nng-update-settings
 {
   param(
         [parameter(Position = 0,
@@ -32,7 +32,7 @@ Function Update-NgangaSettings
   [Nord.Nganga.Commands.Commands]::SetOptions($OptionsObject)
 }
 
-Function Build-ControllerType
+Function nng-build-controller-type
 {
   $proj = Get-Project
 
@@ -46,7 +46,7 @@ Function Build-ControllerType
   }
 }
 
-Function Get-ControllerDllLocation
+Function nng-get-assy-filename
 {
   $proj = Get-Project
 
@@ -59,70 +59,57 @@ Function Get-ControllerDllLocation
   return [System.IO.Path]::Combine($Directory, $OutputPath, $AsmName ) + ".dll"
 }
 
-Function List-NgangaEligibleControllers
+Function nng-list
 {
   param(
     [switch] $ResourceOnly,
-    [switch] $UseVerboseOutput
+    [switch] $Echo
   )
 
-  Build-ControllerType
+  nng-build-controller-type
 
-  $asmLoc = Get-ControllerDllLocation
+  $assyFileName = nng-get-assy-filename
 
-  return [Nord.Nganga.Commands.Commands]::GetEligibleWebApiControllers($asmLoc, $ResourceOnly.IsPresent, $UseVerboseOutput.IsPresent)
+  return [Nord.Nganga.Commands.Commands]::ListControllerNames($assyFileName, $ResourceOnly.IsPresent, $Echo.IsPresent)
 }
 
-Function Generate-NgangaCode
+Function nng-gen
 {
     param(
       [parameter(Position = 0,
             Mandatory = $true)]
-            [string] $Controller,
+            [string] $ControllerName,
        [switch] $ResourceOnly,
-       [switch] $UseVerboseOutput,
+       [switch] $Echo,
        [switch] $Preview,
-       [switch] $Force
+       [switch] $Force,
+       [switch] $Diff
     )
 
     $proj = Get-Project
 
-    Build-ControllerType
+    nng-build-controller-type
 
-    $asmLoc = Get-ControllerDllLocation
+    $assyFileName =  nng-get-assy-filename
 
      $projPath = [System.IO.Path]::GetDirectoryName($proj.FullName)
 
     $result = $null
 
-    if ($ResourceOnly.IsPresent)
-    {
-      $result = [Nord.Nganga.Commands.Commands]::GenerateResource($asmLoc, $Controller, $projPath, $UseVerboseOutput.IsPresent)
-    }
-    else
-    {
-      $result = [Nord.Nganga.Commands.Commands]::GenerateResource($asmLoc, $Controller, $projPath, $UseVerboseOutput.IsPresent)
-    }
+    $result = [Nord.Nganga.Commands.Commands]::Generate($assyFileName, $ControllerName, $projPath,$ResourceOnly.IsPresent, $Echo.IsPresent)
 
     if ($Preview.IsPresent)
     {
       return $result;
     }
 
-    if ($ResourceOnly.IsPresent)
-    {
-      [Nord.Nganga.Commands.Commands]::WriteResourceGenerationResult($result, $Force.IsPresent)
-      [Nord.Nganga.Commands.Commands]::EditCsProj($proj.FullName, $result.ResourcePath)
-      $dte.ItemOperations.OpenFile($result.ResourcePath)
-    }
-    else
-    {
-      [Nord.Nganga.Commands.Commands]::WriteUiGenerationResult($result, $Force.IsPresent)
-      [Nord.Nganga.Commands.Commands]::EditCsProj($proj.FullName, $result.ResourcePath, $result.ViewPath, $result.ControllerPath)
-      $dte.ItemOperations.OpenFile($result.ResourcePath)
-      $dte.ItemOperations.OpenFile($result.ViewPath)
-      $dte.ItemOperations.OpenFile($result.ControllerPath)
-    }
+    if($Diff.IsPresent){
+        [Nord.Nganga.Commands.Commands]::IntegrateResults($result, $Force.IsPresent, $Echo.IsPresent, $dte)
+        }
+        else{
+        [Nord.Nganga.Commands.Commands]::IntegrateResults($result, $Force.IsPresent, $Echo.IsPresent)
+        }
+
 }
 
-Export-ModuleMember -Function Generate-NgangaCode,Get-NgangaSettingsTypes, Get-NgangaSettings, Update-NgangaSettings, List-NgangaEligibleControllers
+Export-ModuleMember -Function nng-gen,nng-get-types, nng-get-settings, nng-update-settings, nng-list

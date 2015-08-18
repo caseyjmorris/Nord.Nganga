@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Nord.Nganga.Fs;
+using EnvDTE;
 using Nord.Nganga.Fs.Coordination;
 using Nord.Nganga.Fs.VsIntegration;
 using Nord.Nganga.Models.Configuration;
@@ -58,7 +57,9 @@ namespace Nord.Nganga.Commands
       method.Invoke(null, new object[] {pkg});
     }
 
-    public static IEnumerable<string> GetEligibleWebApiControllers(
+    private static string vsiErr = "VS integration error.";
+
+    public static IEnumerable<string> ListControllerNames(
       string assyFileName,
       bool resourceOnly,
       bool verbose)
@@ -66,7 +67,7 @@ namespace Nord.Nganga.Commands
       if (!File.Exists(assyFileName))
       {
         throw new Exception(
-          $"The specified assembly file name {assyFileName} does not exist - there is an error in ngangainterface.psm1!");
+          $"The specified assembly file name {assyFileName} does not exist.  {vsiErr}!");
       }
 
       var logs = new List<string>();
@@ -80,33 +81,28 @@ namespace Nord.Nganga.Commands
         logs.Add(e.ToString());
       }
 
-      if (verbose)
-      {
-        foreach (var log in logs)
-        {
-          Console.WriteLine(log);
-        }
-      }
+      DumpLogs(logs, verbose);
 
       return results;
     }
 
-    public static CoordinationResult GenerateCode(
+    public static CoordinationResult Generate(
       string assyFileName,
       string controllerName,
       string vsProjectPath,
+      bool resourceOnly,
       bool verbose)
     {
       if (!File.Exists(assyFileName))
       {
         throw new Exception(
-          $"The specified assembly file name {assyFileName} does not exist - there is an error in ngangainterface.psm1!");
+          $"The specified assembly file name {assyFileName} does not exist.  {vsiErr}!");
       }
 
       if (!Directory.Exists(vsProjectPath))
       {
         throw new Exception(
-          $"The specified project path {vsProjectPath} does not exist - there is an error in ngangainterface.psm1!");
+          $"The specified project path {vsProjectPath} does not exist.  {vsiErr}");
       }
 
       var logs = new List<string>();
@@ -114,80 +110,45 @@ namespace Nord.Nganga.Commands
       CoordinationResult results = null;
       try
       {
-        results = CoordinationExecutor.Coordinate(assyFileName, controllerName, vsProjectPath, logs, false);
+        results = CoordinationExecutor.Coordinate(assyFileName, controllerName, vsProjectPath, logs, resourceOnly);
       }
       catch (Exception e)
       {
         logs.Add(e.ToString());
       }
 
-      if (verbose)
-      {
-        foreach (var log in logs)
-        {
-          Console.WriteLine(log);
-        }
-      }
+      DumpLogs(logs, verbose);
 
       return results;
     }
 
-    public static CoordinationResult GenerateResource(string assemblyLocation, string controllerName,
-      string vsProjectPath, bool verbose)
+
+    public static bool IntegrateResults(
+      CoordinationResult coordinationResult, 
+      bool force,
+      bool verbose,
+      DTE dte = null)
     {
       var logs = new List<string>();
-      var results = CoordinationExecutor.Coordinate(assemblyLocation, controllerName, vsProjectPath, logs, true);
-      if (verbose)
-      {
-        foreach (var log in logs)
-        {
-          Console.WriteLine(log);
-        }
-      }
+      var result = VsIntegrator.Save(
+        coordinationResult,
+        true,
+        (provider, parms) => logs.Add(string.Format(provider, parms)),
+        force,
+        dte);
+      DumpLogs(logs, verbose);
 
-      return results;
+
+      return result;
     }
 
-    public static bool WriteUiGenerationResult(CoordinationResult coordinationResult, bool force)
+    private static void DumpLogs(IEnumerable<string> logs, bool verbose)
     {
-      var dict = new Dictionary<string, string>
+      if (!verbose) return;
+      foreach (var log in logs)
       {
-        {coordinationResult.ControllerPath, coordinationResult.ControllerBody},
-        {coordinationResult.ResourcePath, coordinationResult.ResourceBody},
-        {coordinationResult.ViewPath, coordinationResult.ViewBody}
-      };
-
-      var noSkips = true;
-
-      foreach (var member in dict)
-      {
-        if (!force && File.Exists(member.Key))
-        {
-          noSkips = false;
-          continue;
-        }
-        File.WriteAllText(member.Key, member.Value);
+        Console.WriteLine(log);
       }
-
-      return noSkips;
-    }
-
-    public static bool WriteResourceGenerationResult(CoordinationResult coordinationResult, bool force)
-    {
-      if (!force && File.Exists(coordinationResult.ResourcePath))
-      {
-        return false;
-      }
-      File.WriteAllText(coordinationResult.ResourcePath, coordinationResult.ResourceBody);
-
-      return true;
-    }
-
-    public static void EditCsProj(string csprojPath, params string[] newFiles)
-    {
-      var csprojEditor = new CsProjEditor();
-
-      csprojEditor.AddFileToCsProj(csprojPath, newFiles, x => { });
     }
   }
 }
