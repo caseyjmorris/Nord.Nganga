@@ -161,26 +161,6 @@ namespace Nord.Nganga.Commands
       return results;
     }
 
-
-    public static bool IntegrateResults(
-      CoordinationResult coordinationResult,
-      bool force = false,
-      bool verbose = false,
-      DTE dte = null)
-    {
-      var logs = new List<string>();
-      var result = VsIntegrator.Save(
-        coordinationResult,
-        true,
-        (provider, parms) => logs.Add(string.Format(provider, parms)),
-        force,
-        dte);
-      DumpLogs(logs, verbose);
-
-
-      return result;
-    }
-
     private static void DumpLogs(IEnumerable<string> logs, bool verbose = false)
     {
       if (!verbose) return;

@@ -8,6 +8,7 @@ using Nord.Nganga.Core.Reflection;
 using Nord.Nganga.Fs.Naming;
 using Nord.Nganga.Models;
 using Nord.Nganga.Models.Configuration;
+using Nord.Nganga.StEngine;
 
 namespace Nord.Nganga.Fs.Coordination
 {
@@ -38,7 +39,7 @@ namespace Nord.Nganga.Fs.Coordination
     public IEnumerable<string> GetControllerList(
       string assemlbyFileName,
       ICollection<string> logRecords,
-      bool resourceOnly = false )
+      bool resourceOnly = false)
     {
       if (string.IsNullOrEmpty(assemlbyFileName)) return null;
       var allTypes = DependentTypeResolver.GetTypesFrom(assemlbyFileName,
@@ -64,7 +65,7 @@ namespace Nord.Nganga.Fs.Coordination
       string fuzzyControllerTypeName,
       string projectPath,
       ICollection<string> logRecords,
-      bool resourceOnly =false)
+      bool resourceOnly = false)
     {
       if (string.IsNullOrEmpty(assemblyFileName)) return null;
       var types = DependentTypeResolver.GetTypesFrom(assemblyFileName,
@@ -131,15 +132,27 @@ namespace Nord.Nganga.Fs.Coordination
       var assemblyOps = new AssemblyOptionsModel(controllerType);
       var result = new CoordinationResult
       {
-        ControllerBody = this.sourceGenerator.GenerateController(controllerType),
-        ResourceBody = this.sourceGenerator.GenerateResource(controllerType),
-        ViewBody = this.sourceGenerator.GenerateView(controllerType),
-        ControllerPath = this.nameSuggester.SuggestControllerFileName(controllerType),
-        ResourcePath = this.nameSuggester.SuggestResourceFileName(controllerType),
-        ViewPath = this.nameSuggester.SuggestViewFileName(controllerType),
-        NgResourcesPath = assemblyOps.NgResourcesPath,
-        NgControllersPath = assemblyOps.NgControllersPath,
-        NgViewsPath = assemblyOps.NgViewsPath,
+        Controller =
+          new GenerationResult(
+            s => SourceParser.ParseFile(TemplateFactory.Context.Controller, s),
+            () => this.sourceGenerator.GenerateController(controllerType),
+            () => this.nameSuggester.SuggestControllerFileName(controllerType),
+            vsProjectPath,
+            assemblyOps.NgControllersPath),
+        Resource =
+          new GenerationResult(
+            s => SourceParser.ParseFile(TemplateFactory.Context.Resource, s),
+            () => this.sourceGenerator.GenerateResource(controllerType),
+            () => this.nameSuggester.SuggestResourceFileName(controllerType),
+            vsProjectPath,
+            assemblyOps.NgResourcesPath),
+        View =
+          new GenerationResult(
+            s => SourceParser.ParseFile(TemplateFactory.Context.View, s),
+            () => this.sourceGenerator.GenerateView(controllerType),
+            () => this.nameSuggester.SuggestViewFileName(controllerType),
+            vsProjectPath,
+            assemblyOps.NgViewsPath),
         VsProjectName = assemblyOps.CsProjectName,
         SourceAssemblyLocation = controllerType.Assembly.Location,
         ControllerTypeName = controllerType.FullName,
@@ -154,9 +167,13 @@ namespace Nord.Nganga.Fs.Coordination
       var assemblyOps = new AssemblyOptionsModel(controllerType);
       var result = new CoordinationResult
       {
-        ResourceBody = this.sourceGenerator.GenerateResource(controllerType),
-        ResourcePath = this.nameSuggester.SuggestResourceFileName(controllerType),
-        NgResourcesPath = assemblyOps.NgResourcesPath,
+        Resource =
+          new GenerationResult(
+            s => SourceParser.ParseFile(TemplateFactory.Context.Resource, s),
+            () => this.sourceGenerator.GenerateResource(controllerType),
+            () => this.nameSuggester.SuggestResourceFileName(controllerType),
+            vsProjectPath,
+            assemblyOps.NgResourcesPath),
         VsProjectName = assemblyOps.CsProjectName,
         SourceAssemblyLocation = controllerType.Assembly.Location,
         ControllerTypeName = controllerType.FullName,

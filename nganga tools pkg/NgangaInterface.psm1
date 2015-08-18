@@ -72,6 +72,9 @@ Function Get-NgangaEligibleControllers
   Build-ControllerType
 
   $assyFileName = Get-AssemblyFileName	
+
+  Write-Host "Searching for eligible controllers..." 
+
   return [Nord.Nganga.Commands.Commands]::ListControllerNames($assyFileName, $Filter, $ResourceOnly.IsPresent, $Echo.IsPresent)
 }
 
@@ -98,37 +101,51 @@ Function Export-NgangaCode
 
     $result = $null
 
-    $result = [Nord.Nganga.Commands.Commands]::Generate($assyFileName, $ControllerName, $projPath,$ResourceOnly.IsPresent, $Echo.IsPresent)
+    Write-Host "Generating " $ControllerName  "..."
+
+    $result = [Nord.Nganga.Commands.Commands]::Generate($assyFileName, $ControllerName, $projPath, $ResourceOnly.IsPresent, $Echo.IsPresent)
+
+    Write-Host "Generate complete "
 
     if ($Preview.IsPresent)
     {
+        Write-Host "Preview only.  No data saved."
       return $result;
     }
 
     if($Diff.IsPresent){
-        [Nord.Nganga.Commands.Commands]::IntegrateResults($result, $Force.IsPresent, $Echo.IsPresent, $dte)
+        Write-Host "Opening diff on files, please wait..."
+        if(-not $ResourceOnly.IsPresent) {        
+            DiffFile $result.ViewFileName $result.ViewText 
+            DiffFile $result.ControllerFileName $result.ControllerText 
         }
-        else{
-        [Nord.Nganga.Commands.Commands]::IntegrateResults($result, $Force.IsPresent, $Echo.IsPresent)
+        DiffFile $result.ResourceFileName $result.ResourceText 
+    }
+    else {
+        Write-Host "Integrating files, please wait..."
+        if(-not $ResourceOnly.IsPresent) {        
+            SaveAndIntegrateFile $result.ViewText $result.ViewFileName 
+            SaveAndIntegrateFile $result.ControllerText $result.ControllerFileName 
         }
+        SaveAndIntegrateFile $result.ResourceText $result.ResourceFileName 
+    }
+}
 
-	  $proj = Get-Project
-	  $Directory = [System.IO.Path]::GetDirectoryName($proj.FullName)
+function DiffFile([string]$existingFile, [string]$newSource){
+    Write-Host "Diff file: " $existingFile
+    $tmp = New-TemporaryFile
+    $newSource | Out-File $tmp -encoding Unicode
+    $dte.ExecuteCommand("Tools.DiffFiles", ' "' + $tmp + '" "' + $existingFile + '" "New" "Old" ' )  
+}
 
-	$resourceFileName =  [System.IO.Path]::Combine($Directory, $result.NgResourcesPath, $result.ResourcePath)
-
-	$dte.ItemOperations.OpenFile($resourceFileName)
-
-	if(-not $ResourceOnly.IsPresent) {
-			$viewFileName =  [System.IO.Path]::Combine($Directory, $result.NgViewsPath, $result.ViewPath)
-		    $dte.ItemOperations.OpenFile($viewFileName)
-		}
-
-	if(-not $ResourceOnly.IsPresent) {
-			$CtrlFileName =  [System.IO.Path]::Combine($Directory, $result.NgControllersPath, $result.ControllerPath)
-			$dte.ItemOperations.OpenFile($CtrlFileName)
-		}
-
+function SaveAndIntegrateFile([string]$source, [string]$fileName){
+         Write-Host "Saving file: " $fileName
+        $source | Out-File $fileName -encoding Unicode
+        try {
+            $dte.Application.ItemOperations.AddExistingItem($fileName) 
+        }
+        catch{} 
+        $DTE.ExecuteCommand(“File.OpenFile”, $fileName)
 }
 
 New-Alias nnggen Export-NgangaCode

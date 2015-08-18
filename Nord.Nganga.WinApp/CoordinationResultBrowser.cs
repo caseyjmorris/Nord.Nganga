@@ -55,8 +55,7 @@ namespace Nord.Nganga.WinApp
         this.coordinationResult,
         this.autoVSIntegration.Checked,
         Log,
-        this.forceOverwriteToolStripMenuItem.Checked,
-        this.dte);
+        this.forceOverwriteToolStripMenuItem.Checked);
       if (this.dte != null)
       {
         this.dte.MainWindow.Visible = true;

@@ -6,25 +6,19 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Threading;
 using EnvDTE;
-using Microsoft.VisualStudio.Shell;
 using Nord.Nganga.Core;
 using Nord.Nganga.Fs.Coordination;
-using Nord.Nganga.Models.Configuration;
 using Nord.Nganga.StEngine;
-using Process = System.Diagnostics.Process;
 
 namespace Nord.Nganga.Fs.VsIntegration
 {
   public static class VsIntegrator
   {
-    private static readonly SourceParser SourceParser = new SourceParser();
-
     public static bool Save(
       IEnumerable<CoordinationResult> coordinationResults,
       bool integrate,
       StringFormatProviderVisitor logHandler,
-      bool forceOverwrite,
-      DTE dteCompareInstance = null)
+      bool forceOverwrite)
     {
       var list = coordinationResults.ToList();
 
@@ -32,7 +26,7 @@ namespace Nord.Nganga.Fs.VsIntegration
 
       foreach (var cr in list)
       {
-        Save(cr, integrationDictionary, logHandler, forceOverwrite, dteCompareInstance);
+        Save(cr, integrationDictionary, logHandler, forceOverwrite);
       }
 
       return !integrate || Integrate(list.First().VsProjectFileName, integrationDictionary, logHandler);
@@ -42,14 +36,13 @@ namespace Nord.Nganga.Fs.VsIntegration
       CoordinationResult coordinationResult,
       bool integrate,
       StringFormatProviderVisitor logHandler,
-      bool forceOverwrite,
-      DTE dteCompareInstance = null)
+      bool forceOverwrite)
     {
       if (!AssertArgumentQuality(coordinationResult, logHandler)) return false;
 
       var integrationDictionary = new Dictionary<string, string>();
 
-      Save(coordinationResult, integrationDictionary, logHandler, forceOverwrite, dteCompareInstance);
+      Save(coordinationResult, integrationDictionary, logHandler, forceOverwrite);
 
       return !integrate || Integrate(coordinationResult.VsProjectFileName, integrationDictionary, logHandler);
     }
@@ -106,77 +99,45 @@ namespace Nord.Nganga.Fs.VsIntegration
       CoordinationResult coordinationResult,
       Dictionary<string, string> integrationDictionary,
       StringFormatProviderVisitor logHandler,
-      bool forceOverwrite,
-      DTE dteCompareInstance)
+      bool forceOverwrite)
     {
-      if (!string.IsNullOrEmpty(coordinationResult.ViewBody))
-      {
-        SaveFile(
-          coordinationResult.VsProjectPath,
+      SaveFile(
+        integrationDictionary,
+        coordinationResult.View,
+        logHandler,
+        forceOverwrite);
+      SaveFile(
+        integrationDictionary,
+        coordinationResult.Controller,
+        logHandler,
+        forceOverwrite);
+      SaveFile
+        (
           integrationDictionary,
-          () => coordinationResult.NgViewsPath,
-          () => coordinationResult.ViewPath,
-          () => coordinationResult.ViewBody,
-          TemplateFactory.Context.View,
+          coordinationResult.Resource,
           logHandler,
-          forceOverwrite,
-          dteCompareInstance);
-      }
-
-      if (!string.IsNullOrEmpty(coordinationResult.ControllerBody))
-      {
-        SaveFile(
-          coordinationResult.VsProjectPath,
-          integrationDictionary,
-          () => coordinationResult.NgControllersPath,
-          () => coordinationResult.ControllerPath,
-          () => coordinationResult.ControllerBody,
-          TemplateFactory.Context.Controller,
-          logHandler,
-          forceOverwrite,
-          dteCompareInstance);
-      }
-      if (!string.IsNullOrEmpty(coordinationResult.ResourceBody))
-      {
-        SaveFile
-          (coordinationResult.VsProjectPath,
-            integrationDictionary,
-            () => coordinationResult.NgResourcesPath,
-            () => coordinationResult.ResourcePath,
-            () => coordinationResult.ResourceBody,
-            TemplateFactory.Context.Resource,
-            logHandler,
-            forceOverwrite,
-            dteCompareInstance);
-      }
+          forceOverwrite);
     }
 
     private static void SaveFile(
-      string vsProjectPath,
       Dictionary<string, string> integrationDictionary,
-      Func<string> rootProvider,
-      Func<string> nameProvider,
-      Func<string> dataProvider,
-      TemplateFactory.Context context,
+      GenerationResult result,
       StringFormatProviderVisitor logHandler,
-      bool forceOverwrite,
-      DTE dteCompareInstance = null)
+      bool forceOverwrite)
     {
-      var relativeName = Path.Combine(rootProvider(), nameProvider());
-      var targetFileName = Path.Combine(vsProjectPath, relativeName);
-      CreatePathTree(targetFileName);
-      if (File.Exists(targetFileName))
-      {
-        var source = File.ReadAllText(targetFileName);
-        var parseResult = SourceParser.ParseFile(context, source);
+      if (result == null)
+        return;
 
-        if ((!parseResult.Success ||
-             (parseResult.Success && parseResult.CalculatedBodyMd5 != parseResult.DeclaredHeaderMd5)) && !forceOverwrite)
+      CreatePathTree(result.AbsoluteFileNameName);
+      if (File.Exists(result.AbsoluteFileNameName))
+      {
+        if ((!result.PreviousParseSuccess ||
+             (result.PreviousParseSuccess && result.PreviousDeclaredMd5 != result.PreviousCalculatedMd5)) && !forceOverwrite)
         {
           var msgPreamble = $"WARNING: {Environment.NewLine}" + (
-            parseResult.Success
-              ? $"  The declared {parseResult.DeclaredHeaderMd5} and calculated {parseResult.CalculatedBodyMd5} MD5 expressions do not match for the existing file: {targetFileName}."
-              : $"  Parse of the existing file: {targetFileName} failed.  It is uncertain if this file was previously generated by Nganga."
+            result.PreviousParseSuccess
+              ? $"  The declared {result.PreviousDeclaredMd5} and calculated {result.PreviousCalculatedMd5} MD5 expressions do not match for the existing file: {result.AbsoluteFileNameName}."
+              : $"  Parse of the existing file: {result.AbsoluteFileNameName} failed.  It is uncertain if this file was previously generated by Nganga."
             ) + $"{Environment.NewLine}";
 
           var msgClose = $"  Force was not specified.{Environment.NewLine}" +
@@ -186,30 +147,19 @@ namespace Nord.Nganga.Fs.VsIntegration
           var msg = $"{msgPreamble}{Environment.NewLine}{msgClose}";
 
           logHandler(msg);
-          if (dteCompareInstance == null) return;
-          var ts = new ThreadStart(() =>
-          {
-            CompareStrings(
-              new KeyValuePair<string, string>("On Disk", source),
-              new KeyValuePair<string, string>("New", dataProvider()),
-              logHandler,
-              dteCompareInstance);
-          });
-          var t = new System.Threading.Thread(ts);
-          t.Start();
           return;
         }
-        if (parseResult.Success && parseResult.CalculatedBodyMd5 == parseResult.DeclaredHeaderMd5)
+        if (result.PreviousParseSuccess && result.Md5 == result.PreviousCalculatedMd5)
         {
           logHandler("Generated output for {0} is unchanged from previous version, use FORCE to overwrite!",
-            targetFileName);
+            result.AbsoluteFileNameName);
           return;
         }
       }
-      var data = dataProvider();
-      File.WriteAllText(targetFileName, data);
-      logHandler("{0} written to disk.", targetFileName);
-      integrationDictionary[targetFileName] = relativeName;
+
+      File.WriteAllText(result.AbsoluteFileNameName, result.Text);
+      logHandler("{0} written to disk.", result.AbsoluteFileNameName);
+      integrationDictionary[result.AbsoluteFileNameName] = result.RelativeFileName;
     }
 
     private static void CreatePathTree(string path)

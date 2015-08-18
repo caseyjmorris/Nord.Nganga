@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Coordination\CoordinationResult.cs" />
     <Compile Include="Coordination\GenerationCoordinator.cs" />
+    <Compile Include="Coordination\GenerationResult.cs" />
     <Compile Include="Coordination\GeneratorParseResult.cs" />
     <Compile Include="Coordination\SourceGenerator.cs" />
     <Compile Include="Naming\NameSuggester.cs" />

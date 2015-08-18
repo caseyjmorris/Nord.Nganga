@@ -11,18 +11,18 @@ namespace Nord.Nganga.Fs.Coordination
 
     public string ControllerTypeName { get; set; }
 
-    public string ControllerBody { get; set; }
-    public string ControllerPath { get; set; }
+    public GenerationResult View { get; set; }
+    public string ViewFileName => this.View?.AbsoluteFileNameName;
+    public string ViewText => this.View?.Text;
 
-    public string ViewBody { get; set; }
-    public string ViewPath { get; set; }
+    public GenerationResult Resource { get; set; }
+    public string ResourceFileName => this.Resource?.AbsoluteFileNameName;
+    public string ResourceText => this.Resource?.Text;
 
-    public string ResourceBody { get; set; }
-    public string ResourcePath { get; set; }
+    public GenerationResult Controller { get; set; }
+    public string ControllerFileName => this.Controller?.AbsoluteFileNameName;
+    public string ControllerText => this.Controller?.Text;
 
-    public string NgControllersPath { get; set; }
-    public string NgViewsPath { get; set; }
-    public string NgResourcesPath { get; set; }
     public string VsProjectName { get; set; }
     public string VsProjectPath { get; set; }
 
