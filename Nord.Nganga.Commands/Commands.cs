@@ -42,7 +42,7 @@ namespace Nord.Nganga.Commands
     private static IEnumerable<string> RemoveCommonPrefixNodes(IEnumerable<string> strings, char splitToken = '.')
     {
       var input = strings.ToList();
-      var commonPrefix = FindCommonPrefix(input, splitToken);
+      var commonPrefix = FindCommonPrefix(input, splitToken) + splitToken;
       return input.Select(s => s.Replace(commonPrefix, string.Empty)).ToList();
     }
 
@@ -110,10 +110,10 @@ namespace Nord.Nganga.Commands
       IEnumerable<string> results = null;
       try
       {
-        var typenames = CoordinationExecutor.GetControllerList(assyFileName, logs, resourceOnly);
-        results =
-          RemoveCommonPrefixNodes(typenames)
-            .Where(n => filter == null || n.ToLowerInvariant().Contains(filter.ToLowerInvariant()));
+        var typenames = CoordinationExecutor.GetControllerList(assyFileName, logs, resourceOnly)
+          .Where(n => filter == null || n.ToLowerInvariant().Contains(filter.ToLowerInvariant()));
+
+        results = RemoveCommonPrefixNodes(typenames);
       }
       catch (Exception e)
       {

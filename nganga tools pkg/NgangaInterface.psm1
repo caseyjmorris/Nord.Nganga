@@ -112,6 +112,23 @@ Function Export-NgangaCode
         [Nord.Nganga.Commands.Commands]::IntegrateResults($result, $Force.IsPresent, $Echo.IsPresent)
         }
 
+	  $proj = Get-Project
+	  $Directory = [System.IO.Path]::GetDirectoryName($proj.FullName)
+
+	$resourceFileName =  [System.IO.Path]::Combine($Directory, $result.NgResourcesPath, $result.ResourcePath)
+
+	$dte.ItemOperations.OpenFile($resourceFileName)
+
+	if(-not $ResourceOnly.IsPresent) {
+			$viewFileName =  [System.IO.Path]::Combine($Directory, $result.NgViewsPath, $result.ViewPath)
+		    $dte.ItemOperations.OpenFile($viewFileName)
+		}
+
+	if(-not $ResourceOnly.IsPresent) {
+			$CtrlFileName =  [System.IO.Path]::Combine($Directory, $result.NgControllersPath, $result.ControllerPath)
+			$dte.ItemOperations.OpenFile($CtrlFileName)
+		}
+
 }
 
 New-Alias nnggen Export-NgangaCode
