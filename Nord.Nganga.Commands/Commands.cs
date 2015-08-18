@@ -63,7 +63,7 @@ namespace Nord.Nganga.Commands
       bool resourceOnly,
       bool verbose)
     {
-      if (!File.Exists(assebmlyFileName))
+      if (!File.Exists(assyFileName))
       {
         throw new Exception(
           $"The specified assembly file name {assyFileName} does not exist - there is an error in ngangainterface.psm1!");
@@ -91,13 +91,22 @@ namespace Nord.Nganga.Commands
       return results;
     }
 
-    public static CoordinationResult GenerateCode(string assyFileName, string controllerName, string vsProjectPath,
+    public static CoordinationResult GenerateCode(
+      string assyFileName,
+      string controllerName,
+      string vsProjectPath,
       bool verbose)
     {
       if (!File.Exists(assyFileName))
       {
         throw new Exception(
           $"The specified assembly file name {assyFileName} does not exist - there is an error in ngangainterface.psm1!");
+      }
+
+      if (!Directory.Exists(vsProjectPath))
+      {
+        throw new Exception(
+          $"The specified project path {vsProjectPath} does not exist - there is an error in ngangainterface.psm1!");
       }
 
       var logs = new List<string>();

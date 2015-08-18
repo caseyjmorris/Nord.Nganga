@@ -91,15 +91,17 @@ Function Generate-NgangaCode
 
     $asmLoc = Get-ControllerDllLocation
 
+     $projPath = [System.IO.Path]::GetDirectoryName($proj.FullName)
+
     $result = $null
 
     if ($ResourceOnly.IsPresent)
     {
-      $result = [Nord.Nganga.Commands.Commands]::GenerateResource($asmLoc, $Controller, $proj.FullName, $UseVerboseOutput.IsPresent)
+      $result = [Nord.Nganga.Commands.Commands]::GenerateResource($asmLoc, $Controller, $projPath, $UseVerboseOutput.IsPresent)
     }
     else
     {
-      $result = [Nord.Nganga.Commands.Commands]::GenerateResource($asmLoc, $Controller, $proj.FullName, $UseVerboseOutput.IsPresent)
+      $result = [Nord.Nganga.Commands.Commands]::GenerateResource($asmLoc, $Controller, $projPath, $UseVerboseOutput.IsPresent)
     }
 
     if ($Preview.IsPresent)
