@@ -62,15 +62,17 @@ Function Get-AssemblyFileName
 Function Get-NgangaEligibleControllers
 {
   param(
+	        [parameter(Position = 0,
+            Mandatory = $false)]
+            [string] $Filter,
     [switch] $ResourceOnly,
     [switch] $Echo
   )
 
   Build-ControllerType
 
-  $assyFileName = Get-AssemblyFileName
-
-  return [Nord.Nganga.Commands.Commands]::ListControllerNames($assyFileName, $ResourceOnly.IsPresent, $Echo.IsPresent)
+  $assyFileName = Get-AssemblyFileName	
+  return [Nord.Nganga.Commands.Commands]::ListControllerNames($assyFileName, $Filter, $ResourceOnly.IsPresent, $Echo.IsPresent)
 }
 
 Function Export-NgangaCode

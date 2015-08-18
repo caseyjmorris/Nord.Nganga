@@ -17,6 +17,41 @@ namespace Nord.Nganga.Commands
   {
     private const string SettingsPackage = "SettingsPackage";
 
+    private static string FindCommonPrefix(IEnumerable<string> strings, char splitToken = '.')
+    {
+      var stringNodeSets = strings.Select(s => s.Split(splitToken)).ToList();
+
+      var minNodeCount = (from string[] nodes in stringNodeSets
+        let l = nodes.Length
+        select l).Min();
+
+      var prefixNodes = new Dictionary<int, string>();
+      for (var i = 0; i < minNodeCount; i++)
+      {
+        var nodes = GetNodes(stringNodeSets, i);
+        if (nodes.Distinct().Count() == 1)
+        {
+          prefixNodes[prefixNodes.Count] = nodes.First();
+        }
+      }
+
+      var result = string.Join(splitToken.ToString(), prefixNodes.OrderBy(n => n.Key).Select(n => n.Value).ToList());
+      return result;
+    }
+
+    private static IEnumerable<string> RemoveCommonPrefixNodes(IEnumerable<string> strings, char splitToken = '.')
+    {
+      var input = strings.ToList();
+      var commonPrefix = FindCommonPrefix(input, splitToken);
+      return input.Select(s => s.Replace(commonPrefix, string.Empty)).ToList();
+    }
+
+    private static List<string> GetNodes(IEnumerable<string[]> stringNodeSets, int index)
+    {
+      return
+        (from stringNodeSet in stringNodeSets where index <= stringNodeSet.Length select stringNodeSet[index]).ToList();
+    }
+
     private static string InsensitiveSettingsName(string name)
     {
       return name.ToUpperInvariant().Replace(SettingsPackage.ToUpperInvariant(), string.Empty);
@@ -61,8 +96,9 @@ namespace Nord.Nganga.Commands
 
     public static IEnumerable<string> ListControllerNames(
       string assyFileName,
-      bool resourceOnly,
-      bool verbose)
+      string filter = null,
+      bool resourceOnly = false,
+      bool verbose = false)
     {
       if (!File.Exists(assyFileName))
       {
@@ -74,7 +110,10 @@ namespace Nord.Nganga.Commands
       IEnumerable<string> results = null;
       try
       {
-        results = CoordinationExecutor.GetControllerList(assyFileName, logs, resourceOnly);
+        var typenames = CoordinationExecutor.GetControllerList(assyFileName, logs, resourceOnly);
+        results =
+          RemoveCommonPrefixNodes(typenames)
+            .Where(n => filter == null || n.ToLowerInvariant().Contains(filter.ToLowerInvariant()));
       }
       catch (Exception e)
       {
@@ -90,8 +129,8 @@ namespace Nord.Nganga.Commands
       string assyFileName,
       string controllerName,
       string vsProjectPath,
-      bool resourceOnly,
-      bool verbose)
+      bool resourceOnly = false,
+      bool verbose = false)
     {
       if (!File.Exists(assyFileName))
       {
@@ -124,9 +163,9 @@ namespace Nord.Nganga.Commands
 
 
     public static bool IntegrateResults(
-      CoordinationResult coordinationResult, 
-      bool force,
-      bool verbose,
+      CoordinationResult coordinationResult,
+      bool force = false,
+      bool verbose = false,
       DTE dte = null)
     {
       var logs = new List<string>();
@@ -142,7 +181,7 @@ namespace Nord.Nganga.Commands
       return result;
     }
 
-    private static void DumpLogs(IEnumerable<string> logs, bool verbose)
+    private static void DumpLogs(IEnumerable<string> logs, bool verbose = false)
     {
       if (!verbose) return;
       foreach (var log in logs)

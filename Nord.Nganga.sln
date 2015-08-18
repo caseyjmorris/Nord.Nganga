@@ -33,6 +33,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.Vsix", "Nord.Ng
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.Commands", "Nord.Nganga.Commands\Nord.Nganga.Commands.csproj", "{05BE09F0-7640-405A-A76F-755B6A5B5167}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "powershell", "powershell", "{868ABDBB-9038-417D-96EE-A9368B081D23}"
+	ProjectSection(SolutionItems) = preProject
+		nganga tools pkg\NgangaInterface.psm1 = nganga tools pkg\NgangaInterface.psm1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
