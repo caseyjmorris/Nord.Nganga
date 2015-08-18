@@ -5,12 +5,12 @@
   Add-Type -Path "$($PSScriptRoot)\bin\Nord.Nganga.Fs.dll"  
 }
 
-Function nng-get-settings
+Function Get-NgangaSettingsTypes
 {
   return [Nord.Nganga.Commands.Commands]::ListOptionTypes()
 }
 
-Function nng-get-settings
+Function Get-NgangaSettings
 {
     param (
         [parameter(Position = 0,
@@ -21,7 +21,7 @@ Function nng-get-settings
     return [Nord.Nganga.Commands.Commands]::GetOptions($SettingName)
 }
 
-Function nng-update-settings
+Function Update-NgangaSettings
 {
   param(
         [parameter(Position = 0,
@@ -32,7 +32,7 @@ Function nng-update-settings
   [Nord.Nganga.Commands.Commands]::SetOptions($OptionsObject)
 }
 
-Function nng-build-controller-type
+Function Build-ControllerType
 {
   $proj = Get-Project
 
@@ -46,7 +46,7 @@ Function nng-build-controller-type
   }
 }
 
-Function nng-get-assy-filename
+Function Get-AssemblyFileName
 {
   $proj = Get-Project
 
@@ -59,21 +59,21 @@ Function nng-get-assy-filename
   return [System.IO.Path]::Combine($Directory, $OutputPath, $AsmName ) + ".dll"
 }
 
-Function nng-list
+Function Get-NgangaEligibleControllers
 {
   param(
     [switch] $ResourceOnly,
     [switch] $Echo
   )
 
-  nng-build-controller-type
+  Build-ControllerType
 
-  $assyFileName = nng-get-assy-filename
+  $assyFileName = Get-AssemblyFileName
 
   return [Nord.Nganga.Commands.Commands]::ListControllerNames($assyFileName, $ResourceOnly.IsPresent, $Echo.IsPresent)
 }
 
-Function nng-gen
+Function Export-NgangaCode
 {
     param(
       [parameter(Position = 0,
@@ -88,9 +88,9 @@ Function nng-gen
 
     $proj = Get-Project
 
-    nng-build-controller-type
+    Build-ControllerType
 
-    $assyFileName =  nng-get-assy-filename
+    $assyFileName =  Get-AssemblyFileName
 
      $projPath = [System.IO.Path]::GetDirectoryName($proj.FullName)
 
@@ -112,4 +112,12 @@ Function nng-gen
 
 }
 
-Export-ModuleMember -Function nng-gen,nng-get-types, nng-get-settings, nng-update-settings, nng-list
+New-Alias nnggen Export-NgangaCode
+
+New-Alias nnglist Get-NgangaEligibleControllers
+
+New-Alias nnggetopt Get-NgangaSettings
+
+New-Alias nngsetopt Update-NgangaSettings
+
+Export-ModuleMember -Function Export-NgangaCode, Get-NgangaSettingsTypes, Get-NgangaSettings, Update-NgangaSettings, Get-NgangaEligibleControllers -Alias nnggen, nnglist, nnggetopt, nngsetopt
