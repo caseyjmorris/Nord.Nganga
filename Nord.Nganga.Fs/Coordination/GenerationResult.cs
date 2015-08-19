@@ -28,11 +28,15 @@ namespace Nord.Nganga.Fs.Coordination
 
     public bool PreviousParseSuccess { get; set; }
 
+    public bool PreviousVersionExists { get; set; }
     public string PreviousText { get; set; }
     public string PreviousHeader { get; set; }
     public string PreviousBody { get; set; }
     public string PreviousDeclaredMd5 { get; set; }
     public string PreviousCalculatedMd5 { get; set; }
+
+    public bool MergeOrDiffRecommended => this.PreviousVersionExists && (!this.PreviousParseSuccess || (this.PreviousDeclaredMd5 != this.PreviousCalculatedMd5));
+    public bool GenerationIsRedundantNoSaveRequired => !this.MergeOrDiffRecommended && this.Md5 == this.PreviousCalculatedMd5;
 
     public GenerationResult(
       Func<string, GeneratorParseResult> parser,
@@ -55,12 +59,21 @@ namespace Nord.Nganga.Fs.Coordination
         this.Md5 = current.DeclaredHeaderMd5;
       }
 
-      if (!File.Exists(this.AbsoluteFileNameName)) return;
-      this.PreviousText = File.ReadAllText(this.AbsoluteFileNameName);
+      this.PreviousVersionExists = File.Exists(this.AbsoluteFileNameName);
+
+      if (!this.PreviousVersionExists)
+      {
+        return;
+      }
+
+      this.PreviousText = File.ReadAllText(this.AbsoluteFileNameName).TrimEnd( Environment.NewLine.ToCharArray());
       var diskVersion = parser(this.PreviousText);
       this.PreviousParseSuccess = diskVersion.Success;
 
-      if (!diskVersion.Success) return;
+      if (!diskVersion.Success)
+      {
+        return;
+      }
       this.PreviousBody = diskVersion.Body;
       this.PreviousHeader = diskVersion.Header;
       this.PreviousDeclaredMd5 = diskVersion.DeclaredHeaderMd5;

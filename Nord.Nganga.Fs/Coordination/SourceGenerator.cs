@@ -69,7 +69,24 @@ namespace Nord.Nganga.Fs.Coordination
       masterTemplate.Add("header", header);
       masterTemplate.Add("body", body);
       var source = masterTemplate.Resolve();
+      if (!this.Validate(source, body, context))
+      {
+        throw new Exception($"Failed to validate generated {context} source for {controllerType.Name}.");
+      }
       return source;
+    }
+
+    private bool Validate(string source, string body, TemplateFactory.Context context)
+    {
+      var pr = SourceParser.ParseFile(context, source);
+      if (!pr.Success) 
+      {
+        return false;
+      }
+      var md5 = body.CalculateMd5Hash();
+      var isValid = md5 == pr.CalculatedBodyMd5 && pr.CalculatedBodyMd5 == pr.DeclaredHeaderMd5;
+
+      return isValid;
     }
 
     private string GetBody(TemplateFactory.Context context, object model)

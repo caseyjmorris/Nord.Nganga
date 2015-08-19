@@ -88,7 +88,8 @@ Function Export-NgangaCode
        [switch] $Echo,
        [switch] $Preview,
        [switch] $Force,
-       [switch] $Diff
+       [switch] $Diff,
+       [switch] $Merge
     )
 
     $proj = Get-Project
@@ -107,14 +108,26 @@ Function Export-NgangaCode
 
     Write-Host "Generate complete "
 
-    if ($Preview.IsPresent)
+    if ($Preview.IsPresent )
     {
         Write-Host "Preview only.  No data saved."
       return $result;
     }
 
-    if($Diff.IsPresent){
+    $doDiff = (-not $force.IsPresent) -and ( $Diff.IsPresent -or $result.ViewMergeOrDiffRecommended -or $result.ResourceMergeOrDiffRecommended -or $result.ControllerMergeOrDiffRecommended ) 
+
+    if($Merge.IsPresent){
+      Write-Host "The merge option has not yet been implemented - please try a later version."
+    }
+    
+    if($doDiff){
+
+        if(-not $Diff.IsPresent){
+            Write-Host "The possibility of one or more changes have been detected."
+        }
+
         Write-Host "Opening diff on files, please wait..."
+
         if(-not $ResourceOnly.IsPresent) {        
             DiffFile $result.ViewFileName $result.ViewText 
             DiffFile $result.ControllerFileName $result.ControllerText 
@@ -122,14 +135,16 @@ Function Export-NgangaCode
         DiffFile $result.ResourceFileName $result.ResourceText 
     }
     else {
+
         Write-Host "Integrating files, please wait..."
         if(-not $ResourceOnly.IsPresent) {        
-            SaveAndIntegrateFile $result.ViewText $result.ViewFileName 
-            SaveAndIntegrateFile $result.ControllerText $result.ControllerFileName 
+            SaveAndIntegrateFile $result.ViewText $result.ViewFileName $result.ViewGenerationIsRedundantNoSaveRequired $Force.IsPresent
+            SaveAndIntegrateFile $result.ControllerText $result.ControllerFileName $result.ControllerGenerationIsRedundantNoSaveRequired $Force.IsPresent
         }
-        SaveAndIntegrateFile $result.ResourceText $result.ResourceFileName 
+        SaveAndIntegrateFile $result.ResourceText $result.ResourceFileName $result.ResourceGenerationIsRedundantNoSaveRequired $Force.IsPresent
     }
 }
+
 
 function DiffFile([string]$existingFile, [string]$newSource){
     Write-Host "Diff file: " $existingFile
@@ -138,22 +153,33 @@ function DiffFile([string]$existingFile, [string]$newSource){
     $dte.ExecuteCommand("Tools.DiffFiles", ' "' + $tmp + '" "' + $existingFile + '" "New" "Old" ' )  
 }
 
-function SaveAndIntegrateFile([string]$source, [string]$fileName){
-         Write-Host "Saving file: " $fileName
-        $source | Out-File $fileName -encoding Unicode
+function SaveAndIntegrateFile([string]$source, [string]$fileName, [bool]$noSaveRequired, [bool]$force){
+    if($noSaveRequired -and -not $force){
+        Write-Host "No changes were detected in file: " $fileName " and -Force was not specified.  File not saved." 
+    }
+    else {
+        Write-Host "Saving file: " $fileName
         try {
-            $dte.Application.ItemOperations.AddExistingItem($fileName) 
-        }
-        catch{} 
-        $DTE.ExecuteCommand(“File.OpenFile”, $fileName)
+            $source | Out-File $fileName -encoding Unicode
+            try {
+                $dte.Application.ItemOperations.AddExistingItem($fileName) 
+            }
+            catch{} 
+            try {
+                $DTE.ExecuteCommand(“File.OpenFile”, $fileName)
+            }
+            catch{}
+            }
+        catch{}
+    }
 }
 
-New-Alias nnggen Export-NgangaCode
+New-Alias nng-gen Export-NgangaCode
 
-New-Alias nnglist Get-NgangaEligibleControllers
+New-Alias nng-list Get-NgangaEligibleControllers
 
-New-Alias nnggetopt Get-NgangaSettings
+New-Alias nng-get-opt Get-NgangaSettings
 
-New-Alias nngsetopt Update-NgangaSettings
+New-Alias nng-set-opt Update-NgangaSettings
 
-Export-ModuleMember -Function Export-NgangaCode, Get-NgangaSettingsTypes, Get-NgangaSettings, Update-NgangaSettings, Get-NgangaEligibleControllers -Alias nnggen, nnglist, nnggetopt, nngsetopt
+Export-ModuleMember -Function Export-NgangaCode, Get-NgangaSettingsTypes, Get-NgangaSettings, Update-NgangaSettings, Get-NgangaEligibleControllers -Alias nng-gen, nng-list, nng-get-opt, nng-set-opt
