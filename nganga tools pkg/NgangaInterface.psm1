@@ -179,7 +179,7 @@ function Start-DiffMergeFile([string]$existingFile, [string]$newSource, [string]
         return 
         }
     if($verb -eq "DiffMerge"){        
-        $toolPath = Get-DiffMergeToolPath
+        $toolPath = Get-NgangaDiffMergeToolPath
         $cmd = '"' + $toolPath + '" "' + $existingFile + '" "' + $newFile +'"'
         Invoke-Expression -Command:$cmd
         return 
@@ -204,15 +204,15 @@ function Get-TempDiffFileName([string] $existingFileName){
     return $newFileName;
 }
 
-function Get-DiffMergeToolPath(){
+function Get-NgangaDiffMergeToolPath(){
     $toolPath = $systemPathSettings.DiffMergeToolPath 
     if($toolPath -eq $null -or $toolPath -eq ""){
-        $toolPath = Get-DefaultDiffMergeToolPath
+        $toolPath = Get-NgangaDefaultDiffMergeToolPath
     }
     return $toolPath
 }
 
-function Get-DefaultDiffMergeToolPath() {    
+function Get-NgangaDefaultDiffMergeToolPath() {    
     return $env:VS140COMNTOOLS -replace "\\TOOLS\\", "\IDE\vsDiffMerge.exe"    
 }
 
@@ -272,4 +272,4 @@ New-Alias nng-get-opt Get-NgangaSettings
 
 New-Alias nng-set-opt Update-NgangaSettings
 
-Export-ModuleMember -Function Export-NgangaCode, Get-DiffMergeToolPath, Get-DefaultDiffMergeToolPath, Get-NgangaSettingsTypes, Get-NgangaSettings, Update-NgangaSettings, Get-NgangaEligibleControllers -Alias nng-gen, nng-list, nng-get-opt, nng-set-opt
+Export-ModuleMember -Function Export-NgangaCode, Get-NgangaDiffMergeToolPath, Get-NgangaDefaultDiffMergeToolPath, Get-NgangaSettingsTypes, Get-NgangaSettings, Update-NgangaSettings, Get-NgangaEligibleControllers -Alias nng-gen, nng-list, nng-get-opt, nng-set-opt
