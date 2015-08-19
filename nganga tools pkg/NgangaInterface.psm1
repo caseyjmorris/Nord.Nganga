@@ -75,7 +75,15 @@ Function Get-NgangaEligibleControllers
 
   Write-Host "Searching for eligible controllers..." 
 
-  return [Nord.Nganga.Commands.Commands]::ListControllerNames($assyFileName, $Filter, $ResourceOnly.IsPresent, $Echo.IsPresent)
+  $result =  [Nord.Nganga.Commands.Commands]::ListControllerNames($assyFileName, $Filter, $ResourceOnly.IsPresent, $Echo.IsPresent)
+
+  
+    if($result -eq $null){
+        Write-Host "List controller types failed - are you sure you have selected a valid webapi project in package manger console?"
+        return 
+    }
+
+  return $result 
 }
 
 Function Export-NgangaCode
@@ -90,10 +98,7 @@ Function Export-NgangaCode
        [switch] $Force,
        [switch] $Diff,
        [switch] $Merge
-    )
-
-
-    
+    )    
 
     $proj = Get-Project
 
@@ -108,6 +113,11 @@ Function Export-NgangaCode
     Write-Host "Generating " $ControllerName  "..."
 
     $result = [Nord.Nganga.Commands.Commands]::Generate($assyFileName, $ControllerName, $projPath, $ResourceOnly.IsPresent, $Echo.IsPresent)
+
+    if($result -eq $null){
+        Write-Host "Generate failed - are you sure you have selected a valid webapi project in package manger console?"
+        return 
+    }
 
     Write-Host "Generate complete "
 
