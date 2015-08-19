@@ -227,8 +227,9 @@ function Get-NgangaDefaultDiffMergeToolPath() {
 }
 
 function Start-IntegrateResult( [object]$result, [bool] $resourceOnly, [bool]$force){
-        
-        Write-Host "Integrating files, please wait..."
+        $proj = Get-Project             
+
+        Write-Host "Integrating " $proj.ProjectName ", please wait..."
         if(-not $ResourceOnly) {        
             $noSaveRequired =  Get-NormalizedNoSaveRequred $result.ViewGenerationIsRedundantNoSaveRequired 
             Update-Project $result.ViewText $result.ViewFileName $noSaveRequired $Force
@@ -257,19 +258,41 @@ function Update-Project([string]$source, [string]$fileName, [bool]$noSaveRequire
     if($noSaveRequired -and -not $force){
         Write-Host "No changes were detected in file: " $fileName " and -Force was not specified.  File not saved." 
     }
-    else {
-        Write-Host "Saving file: " $fileName
+    else {        
         try {
+            
+            Write-Host "Writing file: " $fileName
             $source | Out-File $fileName -encoding Unicode
+
             try {
-                $dte.Application.ItemOperations.AddExistingItem($fileName) 
+                $proj = Get-Project  
+                Write-Host "Integrating file: " $fileName 
+                #$dte.Application.ItemOperations.AddExistingItem($relativeFileName) 
+                #$DTE.ExecuteCommand(“Project.AddExistingItem”, $fileName)
+                $proj.ProjectItems.AddFromFile( $fileName )
+
             }
-            catch{} 
+            catch [System.Exception]{
+                Write-Host $_
+            } 
+
+            try {
+                #Write-Host "Adding file to source control: " $fileName                
+                #$DTE.ExecuteCommand(“Team.Git.AddToSourceControl”, $fileName)
+            }
+            catch [System.Exception]{
+                Write-Host $_
+            } 
+
+
             try {
                 $DTE.ExecuteCommand(“File.OpenFile”, $fileName)
             }
-            catch{}
+            catch [System.Exception]{
+                Write-Host $_
             }
+
+        }
         catch{}
     }
 }

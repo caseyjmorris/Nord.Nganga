@@ -13,12 +13,14 @@ namespace Nord.Nganga.Fs.Coordination
 
     public GenerationResult View { get; set; }
     public string ViewFileName => this.View?.AbsoluteFileNameName;
+   // public string RelativeViewFileName => this.View?.RelativeFileName;
     public string ViewText => this.View?.Text;
-    public bool ViewMergeOrDiffRecommended => this.View?.MergeOrDiffRecommended ?? false ;
+    public bool ViewMergeOrDiffRecommended => this.View?.MergeOrDiffRecommended ?? false;
     public bool ViewGenerationIsRedundantNoSaveRequired => this.View?.GenerationIsRedundantNoSaveRequired ?? false;
 
     public GenerationResult Resource { get; set; }
     public string ResourceFileName => this.Resource?.AbsoluteFileNameName;
+  //  public string RelativeResourceFileName => this.Resource?.RelativeFileName;
     public string ResourceText => this.Resource?.Text;
     public bool ResourceMergeOrDiffRecommended => this.Resource?.MergeOrDiffRecommended ?? false;
 
@@ -28,6 +30,7 @@ namespace Nord.Nganga.Fs.Coordination
 
     public GenerationResult Controller { get; set; }
     public string ControllerFileName => this.Controller?.AbsoluteFileNameName;
+   // public string RelativeControllerFileName => this.Controller?.RelativeFileName;
     public string ControllerText => this.Controller?.Text;
     public bool ControllerMergeOrDiffRecommended => this.Controller?.MergeOrDiffRecommended ?? false;
 
