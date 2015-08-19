@@ -92,6 +92,9 @@ Function Export-NgangaCode
        [switch] $Merge
     )
 
+
+    
+
     $proj = Get-Project
 
     Build-ControllerType
@@ -111,49 +114,136 @@ Function Export-NgangaCode
     if ($Preview.IsPresent )
     {
         Write-Host "Preview only.  No data saved."
-      return $result;
+      return $result
     }
 
-    $doDiff = (-not $force.IsPresent) -and ( $Diff.IsPresent -or $result.ViewMergeOrDiffRecommended -or $result.ResourceMergeOrDiffRecommended -or $result.ControllerMergeOrDiffRecommended ) 
-
-    if($Merge.IsPresent){
-      Write-Host "The merge option has not yet been implemented - please try a later version."
+    if($Merge.IsPresent -and $Diff.IsPresent){
+        Write-Host "-Merge and -Diff are mutually exclusive options and may not be used together."
+        return
     }
+
+    $changesDetected = $result.ViewMergeOrDiffRecommended -or $result.ResourceMergeOrDiffRecommended -or $result.ControllerMergeOrDiffRecommended
+
+    if($changesDetected){
+        Write-Host "The possibility of one or more changes have been detected."
+    }
+
+    $doDiff = (-not $force.IsPresent) -and ( $Diff.IsPresent -or  $changesDetected ) 
     
-    if($doDiff){
-
-        if(-not $Diff.IsPresent){
-            Write-Host "The possibility of one or more changes have been detected."
+    if($doDiff -or $Merge.IsPresent){
+        if($Merge.IsPresent){
+            Start-MergeResult $result  $ResourceOnly.IsPresent 
         }
-
-        Write-Host "Opening diff on files, please wait..."
-
-        if(-not $ResourceOnly.IsPresent) {        
-            DiffFile $result.ViewFileName $result.ViewText 
-            DiffFile $result.ControllerFileName $result.ControllerText 
-        }
-        DiffFile $result.ResourceFileName $result.ResourceText 
+        else {
+            Start-DiffResult $result  $ResourceOnly.IsPresent 
+            }
     }
     else {
-
-        Write-Host "Integrating files, please wait..."
-        if(-not $ResourceOnly.IsPresent) {        
-            SaveAndIntegrateFile $result.ViewText $result.ViewFileName $result.ViewGenerationIsRedundantNoSaveRequired $Force.IsPresent
-            SaveAndIntegrateFile $result.ControllerText $result.ControllerFileName $result.ControllerGenerationIsRedundantNoSaveRequired $Force.IsPresent
-        }
-        SaveAndIntegrateFile $result.ResourceText $result.ResourceFileName $result.ResourceGenerationIsRedundantNoSaveRequired $Force.IsPresent
+        Start-IntegrateResult $result  $ResourceOnly.IsPresent $Force.IsPresent
     }
 }
 
+function Start-MergeResult( [object]$result, [bool] $resourceOnly){
+        Write-Host "Opening diff on files, please wait..."
 
-function DiffFile([string]$existingFile, [string]$newSource){
-    Write-Host "Diff file: " $existingFile
-    $tmp = New-TemporaryFile
-    $newSource | Out-File $tmp -encoding Unicode
-    $dte.ExecuteCommand("Tools.DiffFiles", ' "' + $tmp + '" "' + $existingFile + '" "New" "Old" ' )  
+        if(-not $resourceOnly) {        
+            Start-MergeFile $result.ViewFileName $result.ViewText 
+            Start-MergeFile $result.ControllerFileName $result.ControllerText 
+        }
+        Start-MergeFile $result.ResourceFileName $result.ResourceText 
 }
 
-function SaveAndIntegrateFile([string]$source, [string]$fileName, [bool]$noSaveRequired, [bool]$force){
+function Start-MergeFile([string]$existingFile, [string]$newSource){
+    Start-DiffMergeFile $existingFile $newSource "DiffMerge" 
+}
+
+function Start-DiffResult( [object]$result, [bool] $resourceOnly){
+        Write-Host "Opening diff on files, please wait..."
+
+        if(-not $resourceOnly) {        
+            Start-DiffFile $result.ViewFileName $result.ViewText 
+            Start-DiffFile $result.ControllerFileName $result.ControllerText 
+        }
+        Start-DiffFile $result.ResourceFileName $result.ResourceText 
+}
+
+function Start-DiffFile([string]$existingFile, [string]$newSource){
+    Start-DiffMergeFile $existingFile $newSource "DiffFiles"  
+}
+
+function Start-DiffMergeFile([string]$existingFile, [string]$newSource, [string]$verb){
+    Write-Host $verb " : " $existingFile
+    $newFile = Save-TemporaryFile $existingFile $newSource 
+    if($verb -eq "DiffFiles"){
+        $dte.ExecuteCommand("Tools." + $verb, ' "' + $existingFile + '" "' + $newFile + '" "Old" "New" ' )  
+        return 
+        }
+    if($verb -eq "DiffMerge"){        
+        $toolPath = Get-DiffMergeToolPath
+        $cmd = '"' + $toolPath + '" "' + $existingFile + '" "' + $newFile +'"'
+        Invoke-Expression -Command:$cmd
+        return 
+        }
+}
+
+
+function Save-TemporaryFile([string]$existingFileName, [string] $source){
+    $newFile = Get-TempDiffFileName $existingFileName
+    Write-Host "Creating temporary diff/merge file: " $newFile
+    $source | Out-File $newFile -encoding Unicode    
+    return $newFile 
+}
+
+
+function Get-TempDiffFileName([string] $existingFileName){
+    $tmp = New-TemporaryFile
+    $baseDir = [System.IO.Path]::GetDirectoryName($tmp)
+    $baseName = [System.IO.Path]::GetFileNameWithoutExtension($tmp)
+    $extension = [System.IO.Path]::GetExtension($existingFileName)
+    $newFileName = [System.IO.Path]::Combine($baseDir, $baseName) + $extension    
+    return $newFileName;
+}
+
+function Get-DiffMergeToolPath(){
+    $toolPath = $systemPathSettings.DiffMergeToolPath 
+    if($toolPath -eq $null -or $toolPath -eq ""){
+        $toolPath = Get-DefaultDiffMergeToolPath
+    }
+    return $toolPath
+}
+
+function Get-DefaultDiffMergeToolPath() {    
+    return $env:VS140COMNTOOLS -replace "\\TOOLS\\", "\IDE\vsDiffMerge.exe"    
+}
+
+function Start-IntegrateResult( [object]$result, [bool] $resourceOnly, [bool]$force){
+        
+        Write-Host "Integrating files, please wait..."
+        if(-not $ResourceOnly) {        
+            $noSaveRequired =  Get-NormalizedNoSaveRequred $result.ViewGenerationIsRedundantNoSaveRequired 
+            Update-Project $result.ViewText $result.ViewFileName $noSaveRequired $Force
+
+            $noSaveRequired =  Get-NormalizedNoSaveRequred $result.ControllerGenerationIsRedundantNoSaveRequired 
+            Update-Project $result.ControllerText $result.ControllerFileName $noSaveRequired $Force
+        }
+
+        $noSaveRequired =  Get-NormalizedNoSaveRequred $result.ResourceGenerationIsRedundantNoSaveRequired 
+        Update-Project $result.ResourceText $result.ResourceFileName $noSaveRequired $Force
+}
+
+function Get-NormalizedNoSaveRequred([object] $nsr){
+    try {        
+        if($nsr -eq $null -or $nsr -eq ""){ 
+            return $false
+            }
+        return $nsr -as [bool]
+        }
+   catch{
+        return $false 
+        }
+}
+
+function Update-Project([string]$source, [string]$fileName, [bool]$noSaveRequired, [bool]$force){
     if($noSaveRequired -and -not $force){
         Write-Host "No changes were detected in file: " $fileName " and -Force was not specified.  File not saved." 
     }
@@ -182,4 +272,4 @@ New-Alias nng-get-opt Get-NgangaSettings
 
 New-Alias nng-set-opt Update-NgangaSettings
 
-Export-ModuleMember -Function Export-NgangaCode, Get-NgangaSettingsTypes, Get-NgangaSettings, Update-NgangaSettings, Get-NgangaEligibleControllers -Alias nng-gen, nng-list, nng-get-opt, nng-set-opt
+Export-ModuleMember -Function Export-NgangaCode, Get-DiffMergeToolPath, Get-DefaultDiffMergeToolPath, Get-NgangaSettingsTypes, Get-NgangaSettings, Update-NgangaSettings, Get-NgangaEligibleControllers -Alias nng-gen, nng-list, nng-get-opt, nng-set-opt
