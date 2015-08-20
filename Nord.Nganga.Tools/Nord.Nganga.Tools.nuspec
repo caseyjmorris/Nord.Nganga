@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package >
+<package>
   <metadata>
     <id>Nord.Nganga.Tools</id>
     <version>1.0.0</version>
@@ -7,7 +7,12 @@
     <owners>National Organization for Rare Disorders</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Tools to use Nganga package generation.</description>
-    <releaseNotes>First version.</releaseNotes>
+    <releaseNotes>0ebc1b3 Renamed pkg.
+537ded8 Changes for nuget pkg.
+3f6ebe0 finally corrected VS integration bug causing [multiple] registrations in the wrong project locations.
+6794bf5 added a trap/reminder to warn if a command fails due to wrong project type selected in package manager console....
+6946028 changed new exported function names to contain Nganga. i prefer the shorter form nng- (nord nganga) prefix over these longer names.
+</releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>generation angular nganga</tags>
     <dependencies>
