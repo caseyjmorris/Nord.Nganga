@@ -33,6 +33,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.Vsix", "Nord.Ng
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.Commands", "Nord.Nganga.Commands\Nord.Nganga.Commands.csproj", "{05BE09F0-7640-405A-A76F-755B6A5B5167}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{8A67FEDA-A1B8-44D1-AFB9-846FB775A753}"
+	ProjectSection(SolutionItems) = preProject
+		Nord.Nganga.Tools\Nord.Nganga.Tools.nuspec = Nord.Nganga.Tools\Nord.Nganga.Tools.nuspec
+		Nord.Nganga.Tools\publish.ps1 = Nord.Nganga.Tools\publish.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{6B2CA135-BFA4-4846-8719-DFE0C62A6BC9}"
+	ProjectSection(SolutionItems) = preProject
+		Nord.Nganga.Tools\tools\Init.ps1 = Nord.Nganga.Tools\tools\Init.ps1
+		Nord.Nganga.Tools\tools\NgangaInterface.psm1 = Nord.Nganga.Tools\tools\NgangaInterface.psm1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,5 +113,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6B2CA135-BFA4-4846-8719-DFE0C62A6BC9} = {8A67FEDA-A1B8-44D1-AFB9-846FB775A753}
 	EndGlobalSection
 EndGlobal
