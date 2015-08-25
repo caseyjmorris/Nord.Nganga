@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using Humanizer;
 using Newtonsoft.Json;
 using Nord.Nganga.Annotations;
@@ -239,7 +240,7 @@ namespace Nord.Nganga.Mappers
               filterArguments = f.SelectCommon?.QualifiedName
             });
 
-      return this.GetOneLineSerialization(fieldsDesc);
+      return this.GetOneLineSerialization(fieldsDesc, noEscapeBraces: true);
     }
 
     private string GetAdditionalSubordinateActions(ViewModelViewModel.SubordinateViewModelWrapper wrapper)
@@ -261,14 +262,15 @@ namespace Nord.Nganga.Mappers
                 attributeValue = iaa.AttributeValue,
                 actionLabel = iaa.ActionText,
                 cssClass = iaa.AreaClass,
-                glyphicon = iaa.ActionClass
+                glyphicon = iaa.ActionClass,
               }));
 
 
-      return this.GetOneLineSerialization(results);
+      return this.GetOneLineSerialization(results,
+        noEscapeBraces: wrapper.ItemActionAttributes.Any(iaa => iaa.DoNotEscapeAngularBraces));
     }
 
-    private string GetOneLineSerialization(object input)
+    private string GetOneLineSerialization(object input, bool noEscapeBraces)
     {
       var sb = new StringBuilder();
       using (var sw = new StringWriter(sb))
@@ -281,7 +283,13 @@ namespace Nord.Nganga.Mappers
         ser.Serialize(writer, input);
       }
 
-      return sb.ToString();
+      var result = sb.ToString();
+
+      //hack around escaping issues...
+
+      return noEscapeBraces
+        ? result
+        : Regex.Replace(result, @"{{([^}]+)}}", @"\{\{$1}}");
     }
 
     private NgangaControlType DetermineControlType(ViewModelViewModel.MemberDiscriminator discriminator,
@@ -375,12 +383,9 @@ namespace Nord.Nganga.Mappers
           break;
         case ViewModelViewModel.MemberDiscriminator.PrimitiveCollection:
           result.Member = this.GetFieldViewModel(info, true);
-          ;
           break;
         case ViewModelViewModel.MemberDiscriminator.ComplexCollection:
           result.Member = this.GetSubordinateViewModelWrapper(info);
-          break;
-        default:
           break;
       }
       return result;
