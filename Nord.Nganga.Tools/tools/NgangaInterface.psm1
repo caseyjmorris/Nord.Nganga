@@ -278,12 +278,11 @@ function Update-Project([string]$source, [string]$fileName, [bool]$noSaveRequire
 
             try {
                 #Write-Host "Adding file to source control: " $fileName                
-                #$DTE.ExecuteCommand(“Team.Git.AddToSourceControl”, $fileName)
+                #$DTE.ExecuteCommand(“File.AddToSourceControl”, $fileName)
             }
             catch [System.Exception]{
                 Write-Host $_
             } 
-
 
             try {
                 $DTE.ExecuteCommand(“File.OpenFile”, $fileName)
