@@ -8,11 +8,11 @@
     <owners>National Organization for Rare Diseases</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Annotations needed for an Nganga project.</description>
-    <releaseNotes>5fd01f2 Support for default object values with nullable route ID controllers (resolves #5)
-e042270 Merge branch 'master' of https://github.com/NationalOrganizationForRareDisorders/Nord.Nganga
-0c0dba5 Fixed invalid separator declarations in templates.
-b980dda Merge branch 'master' of https://github.com/NationalOrganizationForRareDisorders/Nord.Nganga.git
-28068a8 automatic change detection and overwrite protection on save of generated source.
+    <releaseNotes>040679d Support for escaping braces in subordinate items.
+040e99d Published latest version to nuget package
+0ebc1b3 Renamed pkg.
+537ded8 Changes for nuget pkg.
+3f6ebe0 finally corrected VS integration bug causing [multiple] registrations in the wrong project locations.
 </releaseNotes>
     <copyright>Copyright 2015</copyright>
   </metadata>
