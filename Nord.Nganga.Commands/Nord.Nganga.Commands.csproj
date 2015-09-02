@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\Nord.Nganga.Tools\tools\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -45,7 +45,9 @@
     <Compile Include="Commands.cs" />
     <Compile Include="CoordinationExecutor.cs" />
     <Compile Include="CoordinationFacade.cs" />
+    <Compile Include="GenerateResult.cs" />
     <Compile Include="Isolated.cs" />
+    <Compile Include="ListControllerNamesResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -100,9 +100,6 @@ Function Get-AssemblyFileName
 
     .PARAMETER ResourceOnly
         Scopes the search - ??? is this parameter actually used on this command? 
-
-    .PARAMETER Echo
-        Enables processing feedback to the host console.
         
 #>
 Function Get-NgangaEligibleControllers
@@ -111,8 +108,7 @@ Function Get-NgangaEligibleControllers
 	        [parameter(Position = 0,
             Mandatory = $false)]
             [string] $Filter,
-    [switch] $ResourceOnly,
-    [switch] $Echo
+    [switch] $ResourceOnly
   )
 
   Build-ControllerType
@@ -121,15 +117,22 @@ Function Get-NgangaEligibleControllers
 
   Write-Host "Searching for eligible controllers..." 
 
-  $result =  [Nord.Nganga.Commands.Commands]::ListControllerNames($assyFileName, $Filter, $ResourceOnly.IsPresent, $Echo.IsPresent)
+  $result =  [Nord.Nganga.Commands.Commands]::ListControllerNames($assyFileName, $Filter, $ResourceOnly.IsPresent)
 
-  
-    if($result -eq $null){
-        Write-Host "List controller types failed - are you sure you have selected a valid webapi project in package manger console?"
+   if(!$result) {
+        Write-Host "Unknown error!"
         return 
     }
 
-  return $result 
+  if(!$result.TypeNames){
+        Write-Host "List controller types failed" 
+        if($result.MessageText){
+            Write-Host $result.MessageText 
+        }
+        return
+    }
+
+  return $result.TypeNames 
 }
 
 <#
@@ -141,9 +144,6 @@ Function Get-NgangaEligibleControllers
 
     .PARAMETER ResourceOnly
         Limits the generation to the Angular resource file only.  No angular view or controller is generated. 
-
-    .PARAMETER Echo
-        Enables processing feedback to the host console.
 
     .PARAMETER Preview
         Supresses disk writes.  Dumps the generated source to the console for re/view. 
@@ -174,7 +174,6 @@ Function Export-NgangaCode
             Mandatory = $true)]
             [string] $ControllerName,
        [switch] $ResourceOnly,
-       [switch] $Echo,
        [switch] $Preview,
        [switch] $Force,
        [switch] $Diff,
@@ -189,23 +188,35 @@ Function Export-NgangaCode
 
      $projPath = [System.IO.Path]::GetDirectoryName($proj.FullName)
 
-    $result = $null
-
     Write-Host "Generating " $ControllerName  "..."
 
-    $result = [Nord.Nganga.Commands.Commands]::Generate($assyFileName, $ControllerName, $projPath, $ResourceOnly.IsPresent, $Echo.IsPresent)
+    $result = [Nord.Nganga.Commands.Commands]::Generate($assyFileName, $ControllerName, $projPath, $ResourceOnly.IsPresent)
 
-    if($result -eq $null){
-        Write-Host "Generate failed - are you sure you have selected a valid webapi project in package manger console?"
+    if(!$result) {
+        Write-Host "Unknown error!"
         return 
     }
 
+    if(!$result.CoordinationResult){
+        Write-Host "Generate failed" 
+        if($result.MessageText){
+            Write-Host $result.MessageText 
+        }
+        return
+    }
+
+    if($result.MessageText){
+        Write-Host $result.MessageText 
+    }    
+
     Write-Host "Generate complete "
+
+    $result = $result.CoordinationResult
 
     if ($Preview.IsPresent )
     {
         Write-Host "Preview only.  No data saved."
-      return $result
+        return $result
     }
 
     if($Merge.IsPresent -and $Diff.IsPresent){
@@ -370,15 +381,26 @@ function Update-Project([string]$source, [string]$fileName, [bool]$noSaveRequire
                 Write-Host $_
             } 
         }
-        catch{}
+        catch [System.Exception]{
+            Write-Host $_
+        } 
     }
 }
 
 function Export-SourceFile([string] $source, [string]$fileName){
-    $dir = [System.IO.Path]::GetDirectoryName($fileName)
-    System.IO.Directory.CreateDirectory( $dir ) 
-    Write-Host "Writing file: " $fileName
-    $source | Out-File $fileName -encoding Unicode
+    try {
+        Write-Host "Writing file: " $fileName
+        $dir = [System.IO.Path]::GetDirectoryName($fileName)
+        $dirExists = [System.IO.Directory]::Exists( $dir ) 
+        if(!$dirExists) {
+            Write-Host "Creating destination directory " $dir
+            [System.IO.Directory]::CreateDirectory( $dir ) | out-null
+        }
+        $source | Out-File $fileName -encoding Unicode
+    }
+    catch [System.Exception]{
+        Write-Host $_
+    } 
 }
 
 New-Alias nng-gen Export-NgangaCode

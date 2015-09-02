@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using EnvDTE;
 using Nord.Nganga.Fs.Coordination;
-using Nord.Nganga.Fs.VsIntegration;
 using Nord.Nganga.Models.Configuration;
 
 namespace Nord.Nganga.Commands
@@ -92,82 +90,78 @@ namespace Nord.Nganga.Commands
       method.Invoke(null, new object[] {pkg});
     }
 
-    private static string vsiErr = "VS integration error.";
-
-    public static IEnumerable<string> ListControllerNames(
+    public static ListControllerNamesResult ListControllerNames(
       string assyFileName,
       string filter = null,
-      bool resourceOnly = false,
-      bool verbose = false)
+      bool resourceOnly = false)
     {
       if (!File.Exists(assyFileName))
       {
-        throw new Exception(
-          $"The specified assembly file name {assyFileName} does not exist.  {vsiErr}!");
+        return new ListControllerNamesResult
+        {
+          MessageText = $"The specified assembly file name {assyFileName} does not exist."
+        };
       }
 
       var logs = new List<string>();
-      IEnumerable<string> results = null;
+      var result = new ListControllerNamesResult();
       try
       {
         var typenames = CoordinationExecutor.GetControllerList(assyFileName, logs, resourceOnly)
           .Where(n => filter == null || n.ToLowerInvariant().Contains(filter.ToLowerInvariant()));
 
-        results = RemoveCommonPrefixNodes(typenames);
+        result.TypeNames = RemoveCommonPrefixNodes(typenames);
       }
       catch (Exception e)
       {
-        logs.Add(e.ToString());
+        result.MessageText = $"{e}{Environment.NewLine}";
       }
 
-      DumpLogs(logs, verbose);
+      result.MessageText =
+        $"{result.MessageText}{(logs.Any() ? string.Join(Environment.NewLine, logs) : string.Empty)}";
 
-      return results;
+      return result;
     }
 
-    public static CoordinationResult Generate(
+    public static GenerateResult Generate(
       string assyFileName,
       string controllerName,
       string vsProjectPath,
-      bool resourceOnly = false,
-      bool verbose = false)
+      bool resourceOnly = false)
     {
       if (!File.Exists(assyFileName))
       {
-        throw new Exception(
-          $"The specified assembly file name {assyFileName} does not exist.  {vsiErr}!");
+        return new GenerateResult
+        {
+          MessageText = $"The specified assembly file name {assyFileName} does not exist."
+        };
       }
 
       if (!Directory.Exists(vsProjectPath))
       {
-        throw new Exception(
-          $"The specified project path {vsProjectPath} does not exist.  {vsiErr}");
+        return new GenerateResult
+        {
+          MessageText = $"The specified project path {vsProjectPath} does not exist."
+        };
       }
 
       var logs = new List<string>();
 
-      CoordinationResult results = null;
+      var result = new GenerateResult();
       try
       {
-        results = CoordinationExecutor.Coordinate(assyFileName, controllerName, vsProjectPath, logs, resourceOnly);
+        result.CoordinationResult = CoordinationExecutor.Coordinate(assyFileName, controllerName, vsProjectPath, logs,
+          resourceOnly);
       }
       catch (Exception e)
       {
-        logs.Add(e.ToString());
+        result.MessageText = $"{e}{Environment.NewLine}";
       }
 
-      DumpLogs(logs, verbose);
+      result.MessageText =
+        $"{result.MessageText}{(logs.Any() ? string.Join(Environment.NewLine, logs) : string.Empty)}";
 
-      return results;
-    }
-
-    private static void DumpLogs(IEnumerable<string> logs, bool verbose = false)
-    {
-      if (!verbose) return;
-      foreach (var log in logs)
-      {
-        Console.WriteLine(log);
-      }
+      return result;
     }
   }
 }

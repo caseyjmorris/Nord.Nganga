@@ -7,6 +7,7 @@ namespace Nord.Nganga.Fs.Coordination
   [Serializable]
   public class CoordinationResult
   {
+
     public string SourceAssemblyLocation { get; set; }
 
     public string ControllerTypeName { get; set; }
