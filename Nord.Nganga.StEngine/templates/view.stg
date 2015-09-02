@@ -141,7 +141,6 @@ required
 commonSelect(model, parentObjectName) ::= <%
 <nord-common-select 
 %if(!model.Member.SelectCommon.RestrictUntilResolved)%wait-resolve="false" %endif%
-%! Need to fill in startcap, endcap (but no attrs exist ATM) !%
 %ngModel(model, parentObjectName)% 
 twelfths="%model.Width%" 
 field-label-text="%model.Member.DisplayName%" 
@@ -156,8 +155,7 @@ required
 
 commonSelectExpansible(model, parentObjectName) ::= <%
 <nord-common-select-expansible 
-%if(!model.Member.SelectCommon.RestrictUntilResolved)%wait-resolve="false" %endif%
-%! Need to fill in startcap, endcap (but no attrs exist ATM) !%
+%if(!model.Member.SelectCommon.RestrictUntilResolved)%wait-resolve="false" %endif% 
 %ngModel(model, parentObjectName)% 
 twelfths="%model.Width%" 
 field-label-text="%model.Member.DisplayName%" 
@@ -244,7 +242,6 @@ clrTypeMap ::= [
 
 numberControl(model, parentObjectName) ::= <%
 <nord-number-control 
-%! Need to fill in startcap, endcap (but no attrs exist ATM) !%
 %ngModel(model, parentObjectName)% 
 twelfths="%model.Width%" 
 field-label-text="%model.Member.DisplayName%" 
@@ -274,12 +271,15 @@ view-only
 
 textControl(model, parentObjectName) ::= <%
 <nord-text-control 
-%! Need to fill in startcap, endcap (but no attrs exist ATM) !%
 %ngModel(model, parentObjectName)% 
 twelfths="%model.Width%" 
 field-label-text="%model.Member.DisplayName%" 
 
 %caps(model)% 
+
+%if(model.Member.InputMask)%
+ui-mask="%model.Member.InputMask%" 
+%endif%
 
 %if(model.Member.IsRequired)%
 required 
