@@ -165,7 +165,7 @@ common-select-source="%model.Member.SelectCommon.ObjectName%.%model.Member.Selec
 required
 %endif%
 >
-</nord-common-select>
+</nord-common-select-expansible>
 %>
 
 dateControl(model, parentObjectName) ::= <%
@@ -229,9 +229,20 @@ parent-object="%parentObjectName%"
 child-field-name="%model.Member.FieldName%" 
 field-label-text="%model.Member.DisplayName%" 
 collection-name="%model.Member.FieldName%" is-primitive>
-    %\n% %if(model.Member.SelectCommon)% %commonSelect(model)% %else% %(clrTypeMap.(model.Member.DataType.Name))(model)% %endif% %\n%
+    %\n% 
+    %if(model.Member.SelectCommon)% 
+    %(commonSelectMap.(model.Member.DataType.Name))(model)%
+    %else% 
+    %(clrTypeMap.(model.Member.DataType.Name))(model)%
+    %endif% 
+    %\n%
 </nord-multiple-simple-editor>
 %>
+
+commonSelectMap ::= [
+  "UserExpansibleSelectChoice": "commonSelectExpansible",
+  default: "commonSelect"
+]
 
 clrTypeMap ::= [
     "Boolean":"boolControl",
