@@ -146,6 +146,10 @@ twelfths="%model.Width%"
 field-label-text="%model.Member.DisplayName%" 
 common-select-source="%model.Member.SelectCommon.ObjectName%.%model.Member.SelectCommon.CommonInformationName%%if(model.Member.SelectCommon.Index)%[%parentObjectName%.%model.Member.SelectCommon.Index%]%endif%" 
 
+%if(model.Member.IsViewOnly)%
+view-only 
+%endif%
+
 %if(model.Member.IsRequired)%
 required
 %endif%
@@ -160,6 +164,10 @@ commonSelectExpansible(model, parentObjectName) ::= <%
 twelfths="%model.Width%" 
 field-label-text="%model.Member.DisplayName%" 
 common-select-source="%model.Member.SelectCommon.ObjectName%.%model.Member.SelectCommon.CommonInformationName%%if(model.Member.SelectCommon.Index)%model.Member.SelectCommon.Index%endif%"
+
+%if(model.Member.IsViewOnly)%
+view-only 
+%endif%
 
 %if(model.Member.IsRequired)%
 required
