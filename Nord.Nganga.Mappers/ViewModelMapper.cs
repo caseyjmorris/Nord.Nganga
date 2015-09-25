@@ -204,6 +204,8 @@ namespace Nord.Nganga.Mappers
         LedgerSumProperty =
           info.GetAttributePropertyValueOrDefault<LedgerAttribute, string>(a => a.SumPropertyName),
         ItemActionAttributes = itemActionAttribute,
+        DefaultObjectJsonDefintion =
+          info.GetAttributePropertyValueOrDefault<CollectionEditorAttribute, string>(a => a.DefaultObjectDefinitionJson),
       };
 
       if (this.viewCoordinationMapper != null)

@@ -18,6 +18,11 @@ namespace Nord.Nganga.Annotations.Attributes.Html
     }
 
     /// <summary>
+    /// If defined, this JSON is used to hydrate objects when the user elects to add a new object.
+    /// </summary>
+    public string DefaultObjectDefinitionJson { get; set; }
+
+    /// <summary>
     /// Type of editor control to use.
     /// </summary>
     public enum EditorType

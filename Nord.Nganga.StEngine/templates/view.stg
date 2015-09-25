@@ -223,7 +223,10 @@ multipleSimpleEditorForComplex(model, parentObjectName) ::= <%
 parent-object="%parentObjectName%" 
 collection-name="%model.Member.FieldName%" 
 field-label-text="%model.Member.DisplayName%" 
-child-field-name="%model.Member.CoordinatedInfo.ParentObjectName%"
+child-field-name="%model.Member.CoordinatedInfo.ParentObjectName%" 
+%if (model.Member.DefaultObjectJsonDefintion)%
+default-object-definition="%model.Member.DefaultObjectJsonDefintion%"
+%endif%
 >
 %\n%
 %childViewNested(model.Member.CoordinatedInfo)%

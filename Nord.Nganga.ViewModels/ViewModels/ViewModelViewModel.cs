@@ -70,6 +70,7 @@ namespace Nord.Nganga.Models.ViewModels
       public ViewCoordinatedInformationViewModel CoordinatedInfo { get; set; }
       public string TableFieldsExpression { get; set; }
       public string SubordinateActionsExpression { get; set; }
+      public string DefaultObjectJsonDefintion { get; set; }
 
       public override string ToString()
       {
