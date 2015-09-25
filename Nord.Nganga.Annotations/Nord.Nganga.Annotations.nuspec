@@ -8,11 +8,11 @@
     <owners>National Organization for Rare Diseases</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Annotations needed for an Nganga project.</description>
-    <releaseNotes>040679d Support for escaping braces in subordinate items.
-040e99d Published latest version to nuget package
-0ebc1b3 Renamed pkg.
-537ded8 Changes for nuget pkg.
-3f6ebe0 finally corrected VS integration bug causing [multiple] registrations in the wrong project locations.
+    <releaseNotes>eeaf05d Encode value
+03b51b9 Bumped annotation version
+3a6f401 Add support for default object defs
+3acae14 Update template to support view-only for common-select
+08980fd Fix handling of expansible select choices.
 </releaseNotes>
     <copyright>Copyright 2015</copyright>
   </metadata>
