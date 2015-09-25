@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -190,6 +191,13 @@ namespace Nord.Nganga.Mappers
         ? info.GetCustomAttributes(typeof(SubordinateItemActionAttribute))
           .Select(a => (SubordinateItemActionAttribute) a)
         : new SubordinateItemActionAttribute[0];
+      var defaultObjectDef =
+        info.GetAttributePropertyValueOrDefault<CollectionEditorAttribute, string>(a => a.DefaultObjectDefinitionJson);
+
+      if (defaultObjectDef != null)
+      {
+        defaultObjectDef = WebUtility.HtmlEncode(defaultObjectDef);
+      }
       var wrapper = new ViewModelViewModel.SubordinateViewModelWrapper
       {
         FieldName = info.Name.Camelize(),
@@ -205,7 +213,7 @@ namespace Nord.Nganga.Mappers
           info.GetAttributePropertyValueOrDefault<LedgerAttribute, string>(a => a.SumPropertyName),
         ItemActionAttributes = itemActionAttribute,
         DefaultObjectJsonDefintion =
-          info.GetAttributePropertyValueOrDefault<CollectionEditorAttribute, string>(a => a.DefaultObjectDefinitionJson),
+          defaultObjectDef,
       };
 
       if (this.viewCoordinationMapper != null)
