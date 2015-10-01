@@ -23,6 +23,7 @@ namespace Nord.Nganga.Models.ViewModels
     {
       string FieldName { get; set; }
       string DisplayName { get; set; }
+      bool IsHidden { get; set; }
     }
 
     public enum MemberDiscriminator
@@ -65,6 +66,7 @@ namespace Nord.Nganga.Models.ViewModels
       public string DisplayName { get; set; }
       public string Section { get; set; }
       public bool IsLedger { get; set; }
+      public bool IsHidden { get; set; }
       public string LedgerSumProperty { get; set; }
       public IEnumerable<SubordinateItemActionAttribute> ItemActionAttributes { get; set; }
       public ViewCoordinatedInformationViewModel CoordinatedInfo { get; set; }
