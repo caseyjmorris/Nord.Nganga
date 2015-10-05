@@ -17,6 +17,8 @@ namespace Nord.Nganga.TestConsumer.Controllers.Api
     }
 
     [HttpGet]
+    [FormHtmlAttribute("ng-no-dirty")]
+    [FormHtmlAttribute("arbitrayry-attr",HtmlAttributeValue = "some_value")]
     [InjectHtmlInView("<p>Hello world!</p>")]
     [DefaultClientObjectDefinition("{testProperty: 'testValue'}")]
     public SponsorProgramPeriodDetailCollectionViewModel GetProgramPeriodSponsors(int id)

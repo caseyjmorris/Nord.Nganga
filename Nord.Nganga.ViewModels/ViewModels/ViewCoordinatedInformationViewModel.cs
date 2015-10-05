@@ -12,6 +12,11 @@ namespace Nord.Nganga.Models.ViewModels
 
   public class ViewCoordinatedInformationViewModel
   {
+    public ViewCoordinatedInformationViewModel()
+    {
+      this.NgFormAttributes = new Dictionary<string, string>();
+    }
+
     public ViewModelViewModel ViewModel { get; set; }
     public string Title { get; set; }
 
@@ -20,6 +25,8 @@ namespace Nord.Nganga.Models.ViewModels
     public string SaveButtonText { get; set; }
 
     public string NgFormName { get; set; }
+
+    public IDictionary<string, string> NgFormAttributes { get; set; }
 
     public string NgSubmitAction { get; set; }
 

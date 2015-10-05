@@ -98,9 +98,42 @@ namespace Nord.Nganga.Mappers.Views
         NgSubmitAction = $"saveChangesTo{vmVm.Name.Pascalize()}()",
         ParentObjectName = vmVm.Name.Camelize(),
         HtmlIncludes = this.GetIncludesFromControllerType(controllerType, vmVm),
+        NgFormAttributes = this.GetNgAttributesFromControllerType(controllerType, vmVm),
       };
 
       return coord;
+    }
+
+        private Dictionary<string, string> GetNgAttributesFromControllerType(Type controllerType,
+      ViewModelViewModel vmVm)
+    {
+      if (controllerType == null)
+      {
+        return null;
+      }
+
+      if (vmVm == null)
+      {
+        throw new ArgumentException("VM VM can't be null", nameof(vmVm));
+      }
+
+      var returnTypeName = $"{vmVm.Name.Pascalize()}ViewModel";
+
+      var methods = controllerType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+        .Where(m => Attribute.IsDefined(m, this.httpGetAttribute))
+        .Where(m => m.ReturnType.Name == returnTypeName ||
+                    (m.ReturnType.IsGenericType && m.ReturnType.GetGenericArguments()[0].Name == returnTypeName))
+        .Where(m => m.HasAttribute<FormHtmlAttributeAttribute>());
+
+      var attrs = methods.SelectMany(m => m.GetCustomAttributes(inherit: true).OfType<FormHtmlAttributeAttribute>());
+
+      var result = new Dictionary<string, string>();
+      foreach (var attr in attrs)
+      {
+        result[attr.HtmlAttributeName] = attr.HtmlAttributeValue;
+      }
+
+      return result;
     }
 
     private Dictionary<string, IEnumerable<string>> GetIncludesFromControllerType(Type controllerType,

@@ -48,6 +48,7 @@
     <Compile Include="Attributes\Html\CollectionEditorAttribute.cs" />
     <Compile Include="Attributes\Html\FieldWidthAttribute.cs" />
     <Compile Include="Attributes\Html\InjectHtmlInViewAttribute.cs" />
+    <Compile Include="Attributes\Html\FormHtmlAttributeAttribute.cs" />
     <Compile Include="Attributes\Html\SectionHtmlAttributeAttribute.cs" />
     <Compile Include="Attributes\Html\TextCasePreferencesAttribute.cs" />
     <Compile Include="Attributes\ProjectStructureAttribute.cs" />
