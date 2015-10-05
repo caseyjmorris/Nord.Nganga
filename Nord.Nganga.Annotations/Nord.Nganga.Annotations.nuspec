@@ -8,11 +8,11 @@
     <owners>National Organization for Rare Diseases</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Annotations needed for an Nganga project.</description>
-    <releaseNotes>eeaf05d Encode value
-03b51b9 Bumped annotation version
-3a6f401 Add support for default object defs
-3acae14 Update template to support view-only for common-select
-08980fd Fix handling of expansible select choices.
+    <releaseNotes>7f3a513 Bumped version
+eab9e5c #565 - added HtmlFormAttributeAttribute to nGanga.  See test consumer for usage/example.
+17c0546 Respect DoNotShowAttribute on collections.
+87adc01 Published latest version to nuget package
+eeaf05d Encode value
 </releaseNotes>
     <copyright>Copyright 2015</copyright>
   </metadata>
