@@ -1,7 +1,7 @@
 ﻿delimiters "%","%"
 
 templateVersion() ::=<%
-1.1.1
+1.1.2
 %>
 
 openComment() ::= <%
@@ -35,10 +35,15 @@ injectHtml(model, key) ::= <%
 
 injectFormAttributes(model) :: <%
   %model.NgFormAttributes.keys: {key| %injectFormAttribute(model, key, model.NgFormAttributes.(key) )%}; separator="\n"%
+  %if(model.NgFormAttributes.("class"))%%else%class="user-edit-form form-horizontal"%endif%
 %>
 
 injectFormAttribute(model, key, value) ::= <%
   %key%%if(value)%="%value%"%endif%
+%>
+
+injectFormClassIfNotInFormAttributes(model) ::= <%
+
 %>
 
 childView(model) ::= <<
@@ -49,10 +54,9 @@ childView(model) ::= <<
   <form 
     name="%model.NgFormName%" 
     id="%model.NgFormName%" 
-    ng-submit="%model.NgSubmitAction%" 
-    class="user-edit-form form-horizontal" 
-    novalidate  
-    %injectFormAttributes(model)% >
+    ng-submit="%model.NgSubmitAction%"     
+    %injectFormAttributes(model)%
+    novalidate >
     %injectHtml(model, "InsideFormAtBeginning")%
 
     %childViewNested(model)%
