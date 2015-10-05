@@ -1,7 +1,7 @@
 ﻿delimiters "%","%"
 
 templateVersion() ::=<%
-1.1.2
+1.1.3
 %>
 
 openComment() ::= <%
@@ -204,6 +204,10 @@ field-label-text="%model.Member.DisplayName%"
 
 %if(model.Member.IsRequired)%
 required
+%endif%
+
+%if(model.Member.IsViewOnly)%
+view-only
 %endif%
 >
 </nord-date-control>
