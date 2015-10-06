@@ -15,6 +15,13 @@ namespace Nord.Nganga.Fs.Coordination
     public TemplateContext TemplateContext { get; set; }
     public string Header { get; set; }
     public string DeclaredHeaderMd5 { get; set; }
+
+    public string DeclaredHeaderBodyTemplateVersion { get; set; }
+    public string CurrentBodyTemplateVersion {get; set; }
+
+    public string DeclaredHeaderMasterTemplateVersion { get; set; }
+    public string CurrentMasterTemplateVersion { get; set; }
+
     public string Body { get; set; }
     public string CalculatedBodyMd5 { get; set; }
   }

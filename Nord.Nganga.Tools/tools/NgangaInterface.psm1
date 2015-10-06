@@ -226,8 +226,22 @@ Function Export-NgangaCode
 
     $changesDetected = $result.ViewMergeOrDiffRecommended -or $result.ResourceMergeOrDiffRecommended -or $result.ControllerMergeOrDiffRecommended
 
+    
+    if($result.ViewTemplateRegression) {
+        Write-Host "The possibility of a regression within the view template has been detected."
+    }
+
+    if($result.ControllerTemplateRegression) {
+        Write-Host "The possibility of a regression within the controller template has been detected."
+    }
+
+    if($result.ResourceTemplateRegression) {
+        Write-Host "The possibility of a regression within the resource template has been detected."
+    }
+
+     
     if($changesDetected){
-        Write-Host "The possibility of one or more changes have been detected."
+        Write-Host "The possibility of one or more changes or regressions has been detected."
     }
 
     $doDiff = (-not $force.IsPresent) -and ( $Diff.IsPresent -or  $changesDetected ) 

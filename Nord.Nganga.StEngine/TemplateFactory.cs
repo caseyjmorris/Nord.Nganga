@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using Antlr4.StringTemplate;
 using Nord.Nganga.Annotations;
 using Nord.Nganga.Annotations.Attributes;
@@ -13,10 +11,12 @@ namespace Nord.Nganga.StEngine
   public static class TemplateFactory
   {
     public static void AssertTemplateMinimumVersions(
-      SystemPathSettingsPackage settings,
       Type controllerType,
-      TemplateContext context)
+      TemplateContext context,
+      SystemPathSettingsPackage settingsPackage = null
+      )
     {
+      var spsp = settingsPackage ?? ConfigurationFactory.GetConfiguration<SystemPathSettingsPackage>();
       var assy = controllerType.Assembly;
       var mva = assy
         .GetCustomAttributes(typeof(MinimumTemplateVersionAttribute), false)
@@ -27,19 +27,28 @@ namespace Nord.Nganga.StEngine
       {
         return;
       }
-      AssertTemplateMinimumVersion(settings, mva);
+      AssertTemplateMinimumVersion(mva, spsp);
+    }
+
+    public static string GetTemplateVersion(TemplateContext context, SystemPathSettingsPackage settingsPackage = null)
+    {
+      var spsp = settingsPackage ?? ConfigurationFactory.GetConfiguration<SystemPathSettingsPackage>();
+
+      var versionTemplate = GetTemplate(context, "templateVersion", spsp);
+      if (versionTemplate == null)
+      {
+        throw new InvalidOperationException($"The {context} template does not declare a templateVersion!");
+      }
+      var version = versionTemplate.Render();
+      return version;
     }
 
     private static void AssertTemplateMinimumVersion(
-      SystemPathSettingsPackage settings,
-      MinimumTemplateVersionAttribute mtva)
+      MinimumTemplateVersionAttribute mtva,
+      SystemPathSettingsPackage settingsPackage = null)
     {
-      var versionTemplate = GetTemplate(settings, mtva.TemplateContext, name: "templateVersion");
-      if (versionTemplate == null)
-      {
-        throw new InvalidOperationException($"The {mtva.TemplateContext} template does not declare a templateVersion!");
-      }
-      var version = versionTemplate.Render();
+      var spsp = settingsPackage ?? ConfigurationFactory.GetConfiguration<SystemPathSettingsPackage>();
+      var version = GetTemplateVersion(mtva.TemplateContext, spsp);
       var cr = CompareVersionStrings(version, mtva.MinimumVersion);
       if (cr >= 1)
       {
@@ -74,12 +83,13 @@ namespace Nord.Nganga.StEngine
     }
 
     public static Template GetTemplate(
-      SystemPathSettingsPackage settings,
       TemplateContext templateContext,
       string name = "body",
+      SystemPathSettingsPackage settingsPackage = null,
       bool debug = false)
     {
-      var filename = Path.Combine(settings.TemplatesDirectory, templateContext.ToString() + ".stg");
+      var spsp = settingsPackage ?? ConfigurationFactory.GetConfiguration<SystemPathSettingsPackage>();
+      var filename = Path.Combine(spsp.TemplatesDirectory, templateContext.ToString() + ".stg");
       if (debug)
       {
         Console.WriteLine(filename + ":");

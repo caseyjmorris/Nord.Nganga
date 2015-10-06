@@ -62,7 +62,7 @@ namespace Nord.Nganga.StEngine.Test
     [TestMethod]
     public void TestControllerGeneration()
     {
-      var t = TemplateFactory.GetTemplate(this.settings, TemplateContext.Controller);
+      var t = TemplateFactory.GetTemplate(TemplateContext.Controller, settingsPackage:this.settings );
 
       var endpointMapper = new EndpointMapper(this.webApiSettings);
       var controllerCoordinatedInfoMapper = new ControllerCoordinationMapper(endpointMapper,
@@ -86,7 +86,7 @@ namespace Nord.Nganga.StEngine.Test
     [TestMethod]
     public void TestResourceCoordination()
     {
-      var t = TemplateFactory.GetTemplate(this.settings, TemplateContext.Resource);
+      var t = TemplateFactory.GetTemplate( TemplateContext.Resource, settingsPackage:this.settings);
 
       var endpointMapper = new EndpointMapper(this.webApiSettings);
       var resourceCoordMapper = new ResourceCoordinationMapper(endpointMapper);
@@ -112,7 +112,7 @@ namespace Nord.Nganga.StEngine.Test
     [TestMethod]
     public void TestViewCoordination()
     {
-      var t = TemplateFactory.GetTemplate(this.settings, TemplateContext.View);
+      var t = TemplateFactory.GetTemplate( TemplateContext.View, settingsPackage:this.settings);
 
       var vcMapper = new ViewCoordinationMapper(this.webApiSettings);
 

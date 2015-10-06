@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using Nord.Nganga.Core;
@@ -101,9 +102,10 @@ namespace Nord.Nganga.WinApp
       if (!File.Exists(Path.Combine(this.directorySelector1.SelectedPath, this.AssemblyOptionsModel.CsProjectName)))
       {
         MessageBox.Show(
-          "The project " + this.AssemblyOptionsModel.CsProjectName + " was not found in " +
-          this.directorySelector1.SelectedPath + ".  Please verify this is the correct path?",
-          "Verify Directory Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+          $"The project {this.AssemblyOptionsModel.CsProjectName} was not found in {this.directorySelector1.SelectedPath}.  Please verify this is the correct path?",
+          @"Verify Directory Selection",
+          MessageBoxButtons.OK,
+          MessageBoxIcon.Warning);
       }
     }
 
@@ -183,6 +185,21 @@ namespace Nord.Nganga.WinApp
             : (new GenerationCoordinator(wasp, fileSettings, modelVisitor)).CoordinateUiGeneration(controllerType,
               this.directorySelector1.SelectedPath)
         };
+
+        if (coordinationResult.Any(cr => cr.ControllerTemplateRegression))
+        {
+          this.logHandler?.Invoke($"Controller template regression detected!");
+        }
+
+        if (coordinationResult.Any(cr => cr.ResourceTemplateRegression))
+        {
+          this.logHandler?.Invoke($"Resource template regression detected!");
+        }
+
+        if (coordinationResult.Any(cr => cr.ViewTemplateRegression))
+        {
+          this.logHandler?.Invoke($"View template regression detected!");
+        }
 
         this.resultVisitor(coordinationResult);
       }

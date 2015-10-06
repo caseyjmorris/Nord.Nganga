@@ -27,7 +27,7 @@ namespace Nord.Nganga.Fs.Coordination
 
     public string GenerateController(Type controllerType)
     {
-      TemplateFactory.AssertTemplateMinimumVersions(this.pathSettings, controllerType, TemplateContext.Controller);
+      TemplateFactory.AssertTemplateMinimumVersions(controllerType, TemplateContext.Controller, this.pathSettings);
       var endpointMapper = new EndpointMapper(this.webApiSettings);
       var controllerCoordinatedInfoMapper = new ControllerCoordinationMapper(
         endpointMapper,
@@ -40,7 +40,7 @@ namespace Nord.Nganga.Fs.Coordination
 
     public string GenerateResource(Type controllerType)
     {
-      TemplateFactory.AssertTemplateMinimumVersions(this.pathSettings, controllerType, TemplateContext.Resource);
+      TemplateFactory.AssertTemplateMinimumVersions( controllerType, TemplateContext.Resource, this.pathSettings);
       var endpointMapper = new EndpointMapper(this.webApiSettings);
       var resourceCoordMapper = new ResourceCoordinationMapper(endpointMapper);
       var model = resourceCoordMapper.GetResourceCoordinationInformationViewModel(controllerType);
@@ -50,7 +50,7 @@ namespace Nord.Nganga.Fs.Coordination
 
     public string GenerateView(Type controllerType)
     {
-      TemplateFactory.AssertTemplateMinimumVersions(this.pathSettings, controllerType, TemplateContext.View);
+      TemplateFactory.AssertTemplateMinimumVersions( controllerType, TemplateContext.View, this.pathSettings);
       var vcMapper = new ViewCoordinationMapper(this.webApiSettings);
       var model = vcMapper.GetViewCoordinatedInformationCollection(controllerType);
       this.modelVisitor?.Invoke(model);
@@ -62,7 +62,7 @@ namespace Nord.Nganga.Fs.Coordination
     {
       var body = this.GetBody(templateContext, model);
       var header = this.GetHeader(templateContext, controllerType, body);
-      var masterTemplate = TemplateFactory.GetTemplate(this.pathSettings, TemplateContext.Master, "file");
+      var masterTemplate = TemplateFactory.GetTemplate(TemplateContext.Master, "file", this.pathSettings);
       masterTemplate.Add("header", header);
       masterTemplate.Add("body", body);
       var source = masterTemplate.Resolve();
@@ -88,7 +88,7 @@ namespace Nord.Nganga.Fs.Coordination
 
     private string GetBody(TemplateContext templateContext, object model)
     {
-      var template = TemplateFactory.GetTemplate(this.pathSettings, templateContext);
+      var template = TemplateFactory.GetTemplate(templateContext, settingsPackage:this.pathSettings);
       template.Add("model", model);
       var body = template.Resolve();
       return body;
@@ -98,10 +98,10 @@ namespace Nord.Nganga.Fs.Coordination
     {
       var a = controllerType.Assembly;
 
-      var template = TemplateFactory.GetTemplate(this.pathSettings, TemplateContext.Master, "header");
-      var openComment = TemplateFactory.GetTemplate(this.pathSettings, templateContext, "openComment").Render();
-      var closeComment = TemplateFactory.GetTemplate(this.pathSettings, templateContext, "closeComment").Render();
-      var bodyVersionTemplate = TemplateFactory.GetTemplate(this.pathSettings, templateContext, "templateVersion");
+      var template = TemplateFactory.GetTemplate( TemplateContext.Master, "header", this.pathSettings);
+      var openComment = TemplateFactory.GetTemplate( templateContext, "openComment", this.pathSettings).Render();
+      var closeComment = TemplateFactory.GetTemplate(templateContext, "closeComment", this.pathSettings).Render();
+      var bodyVersionTemplate = TemplateFactory.GetTemplate(templateContext, "templateVersion", this.pathSettings);
       template.Add("model", new
       {
         genDate = DateTime.Now.ToShortDateString(),
