@@ -51,6 +51,7 @@
     <Compile Include="Attributes\Html\FormHtmlAttributeAttribute.cs" />
     <Compile Include="Attributes\Html\SectionHtmlAttributeAttribute.cs" />
     <Compile Include="Attributes\Html\TextCasePreferencesAttribute.cs" />
+    <Compile Include="Attributes\MinimumTemplateVersionAttribute.cs" />
     <Compile Include="Attributes\ProjectStructureAttribute.cs" />
     <Compile Include="Attributes\ViewModels\CapAttribute.cs" />
     <Compile Include="Attributes\ViewModels\SubordinateItemActionAttribute.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="CasingOption.cs" />
     <Compile Include="CasingOptionContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TemplateContext.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

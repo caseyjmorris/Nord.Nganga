@@ -1885,6 +1885,10 @@
       <Project>{d77415e5-25a4-4ceb-8e08-a2d7b82eb1a9}</Project>
       <Name>Nord.Nganga.Annotations</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Nord.Nganga.DataTypes\Nord.Nganga.DataTypes.csproj">
+      <Project>{DB2C0BA3-C238-4A77-A5C8-D4EF8EED3C25}</Project>
+      <Name>Nord.Nganga.DataTypes</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

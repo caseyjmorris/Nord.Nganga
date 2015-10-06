@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using Antlr4.StringTemplate;
+using Nord.Nganga.Annotations;
 using Nord.Nganga.Core.Text;
 using Nord.Nganga.Fs.Coordination;
 using Nord.Nganga.Models.Configuration;
@@ -11,18 +12,18 @@ namespace Nord.Nganga.Fs
 {
   public static class SourceParser
   {
-    public static GeneratorParseResult ParseFile(TemplateFactory.Context context, string source)
+    public static GeneratorParseResult ParseFile(TemplateContext templateContext, string source)
     {
       var pathSettings = ConfigurationFactory.GetConfiguration<SystemPathSettingsPackage>();
 
-      var openComment = TemplateFactory.GetTemplate(pathSettings, context, "openComment").Render();
-      var closeComment = TemplateFactory.GetTemplate(pathSettings, context, "closeComment").Render();
+      var openComment = TemplateFactory.GetTemplate(pathSettings, templateContext, "openComment").Render();
+      var closeComment = TemplateFactory.GetTemplate(pathSettings, templateContext, "closeComment").Render();
 
-      var hs = TemplateFactory.GetTemplate(pathSettings, TemplateFactory.Context.Master, "headerStart");
+      var hs = TemplateFactory.GetTemplate(pathSettings, TemplateContext.Master, "headerStart");
       hs.Add("model", new {openComment = string.Empty, closeComment = string.Empty});
       var headerStart = hs.Resolve(); // get the HEADER START text WITHOUT open or close tokens
 
-      var he = TemplateFactory.GetTemplate(pathSettings, TemplateFactory.Context.Master, "headerEnd");
+      var he = TemplateFactory.GetTemplate(pathSettings, TemplateContext.Master, "headerEnd");
       he.Add("model", new {openComment = string.Empty, closeComment = string.Empty});
       var headerEnd = he.Resolve(); // get the HEADER END text WITHOUT open or close tokens
 
@@ -82,7 +83,7 @@ namespace Nord.Nganga.Fs
       var result = new GeneratorParseResult
       {
         Success = true,
-        Context = context,
+        TemplateContext = templateContext,
         Input = source,
         Header = header,
         Body = body,

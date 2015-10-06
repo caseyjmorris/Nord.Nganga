@@ -66,6 +66,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nord.Nganga.Annotations\Nord.Nganga.Annotations.csproj">
+      <Project>{d77415e5-25a4-4ceb-8e08-a2d7b82eb1a9}</Project>
+      <Name>Nord.Nganga.Annotations</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nord.Nganga.Core\Nord.Nganga.Core.csproj">
       <Project>{d57b30bf-6e21-4c47-a06c-2155f6c2c8ca}</Project>
       <Name>Nord.Nganga.Core</Name>

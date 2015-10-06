@@ -1,12 +1,6 @@
 ﻿using System;
-using System.CodeDom;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.RegularExpressions;
-using Antlr4.StringTemplate;
+using Nord.Nganga.Annotations;
 using Nord.Nganga.Core.Text;
 using Nord.Nganga.Mappers;
 using Nord.Nganga.Mappers.Controllers;
@@ -33,6 +27,7 @@ namespace Nord.Nganga.Fs.Coordination
 
     public string GenerateController(Type controllerType)
     {
+      TemplateFactory.AssertTemplateMinimumVersions(this.pathSettings, controllerType, TemplateContext.Controller);
       var endpointMapper = new EndpointMapper(this.webApiSettings);
       var controllerCoordinatedInfoMapper = new ControllerCoordinationMapper(
         endpointMapper,
@@ -40,45 +35,47 @@ namespace Nord.Nganga.Fs.Coordination
       var model = controllerCoordinatedInfoMapper.GetControllerCoordinatedInformationViewModel(controllerType);
       this.modelVisitor?.Invoke(model);
 
-      return this.ProcessModel(controllerType, TemplateFactory.Context.Controller, model);
+      return this.ProcessModel(controllerType, TemplateContext.Controller, model);
     }
 
     public string GenerateResource(Type controllerType)
     {
+      TemplateFactory.AssertTemplateMinimumVersions(this.pathSettings, controllerType, TemplateContext.Resource);
       var endpointMapper = new EndpointMapper(this.webApiSettings);
       var resourceCoordMapper = new ResourceCoordinationMapper(endpointMapper);
       var model = resourceCoordMapper.GetResourceCoordinationInformationViewModel(controllerType);
       this.modelVisitor?.Invoke(model);
-      return this.ProcessModel(controllerType, TemplateFactory.Context.Resource, model);
+      return this.ProcessModel(controllerType, TemplateContext.Resource, model);
     }
 
     public string GenerateView(Type controllerType)
     {
+      TemplateFactory.AssertTemplateMinimumVersions(this.pathSettings, controllerType, TemplateContext.View);
       var vcMapper = new ViewCoordinationMapper(this.webApiSettings);
       var model = vcMapper.GetViewCoordinatedInformationCollection(controllerType);
       this.modelVisitor?.Invoke(model);
-      return this.ProcessModel(controllerType, TemplateFactory.Context.View, model);
+      return this.ProcessModel(controllerType, TemplateContext.View, model);
     }
 
 
-    private string ProcessModel(Type controllerType, TemplateFactory.Context context, object model)
+    private string ProcessModel(Type controllerType, TemplateContext templateContext, object model)
     {
-      var body = this.GetBody(context, model);
-      var header = this.GetHeader(context, controllerType, body);
-      var masterTemplate = TemplateFactory.GetTemplate(this.pathSettings, TemplateFactory.Context.Master, "file");
+      var body = this.GetBody(templateContext, model);
+      var header = this.GetHeader(templateContext, controllerType, body);
+      var masterTemplate = TemplateFactory.GetTemplate(this.pathSettings, TemplateContext.Master, "file");
       masterTemplate.Add("header", header);
       masterTemplate.Add("body", body);
       var source = masterTemplate.Resolve();
-      if (!this.Validate(source, body, context))
+      if (!this.Validate(source, body, templateContext))
       {
-        throw new Exception($"Failed to validate generated {context} source for {controllerType.Name}.");
+        throw new Exception($"Failed to validate generated {templateContext} source for {controllerType.Name}.");
       }
       return source;
     }
 
-    private bool Validate(string source, string body, TemplateFactory.Context context)
+    private bool Validate(string source, string body, TemplateContext templateContext)
     {
-      var pr = SourceParser.ParseFile(context, source);
+      var pr = SourceParser.ParseFile(templateContext, source);
       if (!pr.Success) 
       {
         return false;
@@ -89,28 +86,28 @@ namespace Nord.Nganga.Fs.Coordination
       return isValid;
     }
 
-    private string GetBody(TemplateFactory.Context context, object model)
+    private string GetBody(TemplateContext templateContext, object model)
     {
-      var template = TemplateFactory.GetTemplate(this.pathSettings, context);
+      var template = TemplateFactory.GetTemplate(this.pathSettings, templateContext);
       template.Add("model", model);
       var body = template.Resolve();
       return body;
     }
 
-    private string GetHeader(TemplateFactory.Context context, Type controllerType, string source)
+    private string GetHeader(TemplateContext templateContext, Type controllerType, string source)
     {
       var a = controllerType.Assembly;
 
-      var template = TemplateFactory.GetTemplate(this.pathSettings, TemplateFactory.Context.Master, "header");
-      var openComment = TemplateFactory.GetTemplate(this.pathSettings, context, "openComment").Render();
-      var closeComment = TemplateFactory.GetTemplate(this.pathSettings, context, "closeComment").Render();
-      var bodyVersionTemplate = TemplateFactory.GetTemplate(this.pathSettings, context, "templateVersion");
+      var template = TemplateFactory.GetTemplate(this.pathSettings, TemplateContext.Master, "header");
+      var openComment = TemplateFactory.GetTemplate(this.pathSettings, templateContext, "openComment").Render();
+      var closeComment = TemplateFactory.GetTemplate(this.pathSettings, templateContext, "closeComment").Render();
+      var bodyVersionTemplate = TemplateFactory.GetTemplate(this.pathSettings, templateContext, "templateVersion");
       template.Add("model", new
       {
         genDate = DateTime.Now.ToShortDateString(),
         genTime = DateTime.Now.ToShortTimeString(),
         bodyTemplateVersion = bodyVersionTemplate.Render(),
-        context = context.ToString(),
+        context = templateContext.ToString(),
         controllerTypeName = controllerType.FullName,
         templatesDirectory = this.pathSettings.TemplatesDirectory,
         md5Checksum = source.CalculateMd5Hash(),

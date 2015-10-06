@@ -57,6 +57,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nord.Nganga.Annotations\Nord.Nganga.Annotations.csproj">
+      <Project>{d77415e5-25a4-4ceb-8e08-a2d7b82eb1a9}</Project>
+      <Name>Nord.Nganga.Annotations</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nord.Nganga.ViewModels\Nord.Nganga.Models.csproj">
       <Project>{7ccea467-e8b3-4c22-8420-cf1851c96824}</Project>
       <Name>Nord.Nganga.Models</Name>

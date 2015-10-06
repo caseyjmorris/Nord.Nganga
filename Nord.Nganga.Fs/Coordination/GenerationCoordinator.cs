@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Nord.Nganga.Annotations;
 using Nord.Nganga.Core;
 using Nord.Nganga.Core.Reflection;
 using Nord.Nganga.Fs.Naming;
@@ -134,21 +135,21 @@ namespace Nord.Nganga.Fs.Coordination
       {
         Controller =
           new GenerationResult(
-            s => SourceParser.ParseFile(TemplateFactory.Context.Controller, s),
+            s => SourceParser.ParseFile(TemplateContext.Controller, s),
             () => this.sourceGenerator.GenerateController(controllerType),
             () => this.nameSuggester.SuggestControllerFileName(controllerType),
             vsProjectPath,
             assemblyOps.NgControllersPath),
         Resource =
           new GenerationResult(
-            s => SourceParser.ParseFile(TemplateFactory.Context.Resource, s),
+            s => SourceParser.ParseFile(TemplateContext.Resource, s),
             () => this.sourceGenerator.GenerateResource(controllerType),
             () => this.nameSuggester.SuggestResourceFileName(controllerType),
             vsProjectPath,
             assemblyOps.NgResourcesPath),
         View =
           new GenerationResult(
-            s => SourceParser.ParseFile(TemplateFactory.Context.View, s),
+            s => SourceParser.ParseFile(TemplateContext.View, s),
             () => this.sourceGenerator.GenerateView(controllerType),
             () => this.nameSuggester.SuggestViewFileName(controllerType),
             vsProjectPath,
@@ -169,7 +170,7 @@ namespace Nord.Nganga.Fs.Coordination
       {
         Resource =
           new GenerationResult(
-            s => SourceParser.ParseFile(TemplateFactory.Context.Resource, s),
+            s => SourceParser.ParseFile(TemplateContext.Resource, s),
             () => this.sourceGenerator.GenerateResource(controllerType),
             () => this.nameSuggester.SuggestResourceFileName(controllerType),
             vsProjectPath,

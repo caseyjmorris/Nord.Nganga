@@ -23,6 +23,20 @@ namespace Nord.Nganga.StEngine.Test
     private readonly WebApiSettingsPackage webApiSettings =
       ConfigurationFactory.GetConfiguration<WebApiSettingsPackage>();
 
+          [TestMethod]
+    public void TestVersionCompareMethod()
+          {
+            var v1 = "1.0.0";
+            var v2 = "1.1.0";
+            
+      Console.WriteLine(TemplateFactory.CompareVersionStrings(v1, v2));
+      Console.WriteLine(TemplateFactory.CompareVersionStrings(v2, v1));
+          Console.WriteLine(TemplateFactory.CompareVersionStrings(v1, v1));
+
+    }
+
+
+
     [TestMethod]
     public void TestAssyOptions()
     {
@@ -48,7 +62,7 @@ namespace Nord.Nganga.StEngine.Test
     [TestMethod]
     public void TestControllerGeneration()
     {
-      var t = TemplateFactory.GetTemplate(this.settings, TemplateFactory.Context.Controller);
+      var t = TemplateFactory.GetTemplate(this.settings, TemplateContext.Controller);
 
       var endpointMapper = new EndpointMapper(this.webApiSettings);
       var controllerCoordinatedInfoMapper = new ControllerCoordinationMapper(endpointMapper,
@@ -72,7 +86,7 @@ namespace Nord.Nganga.StEngine.Test
     [TestMethod]
     public void TestResourceCoordination()
     {
-      var t = TemplateFactory.GetTemplate(this.settings, TemplateFactory.Context.Resource);
+      var t = TemplateFactory.GetTemplate(this.settings, TemplateContext.Resource);
 
       var endpointMapper = new EndpointMapper(this.webApiSettings);
       var resourceCoordMapper = new ResourceCoordinationMapper(endpointMapper);
@@ -98,7 +112,7 @@ namespace Nord.Nganga.StEngine.Test
     [TestMethod]
     public void TestViewCoordination()
     {
-      var t = TemplateFactory.GetTemplate(this.settings, TemplateFactory.Context.View);
+      var t = TemplateFactory.GetTemplate(this.settings, TemplateContext.View);
 
       var vcMapper = new ViewCoordinationMapper(this.webApiSettings);
 
