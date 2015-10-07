@@ -24,7 +24,7 @@ $currentPath = (pwd).Path
 $nuspecXml.Save($currentPath + "\$($pkgName).nuspec")
 
 msbuild $($pkgName).csproj /target:Rebuild /property:Configuration=Release
-nuget pack $($pkgName).csproj -Build -Symbols -Prop Configuration=Release -OutputDirectory .\nuget-packages
+nuget pack .\$($pkgName).csproj -Build -Symbols -Prop Configuration=Release -OutputDirectory .\nuget-packages
 $recentPackages = ls .\nuget-packages\*.nupkg | Where-Object {[DateTime]::Now.Subtract($_.LastWriteTime).TotalMinutes -le 10}
 foreach ($recentPackage in $recentPackages)
 {
