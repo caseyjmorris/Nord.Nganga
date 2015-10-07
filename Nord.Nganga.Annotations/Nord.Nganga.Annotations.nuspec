@@ -8,11 +8,11 @@
     <owners>National Organization for Rare Diseases</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Annotations needed for an Nganga project.</description>
-    <releaseNotes>27a2cd9 debugging script
+    <releaseNotes>d3838a5 debugging script
+c99d986 Published latest version to nuget package
+27a2cd9 debugging script
 8cf0cf4 Published latest version to nuget package
 ca5c856 debugging script
-00cf20d Published latest version to nuget package
-b779ea0 debugging script
 </releaseNotes>
     <copyright>Copyright 2015</copyright>
   </metadata>
