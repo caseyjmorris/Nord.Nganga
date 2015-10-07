@@ -8,11 +8,11 @@
     <owners>National Organization for Rare Diseases</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Annotations needed for an Nganga project.</description>
-    <releaseNotes>5c4df14 Published latest version to nuget package
+    <releaseNotes>43bf138 Published latest version to nuget package
+5c4df14 Published latest version to nuget package
 c4b840c updated assembly version, added missing files to project.
 fe881b6 Added automatic template regression detection.  The template versions are parsed out of the headers of existing generated files.  These template versions are compared against the current templates in use.
 c6d7996 added MinimumTemplateVersion assy attribute.  see test consumer for example use.
-d402495 added support for view-only on nord-date fields
 </releaseNotes>
     <copyright>Copyright 2015</copyright>
   </metadata>
