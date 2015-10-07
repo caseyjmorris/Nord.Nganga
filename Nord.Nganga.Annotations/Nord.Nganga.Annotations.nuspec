@@ -8,11 +8,11 @@
     <owners>National Organization for Rare Diseases</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Annotations needed for an Nganga project.</description>
-    <releaseNotes>7f3a513 Bumped version
-eab9e5c #565 - added HtmlFormAttributeAttribute to nGanga.  See test consumer for usage/example.
-17c0546 Respect DoNotShowAttribute on collections.
-87adc01 Published latest version to nuget package
-eeaf05d Encode value
+    <releaseNotes>c4b840c updated assembly version, added missing files to project.
+fe881b6 Added automatic template regression detection.  The template versions are parsed out of the headers of existing generated files.  These template versions are compared against the current templates in use.
+c6d7996 added MinimumTemplateVersion assy attribute.  see test consumer for example use.
+d402495 added support for view-only on nord-date fields
+0a2c579 Merge branch 'master' of https://github.com/NationalOrganizationForRareDisorders/Nord.Nganga.git
 </releaseNotes>
     <copyright>Copyright 2015</copyright>
   </metadata>
