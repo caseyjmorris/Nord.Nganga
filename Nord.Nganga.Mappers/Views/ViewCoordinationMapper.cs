@@ -24,6 +24,8 @@ namespace Nord.Nganga.Mappers.Views
 
     private Type httpGetAttribute;
 
+    private Type httpPostAttribute;
+
     public ViewCoordinationMapper(
       ViewModelMapper viewModelMapper,
       EndpointFilter endpointFilter,
@@ -52,6 +54,9 @@ namespace Nord.Nganga.Mappers.Views
     {
       this.httpGetAttribute = DependentTypeResolver.GetTypeByName(controller.Assembly,
         this.webApiSettings.HttpGetAttributeName);
+
+      this.httpPostAttribute = DependentTypeResolver.GetTypeByName(controller.Assembly,
+        this.webApiSettings.HttpPostAttributeName);
 
       this.viewModelMapper.AssemblyOptions = new AssemblyOptionsModel(controller);
 
@@ -104,7 +109,7 @@ namespace Nord.Nganga.Mappers.Views
       return coord;
     }
 
-        private Dictionary<string, string> GetNgAttributesFromControllerType(Type controllerType,
+    private Dictionary<string, string> GetNgAttributesFromControllerType(Type controllerType,
       ViewModelViewModel vmVm)
     {
       if (controllerType == null)
@@ -151,11 +156,21 @@ namespace Nord.Nganga.Mappers.Views
 
       var returnTypeName = $"{vmVm.Name.Pascalize()}ViewModel";
 
-      var methods = controllerType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+      Func<Type, bool> matchesReturnType =
+        t => t.Name == returnTypeName || (t.IsGenericType && t.GetGenericArguments()[0].Name == returnTypeName);
+
+      var getMethods = controllerType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
         .Where(m => Attribute.IsDefined(m, this.httpGetAttribute))
-        .Where(m => m.ReturnType.Name == returnTypeName ||
-                    (m.ReturnType.IsGenericType && m.ReturnType.GetGenericArguments()[0].Name == returnTypeName))
+        .Where(m => matchesReturnType(m.ReturnType))
         .Where(m => m.HasAttribute<InjectHtmlInViewAttribute>());
+
+      var postMethods = controllerType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+        .Where(m => Attribute.IsDefined(m, this.httpPostAttribute))
+        .Where(m => m.GetParameters().Any())
+        .Where(m => matchesReturnType(m.GetParameters()[0].ParameterType))
+        .Where(m => m.HasAttribute<InjectHtmlInViewAttribute>());
+
+      var methods = getMethods.Concat(postMethods);
 
       var attrs = methods.SelectMany(m => m.GetCustomAttributes(inherit: true).OfType<InjectHtmlInViewAttribute>());
 
