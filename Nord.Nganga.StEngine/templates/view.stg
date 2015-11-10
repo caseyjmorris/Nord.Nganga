@@ -1,7 +1,7 @@
 ﻿delimiters "%","%"
 
 templateVersion() ::=<%
-1.1.4
+1.1.5
 %>
 
 openComment() ::= <%
@@ -308,7 +308,7 @@ step="%model.Member.Step%"
 %caps(model)% 
 
 %if(model.Member.IsRequired)%
-required
+required 
 %endif%
 
 %if(model.Member.IsViewOnly)%
