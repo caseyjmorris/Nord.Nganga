@@ -1,7 +1,7 @@
 ﻿delimiters "%","%"
 
 templateVersion() ::=<%
-1.1.5
+1.1.6
 %>
 
 openComment() ::= <%
@@ -157,7 +157,8 @@ required
 view-only 
 %endif%
 
-%! The directive has support for changing the yes and no labels to something else !%
+yes-label-text="%model.Member.YesLabelText%" 
+no-label-text="%model.Member.NoLabelText%"
 ></nord-bool-control>
 %>
 

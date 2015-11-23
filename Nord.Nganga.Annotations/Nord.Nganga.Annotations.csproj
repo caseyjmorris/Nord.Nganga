@@ -53,6 +53,7 @@
     <Compile Include="Attributes\Html\TextCasePreferencesAttribute.cs" />
     <Compile Include="Attributes\MinimumTemplateVersionAttribute.cs" />
     <Compile Include="Attributes\ProjectStructureAttribute.cs" />
+    <Compile Include="Attributes\ViewModels\BoolLabelAttribute.cs" />
     <Compile Include="Attributes\ViewModels\CapAttribute.cs" />
     <Compile Include="Attributes\ViewModels\SubordinateItemActionAttribute.cs" />
     <Compile Include="Attributes\ViewModels\LedgerAttribute.cs" />

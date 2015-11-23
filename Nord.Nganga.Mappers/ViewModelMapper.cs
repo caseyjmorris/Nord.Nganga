@@ -184,6 +184,8 @@ namespace Nord.Nganga.Mappers
         StartCap = info.GetAttributePropertyValueOrDefault<CapAttribute, string>(a => a.StartCap),
         EndCap = info.GetAttributePropertyValueOrDefault<CapAttribute, string>(a => a.EndCap),
         Step = this.GetStep(info),
+        YesLabelText = info.GetAttributePropertyValueOrDefault<BoolLabelAttribute, string>(a => a.YesLabelText) ?? "Yes",
+        NoLabelText = info.GetAttributePropertyValueOrDefault<BoolLabelAttribute, string>(a => a.NoLabelText) ?? "No",
       };
 
       fieldModel.ControlType =
