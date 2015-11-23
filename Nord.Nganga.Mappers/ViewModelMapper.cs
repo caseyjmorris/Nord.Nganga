@@ -138,6 +138,26 @@ namespace Nord.Nganga.Mappers
       return "any";
     }
 
+    private string GetDefaultDisplayName(PropertyInfo info)
+    {
+      var name = info.Name;
+      if (name.Length > 2 && name.EndsWith("Id"))
+      {
+        name = name.Substring(0, name.Length - 2);
+      }
+
+      var convention = CasingEnumMap.Instance[this.AssemblyOptions.GetOption(CasingOptionContext.Field)];
+
+      name = name.Humanize(convention);
+
+      if (info.PropertyType.GetNonNullableType() == typeof (bool))
+      {
+        name += "?";
+      }
+
+      return name;
+    }
+
     private ViewModelViewModel.FieldViewModel GetFieldViewModel(PropertyInfo info, bool isCollection)
     {
       var isSelectCommon = info.HasAttribute<SelectCommonAttribute>();
@@ -149,8 +169,7 @@ namespace Nord.Nganga.Mappers
         DisplayName =
           info.HasAttribute<DisplayAttribute>()
             ? info.GetAttribute<DisplayAttribute>().Name
-            : info.Name.Humanize(CasingEnumMap.Instance[this.AssemblyOptions.GetOption(CasingOptionContext.Field)]) +
-              (info.PropertyType.GetNonNullableType() == typeof (bool) ? "?" : String.Empty),
+            : this.GetDefaultDisplayName(info),
         FieldName = info.Name.Camelize(),
         IsHidden = info.HasAttribute<DoNotShowAttribute>(),
         IsRequired = info.HasAttribute<RequiredAttribute>(),
