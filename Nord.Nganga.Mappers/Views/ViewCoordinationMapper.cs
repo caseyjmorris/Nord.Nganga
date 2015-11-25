@@ -5,6 +5,7 @@ using System.Reflection;
 using Humanizer;
 using Nord.Nganga.Annotations;
 using Nord.Nganga.Annotations.Attributes.Html;
+using Nord.Nganga.Annotations.Attributes.ViewModels;
 using Nord.Nganga.Core.Reflection;
 using Nord.Nganga.Models;
 using Nord.Nganga.Models.Configuration;
@@ -92,7 +93,11 @@ namespace Nord.Nganga.Mappers.Views
       var coord = new ViewCoordinatedInformationViewModel
       {
         ViewModel = vmVm,
+        Glyphicon =
+          vmVm.UnderlyingType.GetAttributePropertyValueOrDefault<SaveButtonTextAttribute, string>(a => a.Glyphicon) ??
+          "glyphicon-floppy-save",
         SaveButtonText =
+          vmVm.UnderlyingType.GetAttributePropertyValueOrDefault<SaveButtonTextAttribute, string>(a => a.Text) ??
           ("Save changes to " + vmVm.Name.Humanize(LetterCasing.LowerCase)).Humanize(
             CasingEnumMap.Instance[this.viewModelMapper.AssemblyOptions.GetOption(CasingOptionContext.Button)]),
         Sections = this.SplitSections(vmVm, depthMultipler),

@@ -24,6 +24,8 @@ namespace Nord.Nganga.Models.ViewModels
 
     public string SaveButtonText { get; set; }
 
+    public string Glyphicon { get; set; }
+
     public string NgFormName { get; set; }
 
     public IDictionary<string, string> NgFormAttributes { get; set; }

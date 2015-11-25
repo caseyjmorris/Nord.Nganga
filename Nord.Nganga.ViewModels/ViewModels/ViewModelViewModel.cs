@@ -6,6 +6,8 @@ namespace Nord.Nganga.Models.ViewModels
 {
   public class ViewModelViewModel
   {
+    public Type UnderlyingType { get; set; }
+
     public string Name { get; set; }
     public bool IsViewOnly { get; set; }
     public IList<MemberWrapper> Members { get; set; }
