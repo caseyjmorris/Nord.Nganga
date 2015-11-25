@@ -101,6 +101,7 @@ namespace Nord.Nganga.Models.ViewModels
       public string EndCap { get; set; }
       public object Step { get; set; } //1, .01, "any" are the most likely values here
       public Type DataType { get; set; }
+      public bool IsExcludedFromComplexCollectionEditorTable { get; set; }
 
       public string YesLabelText { get; set; } = "Yes";
 

@@ -186,6 +186,8 @@ namespace Nord.Nganga.Mappers
         Step = this.GetStep(info),
         YesLabelText = info.GetAttributePropertyValueOrDefault<BoolLabelAttribute, string>(a => a.YesLabelText) ?? "Yes",
         NoLabelText = info.GetAttributePropertyValueOrDefault<BoolLabelAttribute, string>(a => a.NoLabelText) ?? "No",
+        IsExcludedFromComplexCollectionEditorTable =
+          info.HasAttribute<ExcludeFromComplexCollectionEditorTableAttribute>(),
       };
 
       fieldModel.ControlType =
@@ -258,7 +260,8 @@ namespace Nord.Nganga.Mappers
 
     private string GetTableVisibleFieldsExpression(ViewModelViewModel.SubordinateViewModelWrapper wrapper)
     {
-      var fields = wrapper.Model.Scalars.Where(s => !s.IsHidden);
+      var fields =
+        wrapper.Model.Scalars.Where(s => !s.IsHidden).Where(s => !s.IsExcludedFromComplexCollectionEditorTable);
 
       var fieldsDesc =
         fields.Select(

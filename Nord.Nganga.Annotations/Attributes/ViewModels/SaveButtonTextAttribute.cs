@@ -5,6 +5,7 @@ namespace Nord.Nganga.Annotations.Attributes.ViewModels
   /// <summary>
   /// Replaces the default "Save changes to modelname" text with custom save text
   /// </summary>
+  [AttributeUsage(AttributeTargets.Class)]
   public class SaveButtonTextAttribute : Attribute
   {
     /// <summary>
