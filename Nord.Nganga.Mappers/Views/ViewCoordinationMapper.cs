@@ -36,6 +36,7 @@ namespace Nord.Nganga.Mappers.Views
       this.viewModelMapper = viewModelMapper;
       this.endpointFilter = endpointFilter;
       this.endpointMapper = endpointMapper;
+      this.webApiSettings = settings;
     }
 
     public ViewCoordinationMapper(WebApiSettingsPackage settings)
