@@ -8,11 +8,11 @@
     <owners>National Organization for Rare Diseases</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Annotations needed for an Nganga project.</description>
-    <releaseNotes>2fc024c Force the newe compiler in build script to use C# 6.0 features
+    <releaseNotes>a9bfa88 Added ability to skip properties for table
+3c87ec3 added spacing to required attr
+4b2f3d9 Published latest version to nuget package
+2fc024c Force the newe compiler in build script to use C# 6.0 features
 32a5094 Bumped version number
-e0af0c4 Corrected constructors
-60f75b7 Added ability to customize save button text (resolves #13)
-aa49efe Custom bool labels (resolves #12)
 </releaseNotes>
     <copyright>Copyright 2015</copyright>
   </metadata>
