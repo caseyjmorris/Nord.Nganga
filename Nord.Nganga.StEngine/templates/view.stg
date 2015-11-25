@@ -1,7 +1,7 @@
 ﻿delimiters "%","%"
 
 templateVersion() ::=<%
-1.1.7
+1.1.8
 %>
 
 openComment() ::= <%
@@ -150,7 +150,7 @@ boolControl(model, parentObjectName) ::= <%
 twelfths="%model.Width%" 
 field-label-text="%model.Member.DisplayName%" 
 %if(model.Member.IsRequired)%
-required
+required 
 %endif%
 
 %if(model.Member.IsViewOnly)%
