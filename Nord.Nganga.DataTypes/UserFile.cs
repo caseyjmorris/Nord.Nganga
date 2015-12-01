@@ -5,7 +5,7 @@ namespace Nord.Nganga.DataTypes
   /// <summary>
   /// Represents a file uploaded by a user
   /// </summary>
-  public class UserFileViewModel
+  public class UserFile
   {
     /// <summary>
     /// ID of file in database

@@ -27,6 +27,9 @@ namespace Nord.Nganga.Mappers
 
     private readonly ViewCoordinationMapper viewCoordinationMapper;
 
+    private static readonly HashSet<Type> BarredFromTables =
+      new HashSet<Type>(new[] {typeof(UserFileCollection)});
+
     private static readonly Dictionary<Type, string> ClientTypes =
       new Dictionary<Type, string>
       {
@@ -46,6 +49,7 @@ namespace Nord.Nganga.Mappers
         {typeof(DateTime), "date"},
         {typeof(DateTime?), "date"},
         {typeof(UserExpansibleSelectChoice), "selectcommon"},
+        {typeof(UserFileCollection), "userfilecollection"},
       };
 
 
@@ -61,6 +65,7 @@ namespace Nord.Nganga.Mappers
         typeof(string),
         typeof(DateTime), typeof(DateTime?),
         typeof(UserExpansibleSelectChoice),
+        typeof(UserFileCollection),
       });
 
     private static readonly ICollection<Type> Numerics = new HashSet<Type>(new[]
@@ -71,6 +76,8 @@ namespace Nord.Nganga.Mappers
       typeof(float), typeof(float?),
       typeof(double), typeof(double?),
     });
+
+    private readonly ICollection<string> usedUniqueIdentifiers = new HashSet<string>();
 
     #region type detectors
 
@@ -158,6 +165,38 @@ namespace Nord.Nganga.Mappers
       return name;
     }
 
+    private string GetUniqueIdentifier(PropertyInfo info)
+    {
+      var name = info.Name.Camelize();
+
+      if (!this.usedUniqueIdentifiers.Contains(name))
+      {
+        this.usedUniqueIdentifiers.Add(name);
+        return name;
+      }
+
+
+      var qualifiedName = info.DeclaringType == null ? name : info.DeclaringType.Name.Camelize() + info.Name;
+
+      if (!this.usedUniqueIdentifiers.Contains(qualifiedName))
+      {
+        this.usedUniqueIdentifiers.Add(qualifiedName);
+        return qualifiedName;
+      }
+
+      var i = 0;
+
+      while (this.usedUniqueIdentifiers.Contains(name))
+      {
+        name = qualifiedName + i;
+
+        i++;
+      }
+
+      this.usedUniqueIdentifiers.Add(name);
+      return name;
+    }
+
     private ViewModelViewModel.FieldViewModel GetFieldViewModel(PropertyInfo info, bool isCollection)
     {
       var isSelectCommon = info.HasAttribute<SelectCommonAttribute>();
@@ -165,6 +204,9 @@ namespace Nord.Nganga.Mappers
 
       var fieldModel = new ViewModelViewModel.FieldViewModel
       {
+        UniqueId = this.GetUniqueIdentifier(info),
+        DocumentTypeSourceProvider =
+          info.GetAttributePropertyValueOrDefault<DocumentTypeSourceProviderAttribute, string>(a => a.Expression),
         DataType = isCollection ? info.PropertyType.GetGenericArguments()[0] : info.PropertyType,
         DisplayName =
           info.HasAttribute<DisplayAttribute>()
@@ -175,7 +217,7 @@ namespace Nord.Nganga.Mappers
         IsRequired = info.HasAttribute<RequiredAttribute>(),
         IsViewOnly = info.HasAttribute<NotUserEditableAttribute>(),
         Section =
-          info.GetAttributePropertyValueOrDefault<UiSectionAttribute, string>(a => a.SectionName) ?? String.Empty,
+          info.GetAttributePropertyValueOrDefault<UiSectionAttribute, string>(a => a.SectionName) ?? string.Empty,
         SelectCommon = selectCommonAttribute,
         IsDefaultSort = info.HasAttribute<DefaultSortAttribute>(),
         InputMask = info.HasAttribute<InputMaskAttribute>() ? info.GetAttribute<InputMaskAttribute>().Mask : null,
@@ -200,7 +242,7 @@ namespace Nord.Nganga.Mappers
     }
 
     private IEnumerable<ViewModelViewModel.FieldViewModel> GetFieldViewModelCollection(IEnumerable<PropertyInfo> t,
-      Boolean isCollection)
+      bool isCollection)
     {
       var pfi = t.Select(p => this.GetFieldViewModel(p, isCollection));
       return pfi;
@@ -261,7 +303,10 @@ namespace Nord.Nganga.Mappers
     private string GetTableVisibleFieldsExpression(ViewModelViewModel.SubordinateViewModelWrapper wrapper)
     {
       var fields =
-        wrapper.Model.Scalars.Where(s => !s.IsHidden).Where(s => !s.IsExcludedFromComplexCollectionEditorTable);
+        wrapper.Model.Scalars
+          .Where(s => !s.IsHidden)
+          .Where(s => !s.IsExcludedFromComplexCollectionEditorTable)
+          .Where(s => !BarredFromTables.Contains(s.DataType));
 
       var fieldsDesc =
         fields.Select(
