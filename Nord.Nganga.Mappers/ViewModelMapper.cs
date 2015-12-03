@@ -434,8 +434,7 @@ namespace Nord.Nganga.Mappers
         return NgangaControlType.NumberControl;
       }
 
-      var msg = string.Format("Couldn't find control for type {0} (property {1} of {2})", underlyingType, info.Name,
-        info.DeclaringType);
+      var msg = $"Couldn't find control for type {underlyingType} (property {info.Name} of {info.DeclaringType})";
 
       throw new KeyNotFoundException(msg);
     }
@@ -449,7 +448,10 @@ namespace Nord.Nganga.Mappers
         return specified;
       }
 
-      if (controlType == NgangaControlType.MultipleComplexEditor)
+      if (controlType == NgangaControlType.MultipleComplexEditor ||
+          controlType == NgangaControlType.UserFileCollection ||
+          controlType == NgangaControlType.MultipleSimpleEditorForComplex ||
+          controlType == NgangaControlType.MultipleSimpleEditorForPrimitive)
       {
         return 12;
       }
