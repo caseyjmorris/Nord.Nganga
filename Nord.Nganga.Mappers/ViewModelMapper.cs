@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -77,7 +78,7 @@ namespace Nord.Nganga.Mappers
       typeof (double), typeof (double?),
     });
 
-    private readonly ICollection<string> usedUniqueIdentifiers = new HashSet<string>();
+    private readonly Dictionary<string, Type> uniquedIdentifierToTypeDictionary = new Dictionary<string, Type>();
 
     #region type detectors
 
@@ -171,31 +172,39 @@ namespace Nord.Nganga.Mappers
     {
       var name = info.Name.Camelize();
 
-      if (!this.usedUniqueIdentifiers.Contains(name))
+      Type owningType;
+
+      var nameFound = this.uniquedIdentifierToTypeDictionary.TryGetValue(name, out owningType);
+
+      if (!nameFound || owningType == info.DeclaringType)
       {
-        this.usedUniqueIdentifiers.Add(name);
+        this.uniquedIdentifierToTypeDictionary[name] = info.DeclaringType;
         return name;
       }
 
+      Debug.Assert(info.DeclaringType != null, "Declaring type is not null");
+      // ReSharper disable once PossibleNullReferenceException
+      var qualifiedName = info.DeclaringType.Name.Camelize() + info.Name;
 
-      var qualifiedName = info.DeclaringType == null ? name : info.DeclaringType.Name.Camelize() + info.Name;
+      nameFound = this.uniquedIdentifierToTypeDictionary.TryGetValue(qualifiedName, out owningType);
 
-      if (!this.usedUniqueIdentifiers.Contains(qualifiedName))
+      if (!nameFound || owningType == info.DeclaringType)
       {
-        this.usedUniqueIdentifiers.Add(qualifiedName);
+        this.uniquedIdentifierToTypeDictionary[qualifiedName] = info.DeclaringType;
         return qualifiedName;
       }
 
       var i = 0;
 
-      while (this.usedUniqueIdentifiers.Contains(name))
+      while (this.uniquedIdentifierToTypeDictionary.TryGetValue(name, out owningType) &&
+             owningType != info.DeclaringType)
       {
         name = qualifiedName + i;
 
         i++;
       }
 
-      this.usedUniqueIdentifiers.Add(name);
+      this.uniquedIdentifierToTypeDictionary[name] = owningType;
       return name;
     }
 
