@@ -33,7 +33,7 @@ injectHtml(model, key) ::= <%
 <!-- End injected HTML -->}; separator="\n"%
 %>
 
-injectFormAttributes(model) :: <%
+injectFormAttributes(model) ::= <%
   %model.NgFormAttributes.keys: {key| %injectFormAttribute(model, key, model.NgFormAttributes.(key) )%}; separator="\n"%
   %if(model.NgFormAttributes.("class"))%%else%class="user-edit-form form-horizontal"%endif%
 %>
@@ -131,6 +131,7 @@ controlTypeTemplateMap ::= [
     "NumberControl" : "numberControl",
     "TextControl": "textControl",
     "CommonSelectExpansible": "commonSelectExpansible",
+    "UserFileCollection" : "fileUploadCollection",
     default : "THROWANEXCEPTION"	
 ]
 
@@ -179,6 +180,22 @@ required
 %endif%
 >
 </nord-common-select>
+%>
+
+fileUploadCollection(model, parentObjectName) ::= <%
+<nord-file-upload-collection 
+parent-object="%parentObjectName%" 
+child-field-name="%model.Member.FieldName%" 
+field-label-text="%model.Member.DisplayName%" 
+
+%if(model.Member.DocumentTypeSourceProvider)%
+document-type-source="%model.Member.UniqueId%TypeSource" 
+%endif%
+
+%if(model.Member.Model.IsViewOnly)%
+view-only 
+%endif%
+></nord-file-upload-collection>
 %>
 
 commonSelectExpansible(model, parentObjectName) ::= <%

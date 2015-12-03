@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Nord.Nganga.Annotations.Attributes.ViewModels;
+using Nord.Nganga.DataTypes;
 
 namespace Nord.Nganga.TestConsumer.Models
 {

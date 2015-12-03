@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -27,61 +28,70 @@ namespace Nord.Nganga.Mappers
 
     private readonly ViewCoordinationMapper viewCoordinationMapper;
 
+    private static readonly HashSet<Type> BarredFromTables =
+      new HashSet<Type>(new[] {typeof (UserFileCollection)});
+
     private static readonly Dictionary<Type, string> ClientTypes =
       new Dictionary<Type, string>
       {
-        {typeof(bool), "bool"},
-        {typeof(bool?), "bool"},
-        {typeof(long), "number"},
-        {typeof(long?), "number"},
-        {typeof(int), "number"},
-        {typeof(int?), "number"},
-        {typeof(decimal), "number"},
-        {typeof(decimal?), "number"},
-        {typeof(float), "number"},
-        {typeof(float?), "number"},
-        {typeof(double), "number"},
-        {typeof(double?), "number"},
-        {typeof(string), "string"},
-        {typeof(DateTime), "date"},
-        {typeof(DateTime?), "date"},
-        {typeof(UserExpansibleSelectChoice), "selectcommon"},
+        {typeof (bool), "bool"},
+        {typeof (bool?), "bool"},
+        {typeof (long), "number"},
+        {typeof (long?), "number"},
+        {typeof (int), "number"},
+        {typeof (int?), "number"},
+        {typeof (decimal), "number"},
+        {typeof (decimal?), "number"},
+        {typeof (float), "number"},
+        {typeof (float?), "number"},
+        {typeof (double), "number"},
+        {typeof (double?), "number"},
+        {typeof (string), "string"},
+        {typeof (DateTime), "date"},
+        {typeof (DateTime?), "date"},
+        {typeof (UserExpansibleSelectChoice), "selectcommon"},
+        {typeof (UserFileCollection), "userfilecollection"},
       };
 
 
     private static readonly ICollection<Type> PrimitiveTypes =
       new HashSet<Type>(new[]
       {
-        typeof(bool), typeof(bool?),
-        typeof(long), typeof(long?),
-        typeof(int), typeof(int?),
-        typeof(decimal), typeof(decimal?),
-        typeof(float), typeof(float?),
-        typeof(double), typeof(double?),
-        typeof(string),
-        typeof(DateTime), typeof(DateTime?),
-        typeof(UserExpansibleSelectChoice),
+        typeof (bool), typeof (bool?),
+        typeof (long), typeof (long?),
+        typeof (int), typeof (int?),
+        typeof (decimal), typeof (decimal?),
+        typeof (float), typeof (float?),
+        typeof (double), typeof (double?),
+        typeof (string),
+        typeof (DateTime), typeof (DateTime?),
+        typeof (UserExpansibleSelectChoice),
+        typeof (UserFileCollection),
       });
 
     private static readonly ICollection<Type> Numerics = new HashSet<Type>(new[]
     {
-      typeof(long), typeof(long?),
-      typeof(int), typeof(int?),
-      typeof(decimal), typeof(decimal?),
-      typeof(float), typeof(float?),
-      typeof(double), typeof(double?),
+      typeof (long), typeof (long?),
+      typeof (int), typeof (int?),
+      typeof (decimal), typeof (decimal?),
+      typeof (float), typeof (float?),
+      typeof (double), typeof (double?),
     });
+
+    private readonly Dictionary<string, Type> uniquedIdentifierToTypeDictionary = new Dictionary<string, Type>();
 
     #region type detectors
 
     private static bool IsScalar(PropertyInfo info)
     {
-      return !typeof(IEnumerable).IsAssignableFrom(info.PropertyType) || info.PropertyType == typeof(string);
+      return !typeof (IEnumerable).IsAssignableFrom(info.PropertyType) || info.PropertyType == typeof (string) ||
+             info.PropertyType == typeof (UserFileCollection);
     }
 
     private static bool IsCollection(PropertyInfo info)
     {
-      return (typeof(IEnumerable).IsAssignableFrom(info.PropertyType) && info.PropertyType != typeof(string));
+      return (typeof (IEnumerable).IsAssignableFrom(info.PropertyType) && info.PropertyType != typeof (string)) &&
+             info.PropertyType != typeof (UserFileCollection);
     }
 
     private static bool IsComplexCollection(PropertyInfo info)
@@ -121,7 +131,7 @@ namespace Nord.Nganga.Mappers
 
       var numeric = Numerics.Contains(propType);
 
-      var isInt = numeric && propType == typeof(int) || propType == typeof(long);
+      var isInt = numeric && propType == typeof (int) || propType == typeof (long);
 
       if (!numeric)
       {
@@ -131,7 +141,7 @@ namespace Nord.Nganga.Mappers
       {
         return 1;
       }
-      if (propType == typeof(decimal))
+      if (propType == typeof (decimal))
       {
         return ".01";
       }
@@ -150,11 +160,51 @@ namespace Nord.Nganga.Mappers
 
       name = name.Humanize(convention);
 
-      if (info.PropertyType.GetNonNullableType() == typeof(bool))
+      if (info.PropertyType.GetNonNullableType() == typeof (bool))
       {
         name += "?";
       }
 
+      return name;
+    }
+
+    private string GetUniqueIdentifier(PropertyInfo info)
+    {
+      var name = info.Name.Camelize();
+
+      Type owningType;
+
+      var nameFound = this.uniquedIdentifierToTypeDictionary.TryGetValue(name, out owningType);
+
+      if (!nameFound || owningType == info.DeclaringType)
+      {
+        this.uniquedIdentifierToTypeDictionary[name] = info.DeclaringType;
+        return name;
+      }
+
+      Debug.Assert(info.DeclaringType != null, "Declaring type is not null");
+      // ReSharper disable once PossibleNullReferenceException
+      var qualifiedName = info.DeclaringType.Name.Camelize() + info.Name;
+
+      nameFound = this.uniquedIdentifierToTypeDictionary.TryGetValue(qualifiedName, out owningType);
+
+      if (!nameFound || owningType == info.DeclaringType)
+      {
+        this.uniquedIdentifierToTypeDictionary[qualifiedName] = info.DeclaringType;
+        return qualifiedName;
+      }
+
+      var i = 0;
+
+      while (this.uniquedIdentifierToTypeDictionary.TryGetValue(name, out owningType) &&
+             owningType != info.DeclaringType)
+      {
+        name = qualifiedName + i;
+
+        i++;
+      }
+
+      this.uniquedIdentifierToTypeDictionary[name] = owningType;
       return name;
     }
 
@@ -165,6 +215,9 @@ namespace Nord.Nganga.Mappers
 
       var fieldModel = new ViewModelViewModel.FieldViewModel
       {
+        UniqueId = this.GetUniqueIdentifier(info),
+        DocumentTypeSourceProvider =
+          info.GetAttributePropertyValueOrDefault<DocumentTypeSourceProviderAttribute, string>(a => a.Expression),
         DataType = isCollection ? info.PropertyType.GetGenericArguments()[0] : info.PropertyType,
         DisplayName =
           info.HasAttribute<DisplayAttribute>()
@@ -175,7 +228,7 @@ namespace Nord.Nganga.Mappers
         IsRequired = info.HasAttribute<RequiredAttribute>(),
         IsViewOnly = info.HasAttribute<NotUserEditableAttribute>(),
         Section =
-          info.GetAttributePropertyValueOrDefault<UiSectionAttribute, string>(a => a.SectionName) ?? String.Empty,
+          info.GetAttributePropertyValueOrDefault<UiSectionAttribute, string>(a => a.SectionName) ?? string.Empty,
         SelectCommon = selectCommonAttribute,
         IsDefaultSort = info.HasAttribute<DefaultSortAttribute>(),
         InputMask = info.HasAttribute<InputMaskAttribute>() ? info.GetAttribute<InputMaskAttribute>().Mask : null,
@@ -200,7 +253,7 @@ namespace Nord.Nganga.Mappers
     }
 
     private IEnumerable<ViewModelViewModel.FieldViewModel> GetFieldViewModelCollection(IEnumerable<PropertyInfo> t,
-      Boolean isCollection)
+      bool isCollection)
     {
       var pfi = t.Select(p => this.GetFieldViewModel(p, isCollection));
       return pfi;
@@ -210,7 +263,7 @@ namespace Nord.Nganga.Mappers
     {
       var hasEnumerableItemAction = info.HasAttribute<SubordinateItemActionAttribute>();
       var itemActionAttribute = hasEnumerableItemAction
-        ? info.GetCustomAttributes(typeof(SubordinateItemActionAttribute))
+        ? info.GetCustomAttributes(typeof (SubordinateItemActionAttribute))
           .Select(a => (SubordinateItemActionAttribute) a)
         : new SubordinateItemActionAttribute[0];
       var defaultObjectDef =
@@ -261,7 +314,10 @@ namespace Nord.Nganga.Mappers
     private string GetTableVisibleFieldsExpression(ViewModelViewModel.SubordinateViewModelWrapper wrapper)
     {
       var fields =
-        wrapper.Model.Scalars.Where(s => !s.IsHidden).Where(s => !s.IsExcludedFromComplexCollectionEditorTable);
+        wrapper.Model.Scalars
+          .Where(s => !s.IsHidden)
+          .Where(s => !s.IsExcludedFromComplexCollectionEditorTable)
+          .Where(s => !BarredFromTables.Contains(s.DataType));
 
       var fieldsDesc =
         fields.Select(
@@ -343,28 +399,33 @@ namespace Nord.Nganga.Mappers
         return NgangaControlType.MultipleSimpleEditorForComplex;
       }
 
-      if (info.HasAttribute<SelectCommonAttribute>() && info.PropertyType == typeof(UserExpansibleSelectChoice))
+      if (info.HasAttribute<SelectCommonAttribute>() && info.PropertyType == typeof (UserExpansibleSelectChoice))
       {
         return NgangaControlType.CommonSelectExpansible;
       }
 
-      if (info.HasAttribute<SelectCommonAttribute>() && info.PropertyType != typeof(UserExpansibleSelectChoice))
+      if (info.HasAttribute<SelectCommonAttribute>() && info.PropertyType != typeof (UserExpansibleSelectChoice))
       {
         return NgangaControlType.CommonSelect;
       }
 
       var underlyingType = info.PropertyType.GetNonNullableType();
 
-      if (underlyingType == typeof(string))
+      if (underlyingType == typeof (UserFileCollection))
+      {
+        return NgangaControlType.UserFileCollection;
+      }
+
+      if (underlyingType == typeof (string))
       {
         return NgangaControlType.TextControl;
       }
 
-      if (underlyingType == typeof(bool))
+      if (underlyingType == typeof (bool))
       {
         return NgangaControlType.BoolControl;
       }
-      if (underlyingType == typeof(DateTime))
+      if (underlyingType == typeof (DateTime))
       {
         return NgangaControlType.DateControl;
       }

@@ -18,5 +18,9 @@ namespace Nord.Nganga.TestConsumer.Models
     [SelectCommon("drugs")]
     [Display(Name = "Medications")]
     public IEnumerable<UserExpansibleSelectChoice> Drugs { get; set; }
+
+
+    [DocumentTypeSourceProvider("service.getDocumentTypes();")]
+    public UserFileCollection Attachments { get; set; }
   }
 }

@@ -56,6 +56,7 @@
     <Compile Include="Attributes\ViewModels\BoolLabelAttribute.cs" />
     <Compile Include="Attributes\ViewModels\CapAttribute.cs" />
     <Compile Include="Attributes\ViewModels\ExcludeFromComplexCollectionEditorTableAttribute.cs" />
+    <Compile Include="Attributes\ViewModels\DocumentTypeSourceProviderAttribute.cs" />
     <Compile Include="Attributes\ViewModels\SaveButtonTextAttribute.cs" />
     <Compile Include="Attributes\ViewModels\SubordinateItemActionAttribute.cs" />
     <Compile Include="Attributes\ViewModels\LedgerAttribute.cs" />

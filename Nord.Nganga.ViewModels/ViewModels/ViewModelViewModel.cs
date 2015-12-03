@@ -86,6 +86,8 @@ namespace Nord.Nganga.Models.ViewModels
 
     public class FieldViewModel : IMember
     {
+      public string UniqueId { get; set; }
+      public string DocumentTypeSourceProvider { get; set; }
       public string FieldName { get; set; }
       public string DisplayName { get; set; }
       public bool IsRequired { get; set; }

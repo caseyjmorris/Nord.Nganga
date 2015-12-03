@@ -18,5 +18,6 @@
     MultipleSimpleEditorForPrimitive,
     NumberControl,
     TextControl,
+    UserFileCollection,
   }
 }

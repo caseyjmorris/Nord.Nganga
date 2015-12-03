@@ -56,6 +56,7 @@ namespace Nord.Nganga.StEngine.Test
         new EndpointMapper(this.webApiSettings), this.webApiSettings);
 
       var coordinated = coord.GetViewCoordinatedInformationCollection(typeof(SponsorsController));
+      
     }
 
 

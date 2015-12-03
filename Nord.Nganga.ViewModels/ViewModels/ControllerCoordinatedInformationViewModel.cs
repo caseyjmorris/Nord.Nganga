@@ -11,6 +11,7 @@ namespace Nord.Nganga.Models.ViewModels
     public IEnumerable<EndpointViewModel> RetrievalTargetGetEndpoints { get; set; }
     public IEnumerable<EndpointViewModel> GetEndpoints { get; set; }
     public IEnumerable<EndpointViewModel> PostEndpoints { get; set; }
+    public IEnumerable<string> DocumentTypeSourceExpressions { get; set; }
     public string NgControllerName { get; set; }
     public IEnumerable<string> AdditionalNgServices { get; set; }
     public bool ForViewOnlyData { get; set; }
