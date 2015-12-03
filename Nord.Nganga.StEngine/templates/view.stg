@@ -189,7 +189,7 @@ child-field-name="%model.Member.FieldName%"
 field-label-text="%model.Member.DisplayName%" 
 
 %if(model.Member.DocumentTypeSourceProvider)%
-document-type-source="%model.Member.Model.UniqueId%TypeSource" 
+document-type-source="%model.Member.UniqueId%TypeSource" 
 %endif%
 
 %if(model.Member.Model.IsViewOnly)%
