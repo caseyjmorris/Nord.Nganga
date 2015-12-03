@@ -26,6 +26,8 @@ body(model) ::= <<
       <commonRecordsSetup(model)>
       <endif>
 
+      <documentTypeSourceInit(model)>
+
       <injectJavaScript(model, "AfterInitialization")>
 
       <if(model.RouteIdParameterIsNullable)>
@@ -65,6 +67,11 @@ injectJavaScript(model, key) ::= <%
 
 commonRecordsObjectInit(model) ::= <<
 <model.CommonRecordObjects:{cr|$scope.<cr> = $scope.<cr> || {\};
+}>
+>>
+
+documentTypeSourceInit(model) ::= <<
+<model.DocumentTypeSourceExpressions:{dts|<dts>
 }>
 >>
 

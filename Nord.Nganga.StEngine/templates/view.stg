@@ -33,7 +33,7 @@ injectHtml(model, key) ::= <%
 <!-- End injected HTML -->}; separator="\n"%
 %>
 
-injectFormAttributes(model) :: <%
+injectFormAttributes(model) ::= <%
   %model.NgFormAttributes.keys: {key| %injectFormAttribute(model, key, model.NgFormAttributes.(key) )%}; separator="\n"%
   %if(model.NgFormAttributes.("class"))%%else%class="user-edit-form form-horizontal"%endif%
 %>
@@ -190,7 +190,7 @@ field-label-text="%model.Member.DisplayName%"
 
 %if(model.Member.Model.DocumentTypeSourceProvider)%
 document-type-source="%model.Member.Model.UniqueId%TypeSource" 
-%endif
+%endif%
 
 %if(model.Member.Model.IsViewOnly)%
 view-only 
