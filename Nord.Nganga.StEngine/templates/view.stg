@@ -185,10 +185,10 @@ required
 fileUploadCollection(model, parentObjectName) ::= <%
 <nord-file-upload-collection 
 parent-object="%parentObjectName%" 
-child-field-name="model.Member.FieldName" 
+child-field-name="%model.Member.FieldName%" 
 field-label-text="%model.Member.DisplayName%" 
 
-%if(model.Member.Model.DocumentTypeSourceProvider)%
+%if(model.Member.DocumentTypeSourceProvider)%
 document-type-source="%model.Member.Model.UniqueId%TypeSource" 
 %endif%
 

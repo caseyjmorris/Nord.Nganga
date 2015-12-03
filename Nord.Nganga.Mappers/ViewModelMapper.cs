@@ -404,7 +404,7 @@ namespace Nord.Nganga.Mappers
 
       if (underlyingType == typeof (UserFileCollection))
       {
-        return NgangaControlType.FileUploadControl;
+        return NgangaControlType.UserFileCollection;
       }
 
       if (underlyingType == typeof (string))

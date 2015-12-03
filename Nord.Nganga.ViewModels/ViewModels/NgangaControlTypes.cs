@@ -18,6 +18,6 @@
     MultipleSimpleEditorForPrimitive,
     NumberControl,
     TextControl,
-    FileUploadControl,
+    UserFileCollection,
   }
 }
