@@ -118,7 +118,7 @@ namespace Nord.Nganga.Mappers.Controllers
       {
         var sb = new StringBuilder();
 
-        foreach (var member in typeSourceProvider)
+        foreach (var member in typeSourceProvider.Distinct())
         {
           sb.Append("$scope.")
             .Append(member.UniqueId)
