@@ -1,7 +1,7 @@
 ﻿delimiters "%","%"
 
 templateVersion() ::=<%
-1.1.8
+1.1.9
 %>
 
 openComment() ::= <%
@@ -185,7 +185,7 @@ required
 fileUploadCollection(model, parentObjectName) ::= <%
 <nord-file-upload-collection 
 parent-object="%parentObjectName%" 
-child-field-name="%model.Member.FieldName%" 
+collection-name="%model.Member.FieldName%" 
 field-label-text="%model.Member.DisplayName%" 
 
 %if(model.Member.DocumentTypeSourceProvider)%
