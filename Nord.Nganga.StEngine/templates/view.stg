@@ -1,7 +1,7 @@
 ﻿delimiters "%","%"
 
 templateVersion() ::=<%
-1.1.9
+1.1.10
 %>
 
 openComment() ::= <%
@@ -173,6 +173,10 @@ common-select-source="%model.Member.SelectCommon.ObjectName%.%model.Member.Selec
 
 %if(model.Member.IsViewOnly)%
 view-only 
+%endif%
+
+%if(model.Member.SelectCommon.UseFilter)%
+nord-filtered 
 %endif%
 
 %if(model.Member.IsRequired)%

@@ -7,5 +7,19 @@ namespace Nord.Nganga.DataTypes
   /// </summary>
   public class UserFileCollection : List<UserFile>
   {
+    /// <summary>
+    /// Create a new instance of <see cref="UserFileCollection"/>
+    /// </summary>
+    /// <param name="source">Elements to be added to the collection</param>
+    public UserFileCollection(IEnumerable<UserFile> source) : base(source)
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of <see cref="UserFileCollection"/>
+    /// </summary>
+    public UserFileCollection()
+    {
+    }
   }
 }
