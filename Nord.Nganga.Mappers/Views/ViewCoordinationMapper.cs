@@ -77,6 +77,7 @@ namespace Nord.Nganga.Mappers.Views
         Header =
           controller.Name.Replace("Controller", string.Empty)
             .Humanize(CasingEnumMap.Instance[this.viewModelMapper.AssemblyOptions.GetOption(CasingOptionContext.Header)]),
+        EditRestricted = filteredInfo.PrivilegedRoles?.Any() ?? false
       };
     }
 
@@ -109,7 +110,7 @@ namespace Nord.Nganga.Mappers.Views
         NgSubmitAction = $"saveChangesTo{vmVm.Name.Pascalize()}()",
         ParentObjectName = vmVm.Name.Camelize(),
         HtmlIncludes = this.GetIncludesFromControllerType(controllerType, vmVm),
-        NgFormAttributes = this.GetNgAttributesFromControllerType(controllerType, vmVm),
+        NgFormAttributes = this.GetNgAttributesFromControllerType(controllerType, vmVm)
       };
 
       return coord;
@@ -136,7 +137,7 @@ namespace Nord.Nganga.Mappers.Views
                     (m.ReturnType.IsGenericType && m.ReturnType.GetGenericArguments()[0].Name == returnTypeName))
         .Where(m => m.HasAttribute<FormHtmlAttributeAttribute>());
 
-      var attrs = methods.SelectMany(m => m.GetCustomAttributes(inherit: true).OfType<FormHtmlAttributeAttribute>());
+      var attrs = methods.SelectMany(m => m.GetCustomAttributes(true).OfType<FormHtmlAttributeAttribute>());
 
       var result = new Dictionary<string, string>();
       foreach (var attr in attrs)
@@ -178,7 +179,7 @@ namespace Nord.Nganga.Mappers.Views
 
       var methods = getMethods.Concat(postMethods);
 
-      var attrs = methods.SelectMany(m => m.GetCustomAttributes(inherit: true).OfType<InjectHtmlInViewAttribute>());
+      var attrs = methods.SelectMany(m => m.GetCustomAttributes(true).OfType<InjectHtmlInViewAttribute>());
 
       var grouped = attrs.GroupBy(a => a.HtmlPosition);
 
@@ -212,7 +213,7 @@ namespace Nord.Nganga.Mappers.Views
 
       var currentRow = new ViewCoordinatedInformationViewModel.RowViewModel
       {
-        Members = new List<ViewModelViewModel.MemberWrapper>(),
+        Members = new List<ViewModelViewModel.MemberWrapper>()
       };
 
       currentSection.Rows.Add(currentRow);
@@ -226,7 +227,7 @@ namespace Nord.Nganga.Mappers.Views
           currentSection = new ViewCoordinatedInformationViewModel.SectionViewModel
           {
             Title = member.Section,
-            Rows = new List<ViewCoordinatedInformationViewModel.RowViewModel>(),
+            Rows = new List<ViewCoordinatedInformationViewModel.RowViewModel>()
           };
 
           if (
@@ -238,7 +239,7 @@ namespace Nord.Nganga.Mappers.Views
 
           currentRow = new ViewCoordinatedInformationViewModel.RowViewModel
           {
-            Members = new List<ViewModelViewModel.MemberWrapper>(),
+            Members = new List<ViewModelViewModel.MemberWrapper>()
           };
 
           currentSection.Rows.Add(currentRow);
@@ -261,7 +262,7 @@ namespace Nord.Nganga.Mappers.Views
         {
           currentRow = new ViewCoordinatedInformationViewModel.RowViewModel
           {
-            Members = new List<ViewModelViewModel.MemberWrapper>(),
+            Members = new List<ViewModelViewModel.MemberWrapper>()
           };
 
           currentSection.Rows.Add(currentRow);

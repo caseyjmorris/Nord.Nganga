@@ -1,7 +1,7 @@
 ﻿delimiters "%","%"
 
 templateVersion() ::=<%
-1.1.10
+1.2.0
 %>
 
 openComment() ::= <%
@@ -19,7 +19,7 @@ body(model) ::= <<
       %model.Header%
     </h2>
   </nord-row>
-  %model.ViewCoordinatedInfo:{vci|%childView(vci)%}%
+  %model.ViewCoordinatedInfo:{vci|%childView(vci, model)%}%
 </div>
 >>
 
@@ -46,7 +46,7 @@ injectFormClassIfNotInFormAttributes(model) ::= <%
 
 %>
 
-childView(model) ::= <<
+childView(model, parent) ::= <<
 %injectHtml(model, "BeforeHeader")%
 %injectHtml(model, "AfterHeader")%
 
@@ -56,7 +56,11 @@ childView(model) ::= <<
     id="%model.NgFormName%" 
     ng-submit="%model.NgSubmitAction%"     
     %injectFormAttributes(model)%
-    novalidate >
+    novalidate 
+    %if(parent.EditRestricted)%
+    can-edit-if="canEdit"
+    %endif%
+    >
     %injectHtml(model, "InsideFormAtBeginning")%
 
     %childViewNested(model)%
@@ -64,7 +68,11 @@ childView(model) ::= <<
 
     %injectHtml(model, "BeforeSaveButtons")%
 
-    <nord-row-simple>
+    <nord-row-simple 
+    %if(parent.EditRestricted)%
+    ng-show="canEdit"
+    %endif%    
+    >
       %! issues with checking for invalid... model.NgFormNvame.$invalid !%
       <button class="btn btn-primary pull-right" type="submit" ng-disabled="%model.NgFormName%.$pristine">
         <span class="glyphicon %model.Glyphicon%"></span> %model.SaveButtonText%

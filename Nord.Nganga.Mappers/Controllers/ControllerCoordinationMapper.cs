@@ -5,7 +5,6 @@ using System.Text;
 using Humanizer;
 using Nord.Nganga.Annotations.Attributes.Angular;
 using Nord.Nganga.Core.Reflection;
-using Nord.Nganga.Core.Text;
 using Nord.Nganga.Models.ViewModels;
 
 namespace Nord.Nganga.Mappers.Controllers

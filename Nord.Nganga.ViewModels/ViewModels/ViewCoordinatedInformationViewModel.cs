@@ -8,6 +8,7 @@ namespace Nord.Nganga.Models.ViewModels
     public string NgControllerName { get; set; }
     public string Header { get; set; }
     public IEnumerable<ViewCoordinatedInformationViewModel> ViewCoordinatedInfo { get; set; }
+    public bool EditRestricted { get; set; }
   }
 
   public class ViewCoordinatedInformationViewModel
