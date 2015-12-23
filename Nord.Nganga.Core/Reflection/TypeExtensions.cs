@@ -31,14 +31,14 @@ namespace Nord.Nganga.Core.Reflection
 
     public static Type GetNonnullableNonCollectionType(this Type type)
     {
-      return type.IsGenericType && typeof(IEnumerable).IsAssignableFrom(type) && typeof(string) != type
+      return type.IsGenericType && typeof (IEnumerable).IsAssignableFrom(type) && typeof (string) != type
         ? type.GetGenericArguments().First().GetNonNullableType()
         : type.GetNonNullableType();
     }
 
     public static Type GetNonNullableType(this Type type)
     {
-      if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+      if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof (Nullable<>))
       {
         return type.GetGenericArguments().First();
       }
@@ -47,22 +47,31 @@ namespace Nord.Nganga.Core.Reflection
 
     public static bool HasAttribute<T>(this Type type) where T : Attribute
     {
-      return Attribute.IsDefined(type, typeof(T));
+      return Attribute.IsDefined(type, typeof (T));
     }
 
     public static bool HasAttribute<T>(this MemberInfo member) where T : Attribute
     {
-      return Attribute.IsDefined(member, typeof(T));
+      return Attribute.IsDefined(member, typeof (T));
     }
 
     public static T GetAttribute<T>(this Type type) where T : Attribute
     {
-      return (T) Attribute.GetCustomAttribute(type, typeof(T));
+      return (T) Attribute.GetCustomAttribute(type, typeof (T));
     }
 
     public static T GetAttribute<T>(this MemberInfo member) where T : Attribute
     {
-      return (T) Attribute.GetCustomAttribute(member, typeof(T));
+      try
+      {
+        return (T) Attribute.GetCustomAttribute(member, typeof (T));
+      }
+      catch (Exception e)
+      {
+        throw new Exception(
+          $"Error encountered seeking {typeof (T).Name} in member {member.Name} of {member?.DeclaringType?.Name}:  {e.Message}",
+          e);
+      }
     }
 
     public static bool TryGetAttributePropertyValue<TAttribute, TReturn>(this Type type, out TReturn returnValue,
@@ -109,7 +118,7 @@ namespace Nord.Nganga.Core.Reflection
       {
         name = type.Name;
       }
-      else if (type.IsGenericType && typeof(IEnumerable).IsAssignableFrom(type) && type != typeof(string))
+      else if (type.IsGenericType && typeof (IEnumerable).IsAssignableFrom(type) && type != typeof (string))
       {
         name = type.GetGenericArguments()[0].Name.Pluralize();
       }
