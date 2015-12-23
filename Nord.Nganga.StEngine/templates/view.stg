@@ -1,7 +1,7 @@
 ﻿delimiters "%","%"
 
 templateVersion() ::=<%
-1.2.3
+1.3.0
 %>
 
 openComment() ::= <%
@@ -257,6 +257,10 @@ panel-top-label="%model.Member.DisplayName%"
 field-definitions="%model.Member.TableFieldsExpression%" 
 %if(model.Member.SubordinateActionsExpression)%
 additional-buttons="%model.Member.SubordinateActionsExpression%" 
+%endif%
+
+%if (model.Member.DefaultObjectJsonDefintion)%
+default-object-definition="%model.Member.DefaultObjectJsonDefintion%" 
 %endif%
 
 %if(model.Member.IsLedger)%
