@@ -57,9 +57,13 @@ namespace Nord.Nganga.Commands
 
     private static IEnumerable<Type> GetSettingsTypes()
     {
-      var asm = Assembly.GetAssembly(typeof(IConfigurationPackage));
+      var asm = Assembly.GetAssembly(typeof (IConfigurationPackage));
 
-      return asm.GetTypes().Where(t => typeof(IConfigurationPackage).IsAssignableFrom(t)).ToList();
+      return
+        asm.GetTypes()
+          .Where(t => typeof (IConfigurationPackage).IsAssignableFrom(t))
+          .Where(t => !t.IsInterface)
+          .ToList();
     }
 
     public static IEnumerable<string> ListOptionTypes()
@@ -78,14 +82,14 @@ namespace Nord.Nganga.Commands
         throw new KeyNotFoundException($"Setting type {name} not recognized.");
       }
 
-      var method = typeof(ConfigurationFactory).GetMethod("GetConfiguration").MakeGenericMethod(type);
+      var method = typeof (ConfigurationFactory).GetMethod("GetConfiguration").MakeGenericMethod(type);
 
       return (IConfigurationPackage) method.Invoke(null, new object[0]);
     }
 
     public static void SetOptions(IConfigurationPackage pkg)
     {
-      var method = typeof(ConfigurationFactory).GetMethod("UpdateSettings").MakeGenericMethod(pkg.GetType());
+      var method = typeof (ConfigurationFactory).GetMethod("UpdateSettings").MakeGenericMethod(pkg.GetType());
 
       method.Invoke(null, new object[] {pkg});
     }

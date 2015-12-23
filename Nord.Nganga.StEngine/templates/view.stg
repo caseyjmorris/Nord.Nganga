@@ -1,7 +1,7 @@
 ﻿delimiters "%","%"
 
 templateVersion() ::=<%
-1.2.0
+1.2.3
 %>
 
 openComment() ::= <%
@@ -283,6 +283,9 @@ field-label-text="%model.Member.DisplayName%"
 child-field-name="%model.Member.CoordinatedInfo.ParentObjectName%" 
 %if (model.Member.DefaultObjectJsonDefintion)%
 default-object-definition="%model.Member.DefaultObjectJsonDefintion%"
+%endif%
+%if(model.Member.Model.IsViewOnly)%
+view-only 
 %endif%
 >
 %\n%
