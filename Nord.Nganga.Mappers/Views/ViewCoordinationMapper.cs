@@ -5,6 +5,7 @@ using System.Reflection;
 using Humanizer;
 using Nord.Nganga.Annotations;
 using Nord.Nganga.Annotations.Attributes.Html;
+using Nord.Nganga.Annotations.Attributes.ViewModels;
 using Nord.Nganga.Core.Reflection;
 using Nord.Nganga.Models;
 using Nord.Nganga.Models.Configuration;
@@ -24,6 +25,8 @@ namespace Nord.Nganga.Mappers.Views
 
     private Type httpGetAttribute;
 
+    private Type httpPostAttribute;
+
     public ViewCoordinationMapper(
       ViewModelMapper viewModelMapper,
       EndpointFilter endpointFilter,
@@ -33,6 +36,7 @@ namespace Nord.Nganga.Mappers.Views
       this.viewModelMapper = viewModelMapper;
       this.endpointFilter = endpointFilter;
       this.endpointMapper = endpointMapper;
+      this.webApiSettings = settings;
     }
 
     public ViewCoordinationMapper(WebApiSettingsPackage settings)
@@ -53,6 +57,9 @@ namespace Nord.Nganga.Mappers.Views
       this.httpGetAttribute = DependentTypeResolver.GetTypeByName(controller.Assembly,
         this.webApiSettings.HttpGetAttributeName);
 
+      this.httpPostAttribute = DependentTypeResolver.GetTypeByName(controller.Assembly,
+        this.webApiSettings.HttpPostAttributeName);
+
       this.viewModelMapper.AssemblyOptions = new AssemblyOptionsModel(controller);
 
       var endpoints = this.endpointMapper.GetEnpoints(controller);
@@ -70,6 +77,7 @@ namespace Nord.Nganga.Mappers.Views
         Header =
           controller.Name.Replace("Controller", string.Empty)
             .Humanize(CasingEnumMap.Instance[this.viewModelMapper.AssemblyOptions.GetOption(CasingOptionContext.Header)]),
+        EditRestricted = filteredInfo.PrivilegedRoles?.Any() ?? false
       };
     }
 
@@ -87,7 +95,11 @@ namespace Nord.Nganga.Mappers.Views
       var coord = new ViewCoordinatedInformationViewModel
       {
         ViewModel = vmVm,
+        Glyphicon =
+          vmVm.UnderlyingType.GetAttributePropertyValueOrDefault<SaveButtonTextAttribute, string>(a => a.Glyphicon) ??
+          "glyphicon-floppy-save",
         SaveButtonText =
+          vmVm.UnderlyingType.GetAttributePropertyValueOrDefault<SaveButtonTextAttribute, string>(a => a.Text) ??
           ("Save changes to " + vmVm.Name.Humanize(LetterCasing.LowerCase)).Humanize(
             CasingEnumMap.Instance[this.viewModelMapper.AssemblyOptions.GetOption(CasingOptionContext.Button)]),
         Sections = this.SplitSections(vmVm, depthMultipler),
@@ -98,13 +110,13 @@ namespace Nord.Nganga.Mappers.Views
         NgSubmitAction = $"saveChangesTo{vmVm.Name.Pascalize()}()",
         ParentObjectName = vmVm.Name.Camelize(),
         HtmlIncludes = this.GetIncludesFromControllerType(controllerType, vmVm),
-        NgFormAttributes = this.GetNgAttributesFromControllerType(controllerType, vmVm),
+        NgFormAttributes = this.GetNgAttributesFromControllerType(controllerType, vmVm)
       };
 
       return coord;
     }
 
-        private Dictionary<string, string> GetNgAttributesFromControllerType(Type controllerType,
+    private Dictionary<string, string> GetNgAttributesFromControllerType(Type controllerType,
       ViewModelViewModel vmVm)
     {
       if (controllerType == null)
@@ -125,7 +137,7 @@ namespace Nord.Nganga.Mappers.Views
                     (m.ReturnType.IsGenericType && m.ReturnType.GetGenericArguments()[0].Name == returnTypeName))
         .Where(m => m.HasAttribute<FormHtmlAttributeAttribute>());
 
-      var attrs = methods.SelectMany(m => m.GetCustomAttributes(inherit: true).OfType<FormHtmlAttributeAttribute>());
+      var attrs = methods.SelectMany(m => m.GetCustomAttributes(true).OfType<FormHtmlAttributeAttribute>());
 
       var result = new Dictionary<string, string>();
       foreach (var attr in attrs)
@@ -151,13 +163,23 @@ namespace Nord.Nganga.Mappers.Views
 
       var returnTypeName = $"{vmVm.Name.Pascalize()}ViewModel";
 
-      var methods = controllerType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+      Func<Type, bool> matchesReturnType =
+        t => t.Name == returnTypeName || (t.IsGenericType && t.GetGenericArguments()[0].Name == returnTypeName);
+
+      var getMethods = controllerType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
         .Where(m => Attribute.IsDefined(m, this.httpGetAttribute))
-        .Where(m => m.ReturnType.Name == returnTypeName ||
-                    (m.ReturnType.IsGenericType && m.ReturnType.GetGenericArguments()[0].Name == returnTypeName))
+        .Where(m => matchesReturnType(m.ReturnType))
         .Where(m => m.HasAttribute<InjectHtmlInViewAttribute>());
 
-      var attrs = methods.SelectMany(m => m.GetCustomAttributes(inherit: true).OfType<InjectHtmlInViewAttribute>());
+      var postMethods = controllerType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+        .Where(m => Attribute.IsDefined(m, this.httpPostAttribute))
+        .Where(m => m.GetParameters().Any())
+        .Where(m => matchesReturnType(m.GetParameters()[0].ParameterType))
+        .Where(m => m.HasAttribute<InjectHtmlInViewAttribute>());
+
+      var methods = getMethods.Concat(postMethods);
+
+      var attrs = methods.SelectMany(m => m.GetCustomAttributes(true).OfType<InjectHtmlInViewAttribute>());
 
       var grouped = attrs.GroupBy(a => a.HtmlPosition);
 
@@ -191,7 +213,7 @@ namespace Nord.Nganga.Mappers.Views
 
       var currentRow = new ViewCoordinatedInformationViewModel.RowViewModel
       {
-        Members = new List<ViewModelViewModel.MemberWrapper>(),
+        Members = new List<ViewModelViewModel.MemberWrapper>()
       };
 
       currentSection.Rows.Add(currentRow);
@@ -205,7 +227,7 @@ namespace Nord.Nganga.Mappers.Views
           currentSection = new ViewCoordinatedInformationViewModel.SectionViewModel
           {
             Title = member.Section,
-            Rows = new List<ViewCoordinatedInformationViewModel.RowViewModel>(),
+            Rows = new List<ViewCoordinatedInformationViewModel.RowViewModel>()
           };
 
           if (
@@ -217,7 +239,7 @@ namespace Nord.Nganga.Mappers.Views
 
           currentRow = new ViewCoordinatedInformationViewModel.RowViewModel
           {
-            Members = new List<ViewModelViewModel.MemberWrapper>(),
+            Members = new List<ViewModelViewModel.MemberWrapper>()
           };
 
           currentSection.Rows.Add(currentRow);
@@ -240,7 +262,7 @@ namespace Nord.Nganga.Mappers.Views
         {
           currentRow = new ViewCoordinatedInformationViewModel.RowViewModel
           {
-            Members = new List<ViewModelViewModel.MemberWrapper>(),
+            Members = new List<ViewModelViewModel.MemberWrapper>()
           };
 
           currentSection.Rows.Add(currentRow);

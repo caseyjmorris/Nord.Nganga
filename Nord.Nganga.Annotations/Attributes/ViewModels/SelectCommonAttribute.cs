@@ -81,6 +81,11 @@ namespace Nord.Nganga.Annotations.Attributes.ViewModels
     public bool RestrictUntilResolved { get; set; }
 
     /// <summary>
+    /// If true, a searchable, filtered dropdown list will be used in lieu of the ordinary dropdown.
+    /// </summary>
+    public bool UseFilter { get; set; }
+
+    /// <summary>
     /// Generates a new <code>SelectCommonAttribute</code>
     /// </summary>
     /// <param name="commonInformationName">The name of the common records</param>

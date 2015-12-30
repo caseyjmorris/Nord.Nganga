@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Humanizer;
 using Nord.Nganga.Annotations.Attributes.Angular;
 using Nord.Nganga.Core.Reflection;
-using Nord.Nganga.Core.Text;
 using Nord.Nganga.Models.ViewModels;
 
 namespace Nord.Nganga.Mappers.Controllers
@@ -57,6 +57,8 @@ namespace Nord.Nganga.Mappers.Controllers
             a => a.Services),
         CommonRecordsWithResolvers =
           this.GetCommonRecordsWithResolvers(filteredInfo.TargetComplexTypesWithChildren.ToList(), crObjects),
+        DocumentTypeSourceExpressions =
+          this.GetDocumentTypeSourceExpressions(filteredInfo.TargetComplexTypesWithChildren).ToList(),
         CommonRecordObjects = crObjects,
         InjectedJavaScript = this.GetInjectedJavaScriptDictionary(controller),
       };
@@ -102,6 +104,30 @@ namespace Nord.Nganga.Mappers.Controllers
       }
 
       return result;
+    }
+
+    public IEnumerable<string> GetDocumentTypeSourceExpressions(IEnumerable<ViewModelViewModel> complexTypes)
+    {
+      var typeSourceProviders =
+        complexTypes.SelectMany(ct => ct.Scalars)
+          .Where(s => s.DocumentTypeSourceProvider != null)
+          .GroupBy(s => s.DocumentTypeSourceProvider);
+
+      foreach (var typeSourceProvider in typeSourceProviders)
+      {
+        var sb = new StringBuilder();
+
+        foreach (var member in typeSourceProvider.Distinct())
+        {
+          sb.Append("$scope.")
+            .Append(member.UniqueId)
+            .Append("TypeSource = ");
+        }
+
+        sb.Append(typeSourceProvider.Key);
+
+        yield return sb.ToString();
+      }
     }
 
     private Dictionary<string, IEnumerable<string>> GetInjectedJavaScriptDictionary(Type controller)

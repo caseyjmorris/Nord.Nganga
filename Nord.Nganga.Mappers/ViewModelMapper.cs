@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -27,6 +28,9 @@ namespace Nord.Nganga.Mappers
 
     private readonly ViewCoordinationMapper viewCoordinationMapper;
 
+    private static readonly HashSet<Type> BarredFromTables =
+      new HashSet<Type>(new[] {typeof (UserFileCollection)});
+
     private static readonly Dictionary<Type, string> ClientTypes =
       new Dictionary<Type, string>
       {
@@ -46,6 +50,7 @@ namespace Nord.Nganga.Mappers
         {typeof (DateTime), "date"},
         {typeof (DateTime?), "date"},
         {typeof (UserExpansibleSelectChoice), "selectcommon"},
+        {typeof (UserFileCollection), "userfilecollection"},
       };
 
 
@@ -61,6 +66,7 @@ namespace Nord.Nganga.Mappers
         typeof (string),
         typeof (DateTime), typeof (DateTime?),
         typeof (UserExpansibleSelectChoice),
+        typeof (UserFileCollection),
       });
 
     private static readonly ICollection<Type> Numerics = new HashSet<Type>(new[]
@@ -72,16 +78,20 @@ namespace Nord.Nganga.Mappers
       typeof (double), typeof (double?),
     });
 
+    private readonly Dictionary<string, Type> uniquedIdentifierToTypeDictionary = new Dictionary<string, Type>();
+
     #region type detectors
 
     private static bool IsScalar(PropertyInfo info)
     {
-      return !typeof (IEnumerable).IsAssignableFrom(info.PropertyType) || info.PropertyType == typeof (string);
+      return !typeof (IEnumerable).IsAssignableFrom(info.PropertyType) || info.PropertyType == typeof (string) ||
+             info.PropertyType == typeof (UserFileCollection);
     }
 
     private static bool IsCollection(PropertyInfo info)
     {
-      return (typeof (IEnumerable).IsAssignableFrom(info.PropertyType) && info.PropertyType != typeof (string));
+      return (typeof (IEnumerable).IsAssignableFrom(info.PropertyType) && info.PropertyType != typeof (string)) &&
+             info.PropertyType != typeof (UserFileCollection);
     }
 
     private static bool IsComplexCollection(PropertyInfo info)
@@ -138,6 +148,66 @@ namespace Nord.Nganga.Mappers
       return "any";
     }
 
+    private string GetDefaultDisplayName(PropertyInfo info)
+    {
+      var name = info.Name;
+      if (name.Length > 2 && name.EndsWith("Id"))
+      {
+        name = name.Substring(0, name.Length - 2);
+      }
+
+      var convention = CasingEnumMap.Instance[this.AssemblyOptions.GetOption(CasingOptionContext.Field)];
+
+      name = name.Humanize(convention);
+
+      if (info.PropertyType.GetNonNullableType() == typeof (bool))
+      {
+        name += "?";
+      }
+
+      return name;
+    }
+
+    private string GetUniqueIdentifier(PropertyInfo info)
+    {
+      var name = info.Name.Camelize();
+
+      Type owningType;
+
+      var nameFound = this.uniquedIdentifierToTypeDictionary.TryGetValue(name, out owningType);
+
+      if (!nameFound || owningType == info.DeclaringType)
+      {
+        this.uniquedIdentifierToTypeDictionary[name] = info.DeclaringType;
+        return name;
+      }
+
+      Debug.Assert(info.DeclaringType != null, "Declaring type is not null");
+      // ReSharper disable once PossibleNullReferenceException
+      var qualifiedName = info.DeclaringType.Name.Camelize() + info.Name;
+
+      nameFound = this.uniquedIdentifierToTypeDictionary.TryGetValue(qualifiedName, out owningType);
+
+      if (!nameFound || owningType == info.DeclaringType)
+      {
+        this.uniquedIdentifierToTypeDictionary[qualifiedName] = info.DeclaringType;
+        return qualifiedName;
+      }
+
+      var i = 0;
+
+      while (this.uniquedIdentifierToTypeDictionary.TryGetValue(name, out owningType) &&
+             owningType != info.DeclaringType)
+      {
+        name = qualifiedName + i;
+
+        i++;
+      }
+
+      this.uniquedIdentifierToTypeDictionary[name] = owningType;
+      return name;
+    }
+
     private ViewModelViewModel.FieldViewModel GetFieldViewModel(PropertyInfo info, bool isCollection)
     {
       var isSelectCommon = info.HasAttribute<SelectCommonAttribute>();
@@ -145,18 +215,20 @@ namespace Nord.Nganga.Mappers
 
       var fieldModel = new ViewModelViewModel.FieldViewModel
       {
+        UniqueId = this.GetUniqueIdentifier(info),
+        DocumentTypeSourceProvider =
+          info.GetAttributePropertyValueOrDefault<DocumentTypeSourceProviderAttribute, string>(a => a.Expression),
         DataType = isCollection ? info.PropertyType.GetGenericArguments()[0] : info.PropertyType,
         DisplayName =
           info.HasAttribute<DisplayAttribute>()
             ? info.GetAttribute<DisplayAttribute>().Name
-            : info.Name.Humanize(CasingEnumMap.Instance[this.AssemblyOptions.GetOption(CasingOptionContext.Field)]) +
-              (info.PropertyType.GetNonNullableType() == typeof (bool) ? "?" : String.Empty),
+            : this.GetDefaultDisplayName(info),
         FieldName = info.Name.Camelize(),
         IsHidden = info.HasAttribute<DoNotShowAttribute>(),
         IsRequired = info.HasAttribute<RequiredAttribute>(),
         IsViewOnly = info.HasAttribute<NotUserEditableAttribute>(),
         Section =
-          info.GetAttributePropertyValueOrDefault<UiSectionAttribute, string>(a => a.SectionName) ?? String.Empty,
+          info.GetAttributePropertyValueOrDefault<UiSectionAttribute, string>(a => a.SectionName) ?? string.Empty,
         SelectCommon = selectCommonAttribute,
         IsDefaultSort = info.HasAttribute<DefaultSortAttribute>(),
         InputMask = info.HasAttribute<InputMaskAttribute>() ? info.GetAttribute<InputMaskAttribute>().Mask : null,
@@ -165,6 +237,10 @@ namespace Nord.Nganga.Mappers
         StartCap = info.GetAttributePropertyValueOrDefault<CapAttribute, string>(a => a.StartCap),
         EndCap = info.GetAttributePropertyValueOrDefault<CapAttribute, string>(a => a.EndCap),
         Step = this.GetStep(info),
+        YesLabelText = info.GetAttributePropertyValueOrDefault<BoolLabelAttribute, string>(a => a.YesLabelText) ?? "Yes",
+        NoLabelText = info.GetAttributePropertyValueOrDefault<BoolLabelAttribute, string>(a => a.NoLabelText) ?? "No",
+        IsExcludedFromComplexCollectionEditorTable =
+          info.HasAttribute<ExcludeFromComplexCollectionEditorTableAttribute>(),
       };
 
       fieldModel.ControlType =
@@ -177,7 +253,7 @@ namespace Nord.Nganga.Mappers
     }
 
     private IEnumerable<ViewModelViewModel.FieldViewModel> GetFieldViewModelCollection(IEnumerable<PropertyInfo> t,
-      Boolean isCollection)
+      bool isCollection)
     {
       var pfi = t.Select(p => this.GetFieldViewModel(p, isCollection));
       return pfi;
@@ -237,7 +313,11 @@ namespace Nord.Nganga.Mappers
 
     private string GetTableVisibleFieldsExpression(ViewModelViewModel.SubordinateViewModelWrapper wrapper)
     {
-      var fields = wrapper.Model.Scalars.Where(s => !s.IsHidden);
+      var fields =
+        wrapper.Model.Scalars
+          .Where(s => !s.IsHidden)
+          .Where(s => !s.IsExcludedFromComplexCollectionEditorTable)
+          .Where(s => !BarredFromTables.Contains(s.DataType));
 
       var fieldsDesc =
         fields.Select(
@@ -331,6 +411,11 @@ namespace Nord.Nganga.Mappers
 
       var underlyingType = info.PropertyType.GetNonNullableType();
 
+      if (underlyingType == typeof (UserFileCollection))
+      {
+        return NgangaControlType.UserFileCollection;
+      }
+
       if (underlyingType == typeof (string))
       {
         return NgangaControlType.TextControl;
@@ -349,8 +434,7 @@ namespace Nord.Nganga.Mappers
         return NgangaControlType.NumberControl;
       }
 
-      var msg = string.Format("Couldn't find control for type {0} (property {1} of {2})", underlyingType, info.Name,
-        info.DeclaringType);
+      var msg = $"Couldn't find control for type {underlyingType} (property {info.Name} of {info.DeclaringType})";
 
       throw new KeyNotFoundException(msg);
     }
@@ -364,7 +448,10 @@ namespace Nord.Nganga.Mappers
         return specified;
       }
 
-      if (controlType == NgangaControlType.MultipleComplexEditor)
+      if (controlType == NgangaControlType.MultipleComplexEditor ||
+          controlType == NgangaControlType.UserFileCollection ||
+          controlType == NgangaControlType.MultipleSimpleEditorForComplex ||
+          controlType == NgangaControlType.MultipleSimpleEditorForPrimitive)
       {
         return 12;
       }
@@ -419,6 +506,7 @@ namespace Nord.Nganga.Mappers
 
       var vm = new ViewModelViewModel
       {
+        UnderlyingType = type,
         Name = type.Name.Replace("ViewModel", string.Empty).Camelize(),
         Scalars = this.GetFieldViewModelCollection(
           decoratedProperties.Where(p => p.discriminator == ViewModelViewModel.MemberDiscriminator.Scalar)

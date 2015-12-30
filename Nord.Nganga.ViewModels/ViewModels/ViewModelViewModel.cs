@@ -6,6 +6,8 @@ namespace Nord.Nganga.Models.ViewModels
 {
   public class ViewModelViewModel
   {
+    public Type UnderlyingType { get; set; }
+
     public string Name { get; set; }
     public bool IsViewOnly { get; set; }
     public IList<MemberWrapper> Members { get; set; }
@@ -84,6 +86,8 @@ namespace Nord.Nganga.Models.ViewModels
 
     public class FieldViewModel : IMember
     {
+      public string UniqueId { get; set; }
+      public string DocumentTypeSourceProvider { get; set; }
       public string FieldName { get; set; }
       public string DisplayName { get; set; }
       public bool IsRequired { get; set; }
@@ -99,19 +103,18 @@ namespace Nord.Nganga.Models.ViewModels
       public string EndCap { get; set; }
       public object Step { get; set; } //1, .01, "any" are the most likely values here
       public Type DataType { get; set; }
+      public bool IsExcludedFromComplexCollectionEditorTable { get; set; }
+
+      public string YesLabelText { get; set; } = "Yes";
+
+      public string NoLabelText { get; set; } = "No";
 
       public NgangaControlType ControlType { get; set; }
 
-      public string NgangaControlTypeSt
-      {
-        get { return this.ControlType.ToString(); }
-      }
+      public string NgangaControlTypeSt => this.ControlType.ToString();
 
 
-      public override string ToString()
-      {
-        return this.FieldName;
-      }
+      public override string ToString() => this.FieldName;
     }
   }
 }
