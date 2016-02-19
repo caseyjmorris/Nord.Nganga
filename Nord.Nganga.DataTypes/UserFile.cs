@@ -12,10 +12,10 @@ namespace Nord.Nganga.DataTypes
     /// </summary>
     public int Id { get; set; }
 
-    /// <summary>
-    /// Uri to view existing file.
+/*    /// <summary>
+    /// Uri to view existing file.  For new file, data URI representing file body
     /// </summary>
-    public Uri Uri { get; set; }
+    public Uri Uri { get; set; }*/
 
     /// <summary>
     /// MIME type of file
@@ -27,9 +27,6 @@ namespace Nord.Nganga.DataTypes
     /// </summary>
     public string FileName { get; set; }
 
-    /// <summary>
-    /// For new file, data URI representing file body
-    /// /// </summary>
     public byte[] Content { get; set; }
 
     /// <summary>
