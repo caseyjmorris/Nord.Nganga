@@ -263,7 +263,7 @@ default-object-definition="%model.Member.DefaultObjectJsonDefintion%"
 %endif%
 
 %if(model.Member.IsLedger)%
-ledger-sum-property="%model.Member.LedgerSumProperty%"
+ledger-sum-property="%model.Member.LedgerSumProperty%" 
 %endif%
 
 %if(model.Member.Model.IsViewOnly)%
