@@ -8,11 +8,11 @@
     <owners>National Organization for Rare Disorders</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Support tools for Nganga</description>
-    <releaseNotes>3c71a0b Published latest version to nuget package
+    <releaseNotes>ac3186d Published latest version to nuget package
+3c71a0b Published latest version to nuget package
 029563e nuspec
 1713bac publish support
 74b214b Break bundlers into separate project
-d7026e6 Space after ledger sum property
 </releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>nganga support</tags>
