@@ -1,0 +1,10 @@
+<nord-row>
+  <ul class="nav nav-{{tabType}} nav-justified main-menu">
+    <li ng-repeat="tab in tabs" role="presentation" ng-class="{active: isActive(tab), disabled: isDisabled(tab)}"
+        ng-show="!isHidden(tab)">
+      <a ui-sref="{{tab.sref}}">
+        {{tab.title}}
+      </a>
+    </li>
+  </ul>
+</nord-row>

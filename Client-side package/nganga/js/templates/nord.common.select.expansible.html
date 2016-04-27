@@ -1,0 +1,25 @@
+<div class="col-md-{{twelfths}}">
+  <label ng-class="{'required-field-label': isRequired}">
+    {{fieldLabelText}}
+  </label>
+
+  <div ng-class="{'input-group': startCap || endCap}" ng-show="canEdit()">
+    <span class="input-group-addon" ng-if="startCap">{{startCap}}</span>
+
+    <select class="form-control" data-ng-model="ngModel.id"
+            data-ng-options="item.id as item.name for item in commonSelectSource"
+            ng-readonly="waitResolve && (!commonSelectSource.$resolved)">
+      <option value="">---</option>
+    </select>
+    <input type="text" class="form-control" ng-model="ngModel.userDefinedText" ng-show="ngModel.id === 0">
+
+    <span class="input-group-addon" ng-if="endCap">{{endCap}}</span>
+  </div>
+
+  <div ng-show="!canEdit()">
+    {{startCap}}
+    <span ng-show="ngModel.userDefinedText">{{ngModel.userDefinedText}}</span>
+    <span ng-show="!ngModel.userDefinedText">{{ngModel.id | commonRecord: commonSelectSource}}</span>
+    {{endCap}}
+  </div>
+</div>

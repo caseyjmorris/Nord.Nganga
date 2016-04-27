@@ -1,0 +1,87 @@
+<div class="panel panel-default nganga-panel">
+  <div class="panel-heading">
+    {{panelTopLabel}}
+  </div>
+
+  <table class="table table-condensed table-striped table-hover table-responsive">
+    <thead>
+    <tr class="membersHeaderRow">
+
+      <th ng-repeat="fieldDefinition in fieldDefinitionValues">
+        <!-- add filter for sorter here with ts-criteria -->
+        {{fieldDefinition.label}}
+      </th>
+      <th ng-show="showActionsColumn()" style="text-align: right; padding-right: 21px;">
+        Actions
+      </th>
+      <th ng-show="ledgerSumProperty">
+        Balance
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-show="!collection || collection.length === 0">
+      <td colspan="{{fieldDefinitionValues.length + 1 + (canEdit() ? 1 : 0)}}">
+        There are no entries in this table.
+      </td>
+    </tr>
+    <tr ng-repeat="item in collection track by $index"
+        ng-class="{'nganga-table-selected': activeItemIndex === $index}" class="membersBodyRow">
+      <td ng-repeat="fieldDefinition in fieldDefinitionValues">
+        {{item[fieldDefinition.name] | complexEditorMemberField:
+        fieldDefinition.clientType:fieldDefinition.filterArguments }}
+      </td>
+      <td ng-show="showActionsColumn()">
+        <span class="btn-group pull-right">
+          <button type="button" class="btn btn-default" ng-click="editItemAt($index)" ng-show="canEdit()">
+            <span class="glyphicon glyphicon-edit"></span> Edit
+          </button>
+          <button type="button" class="btn btn-danger" ng-click="deleteItemAt($index)"
+                  ng-class="{'disabled': activeItemIndex === $index}" ng-show="canEdit()">
+            <span class="glyphicon glyphicon-remove"></span> Remove
+          </button>
+          <span class="additionalButtonActionSpan" ng-show="additionalButtonValues['Actions']">
+
+            </span>
+          </span>
+      </td>
+      <td ng-show="ledgerSumProperty">
+        {{sums[$index] | currency}}
+      </td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr ng-show="canEdit()">
+      <th colspan="{{fieldDefinitionValues.length + 1}}">
+        <button type="button" class="btn btn-default pull-right" ng-click="addItem()">
+          <span class="glyphicon glyphicon-plus-sign"></span> Add
+        </button>
+      </th>
+    </tr>
+    </tfoot>
+  </table>
+
+  <div class="panel-body" ng-show="editDisplayed">
+    <ng-form name="childForm{{uid}}">
+      <div class="row">
+        <div class="col-md-12">
+          <ng-transclude></ng-transclude>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <span class="btn-group pull-right">
+        <button type="button" class="btn btn-warning" ng-click="discardActiveItemChanges()">
+          <span class="glyphicon glyphicon-remove-circle"></span> Discard changes
+        </button>
+        <button type="button" class="btn btn-info" ng-click="applyActiveItemChanges()">
+          <span class="glyphicon glyphicon-ok"></span> Apply these changes
+        </button>
+      </span>
+
+        </div>
+      </div>
+    </ng-form>
+  </div>
+</div>
