@@ -4,12 +4,21 @@ var templateCache = require('gulp-angular-templatecache');
 var concat = require('gulp-concat');
 var rename = require('gulp-rename');
 var sourcemaps = require('gulp-sourcemaps');
+var cleancss = require('gulp-clean-css');
 
 gulp.task('default', function() {
   // place code for your default task here
 });
 
 var BUILD = 'build';
+
+gulp.task('minify-css', function()
+{
+  return gulp.src('css/**/*.css')
+    .pipe(concat('nganga.dist.css'))
+    .pipe(cleancss({compatibility: 'ie8'}))
+    .pipe(gulp.dest(BUILD));
+})
 
 gulp.task('minify', function()
 {
