@@ -1,0 +1,21 @@
+{
+  "name": "nganga",
+  "description": "Client-side tools for nganga package",
+  "main": "gulpfile.js",
+  "authors": [
+    "Casey J. Morris <caseyjmorris@users.noreply.github.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/NationalOrganizationForRareDisorders/Nord.Nganga",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "angularjs#^1.5.5"
+  }
+}
