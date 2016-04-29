@@ -1,4 +1,4 @@
-ngangaUi.directive('nordBasicScalar', [function()
+angular.module('nganga.ui').directive('nordBasicScalar', [function()
   {
     return {
       restrict: 'E',

@@ -1,4 +1,4 @@
-﻿ngangaUi.directive('nordRowSimple', [function()
+﻿angular.module('nganga.ui').directive('nordRowSimple', [function()
   {
     return {
       restrict: 'E',

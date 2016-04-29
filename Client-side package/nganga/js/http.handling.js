@@ -24,9 +24,9 @@
         return service;
       };
 
-    ngangaUi.provider('httpMonitorService', httpMonitorServiceProvider);
+    angular.module('nganga.ui').provider('httpMonitorService', httpMonitorServiceProvider);
 
-    ngangaUi.config([
+    angular.module('nganga.ui').config([
       '$httpProvider', 'httpMonitorServiceProvider', function($httpProvider, httpMonitorServiceProvider)
         {
           var convertDate = function convertDate(input)

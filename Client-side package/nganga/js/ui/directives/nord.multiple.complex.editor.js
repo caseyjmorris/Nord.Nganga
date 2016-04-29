@@ -377,6 +377,6 @@
         }
       }
 
-    ngangaUi.directive('nordMultipleComplexEditor', ['$parse', '$log', '$interpolate', 'toasterProxyService',
+    angular.module('nganga.ui').directive('nordMultipleComplexEditor', ['$parse', '$log', '$interpolate', 'toasterProxyService',
       'uniqueIdService', 'directiveEditStateEvaluator', provider]);
   })();

@@ -33,5 +33,5 @@
         }
       }
 
-    ngangaUi.directive('nordBoolControl', [ 'uniqueIdService', 'directiveEditStateEvaluator', provider]);
+    angular.module('nganga.ui').directive('nordBoolControl', [ 'uniqueIdService', 'directiveEditStateEvaluator', provider]);
   })();

@@ -19,5 +19,5 @@
         }
       }
 
-    ngangaUi.factory('uniqueIdService', [provider])
+    angular.module('nganga.ui').factory('uniqueIdService', [provider])
   })();

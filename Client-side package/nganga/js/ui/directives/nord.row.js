@@ -1,4 +1,4 @@
-ngangaUi.directive('nordRow', [function()
+angular.module('nganga.ui').directive('nordRow', [function()
   {
     var tmpl = '<div class="row"><div class="col-md-12"></div></div>';
 

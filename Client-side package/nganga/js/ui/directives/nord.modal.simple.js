@@ -24,5 +24,5 @@
         return body;
       }
 
-    ngangaUi.directive('nordModalSimple', [provider]);
+    angular.module('nganga.ui').directive('nordModalSimple', [provider]);
   })();

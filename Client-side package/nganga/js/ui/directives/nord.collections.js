@@ -320,9 +320,9 @@
             }
           }
 
-        ngangaUi.directive('nordMultipleSimpleEditor', ['uniqueIdService', preprocessorProvider]);
+        angular.module('nganga.ui').directive('nordMultipleSimpleEditor', ['uniqueIdService', preprocessorProvider]);
 
-        ngangaUi.directive('nordMultipleSimpleEditor', ['$log', '$timeout', 'directiveEditStateEvaluator', provider]);
+        angular.module('nganga.ui').directive('nordMultipleSimpleEditor', ['$log', '$timeout', 'directiveEditStateEvaluator', provider]);
       })();
 
     (function nordFileUploadCollection()
@@ -451,7 +451,7 @@
             }
           }
 
-        ngangaUi.directive('nordFileUploadCollection', ['uniqueIdService', 'directiveEditStateEvaluator', provider]);
+        angular.module('nganga.ui').directive('nordFileUploadCollection', ['uniqueIdService', 'directiveEditStateEvaluator', provider]);
       })();
 
   })

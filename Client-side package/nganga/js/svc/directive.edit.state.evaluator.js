@@ -44,5 +44,5 @@
         }
       }
 
-    ngangaUi.factory('directiveEditStateEvaluator', [provider]);
+    angular.module('nganga.ui').factory('directiveEditStateEvaluator', [provider]);
   })();

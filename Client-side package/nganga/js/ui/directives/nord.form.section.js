@@ -1,4 +1,4 @@
-﻿ngangaUi.directive('nordFormSection', [function()
+﻿angular.module('nganga.ui').directive('nordFormSection', [function()
   {
     return {
       restrict: 'E',

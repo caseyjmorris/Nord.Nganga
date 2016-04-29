@@ -1,4 +1,4 @@
-﻿ngangaUi.factory('buildInfoSvc', ['$resource', '$cacheFactory', function ($resource, $cacheFactory) {
+﻿angular.module('nganga.ui').factory('buildInfoSvc', ['$resource', '$cacheFactory', function ($resource, $cacheFactory) {
   return {
     isDebugBuild: function (handler, successFn, failFn) {
       var rsc = $resource('/api/BuildInfoProvider/IsDebugBuild', {}, { 'get': { isArray: false, cache: true } });

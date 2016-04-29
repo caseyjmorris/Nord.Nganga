@@ -1,4 +1,4 @@
-ngangaUi.directive('nordBusySpinner', [
+angular.module('nganga.ui').directive('nordBusySpinner', [
   'httpMonitorService', 'spinner',
   function(httpMonitorService, spinner)
     {

@@ -1,4 +1,4 @@
-ngangaUi.directive('nordDateControl',  ['directiveEditStateEvaluator',
+angular.module('nganga.ui').directive('nordDateControl',  ['directiveEditStateEvaluator',
   function(directiveEditStateEvaluator)
     {
       return {

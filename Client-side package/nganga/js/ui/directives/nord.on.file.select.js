@@ -18,5 +18,5 @@
         }
       }
 
-    ngangaUi.directive('nordOnFileSelect', [provider]);
+    angular.module('nganga.ui').directive('nordOnFileSelect', [provider]);
   })();

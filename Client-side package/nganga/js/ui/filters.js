@@ -1,4 +1,4 @@
-ngangaUi.filter('complexEditorMemberField', [
+angular.module('nganga.ui').filter('complexEditorMemberField', [
   'dateFilter', 'yesNoFilter', 'commonRecordFilter', function(dateFilter, yesNoFilter, commonRecordFilter)
     {
 
@@ -26,7 +26,7 @@ ngangaUi.filter('complexEditorMemberField', [
 ]);
 
 
-ngangaUi.filter('yesNo', function()
+angular.module('nganga.ui').filter('yesNo', function()
 {
   return function(input)
     {
@@ -34,7 +34,7 @@ ngangaUi.filter('yesNo', function()
     }
 });
 
-ngangaUi.filter('mustOrMustNotHave', function()
+angular.module('nganga.ui').filter('mustOrMustNotHave', function()
 {
   return function(input)
     {
@@ -43,7 +43,7 @@ ngangaUi.filter('mustOrMustNotHave', function()
 });
 
 
-ngangaUi.filter('unknownAsInProcessIf', function()
+angular.module('nganga.ui').filter('unknownAsInProcessIf', function()
 {
   return function(input, condition)
     {
@@ -52,7 +52,7 @@ ngangaUi.filter('unknownAsInProcessIf', function()
 });
 
 
-ngangaUi.filter('commonRecord', function()
+angular.module('nganga.ui').filter('commonRecord', function()
 {
   return function(input, list)
     {
@@ -71,7 +71,7 @@ ngangaUi.filter('commonRecord', function()
     }
 });
 
-ngangaUi.filter('valueOrDefault', function()
+angular.module('nganga.ui').filter('valueOrDefault', function()
 {
   return function(input, defaultText)
     {
@@ -79,7 +79,7 @@ ngangaUi.filter('valueOrDefault', function()
     }
 });
 
-ngangaUi.filter('meta', [
+angular.module('nganga.ui').filter('meta', [
   '$filter', function($filter)
     {
       return function()
@@ -99,7 +99,7 @@ ngangaUi.filter('meta', [
     }
 ]);
 
-ngangaUi.filter('iif', function()
+angular.module('nganga.ui').filter('iif', function()
 {
   return function(input, trueValue, falseValue)
     {

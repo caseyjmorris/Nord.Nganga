@@ -111,7 +111,7 @@
         };
       }
 
-    ngangaUi.factory('authService', [
+    angular.module('nganga.ui').factory('authService', [
       '$rootScope', '$resource', 'localStorageService', 'stateHistoryStack', '$state', 'toasterProxyService', 'userInfoService',
       '$cacheFactory', provider
     ]);

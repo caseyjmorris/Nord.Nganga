@@ -69,5 +69,5 @@
         return svc;
       }
 
-    ngangaUi.factory('stateHistoryStack', ['$state', '$log', provider]);
+    angular.module('nganga.ui').factory('stateHistoryStack', ['$state', '$log', provider]);
   })();

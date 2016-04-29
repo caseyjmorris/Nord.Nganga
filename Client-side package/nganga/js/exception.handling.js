@@ -1,11 +1,11 @@
-ngangaUi.provider('$exceptionHandler', {
+angular.module('nganga.ui').provider('$exceptionHandler', {
   '$get': ['exceptionLoggingService', function(exceptionLoggingService)
     {
       return (exceptionLoggingService);
     }]
 });
 
-ngangaUi.factory('exceptionLoggingService', ['$log', '$window', function($log, $window)
+angular.module('nganga.ui').factory('exceptionLoggingService', ['$log', '$window', function($log, $window)
   {
     return function(exception, cause)
       {

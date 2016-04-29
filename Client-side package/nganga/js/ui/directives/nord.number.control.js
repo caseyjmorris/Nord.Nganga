@@ -1,4 +1,4 @@
-ngangaUi.directive('nordNumberControl',  ['directiveEditStateEvaluator', function(directiveEditStateEvaluator)
+angular.module('nganga.ui').directive('nordNumberControl',  ['directiveEditStateEvaluator', function(directiveEditStateEvaluator)
   {
     return {
       restrict: 'E',

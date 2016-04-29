@@ -12,5 +12,5 @@
         };
       }
 
-    ngangaUi.directive('canEditIf', [provider]);
+    angular.module('nganga.ui').directive('canEditIf', [provider]);
   })();

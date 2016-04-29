@@ -42,5 +42,5 @@
         }
       }
 
-    ngangaUi.directive('nordTextControl', ['directiveEditStateEvaluator', provider]);
+    angular.module('nganga.ui').directive('nordTextControl', ['directiveEditStateEvaluator', provider]);
   })();

@@ -1,4 +1,4 @@
-ngangaUi.directive('nordCommonSelectExpansible', ['directiveEditStateEvaluator', function(directiveEditStateEvaluator)
+angular.module('nganga.ui').directive('nordCommonSelectExpansible', ['directiveEditStateEvaluator', function(directiveEditStateEvaluator)
   {
     return {
       restrict: 'E',

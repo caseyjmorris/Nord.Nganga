@@ -1,4 +1,4 @@
-﻿ngangaUi.directive('nordDate', [
+﻿angular.module('nganga.ui').directive('nordDate', [
   function () {
 
     // a custom date directive intended to normalize date behavior on browsers not 

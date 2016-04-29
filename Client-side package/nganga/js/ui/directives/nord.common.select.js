@@ -92,5 +92,5 @@
         }
       }
 
-    ngangaUi.directive('nordCommonSelect', ['$timeout', 'directiveEditStateEvaluator', 'uniqueIdService', provider]);
+    angular.module('nganga.ui').directive('nordCommonSelect', ['$timeout', 'directiveEditStateEvaluator', 'uniqueIdService', provider]);
   })();

@@ -1,4 +1,4 @@
-ngangaUi.directive('nordModal', [
+angular.module('nganga.ui').directive('nordModal', [
   function()
     {
       return {

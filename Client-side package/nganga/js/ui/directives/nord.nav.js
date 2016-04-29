@@ -100,9 +100,9 @@
         return directiveBodyTop;
       }
 
-    ngangaUi.directive('nordNavSidebar', [
+    angular.module('nganga.ui').directive('nordNavSidebar', [
       '$state', providerSidebar
     ]);
 
-    ngangaUi.directive('nordNavTop', ['$state', providerTop]);
+    angular.module('nganga.ui').directive('nordNavTop', ['$state', providerTop]);
   })();

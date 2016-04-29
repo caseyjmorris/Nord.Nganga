@@ -1,4 +1,4 @@
-ngangaUi.factory('userInfoService', [
+angular.module('nganga.ui').factory('userInfoService', [
   'localStorageService', 'stateHistoryStack', '$state',
   function(localStorageService, stateHistoryStack, $state)
     {
