@@ -16,6 +16,11 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "angularjs#^1.5.5"
+    "angular": "angularjs#^1.5.5",
+    "angular-ui-utils": "^3.0.0",
+    "angular-ui-router": "^0.2.18",
+    "AngularJS-Toaster": "angularjs-toaster#^2.0.0",
+    "angular-tablesort": "^1.1.2",
+    "angular-local-storage": "^0.2.7"
   }
 }

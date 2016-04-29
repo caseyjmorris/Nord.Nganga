@@ -4,7 +4,6 @@ var ngangaUi = angular.module(
     'ui.utils',
     'ui.router',
     'ngCookies',
-    'ui.bootstrap',
     'tableSort',
     'toaster',
     'ngAnimate',
