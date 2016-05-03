@@ -1,0 +1,43 @@
+<div class="col-md-{{twelfths}}">
+  <label ng-class="{'required-field-label': isRequired}">
+    {{fieldLabelText}}
+  </label>
+
+  <div ng-class="{'input-group': startCap || endCap}" ng-show="canEdit() && !useFiltered()">
+    <span class="input-group-addon" ng-if="startCap">{{startCap}}</span>
+
+    <select class="form-control" data-ng-model="ngModel"
+            data-ng-options="item.id as item.name for item in commonSelectSource"
+            ng-readonly="waitResolve && (!commonSelectSource.$resolved)">
+      <option value="">---</option>
+    </select>
+
+    <span class="input-group-addon" ng-if="endCap">{{endCap}}</span>
+  </div>
+
+  <div ng-show="canEdit() && useFiltered()">
+
+    <div class="input-group">
+      <p class="form-control" ng-show="!displaySelector()" ng-click="toggleSelectorDisplay()">
+        {{ngModel | commonRecord: commonSelectSource}}
+      </p>
+      <input name="{{uid}}" autocomplete="off" ng-show="displaySelector()" type="text"
+             class="form-control filtered-common-select-search-box" ng-model="filterText">
+      <div class="input-group-addon" ng-click="toggleSelectorDisplay()"><b class="caret"></b></div>
+    </div>
+
+    <div class="filtered-common-select" ng-show="displaySelector()">
+      <nord-row>
+        <ul class="filtered-common-select-list">
+          <li class="filtered-common-select-list-member"
+              ng-repeat="item in commonSelectSource | filter:{name: filterText} track by item.id"
+              ng-click="setSelected(item)">{{::item.name}}</li>
+        </ul>
+      </nord-row>
+    </div>
+  </div>
+
+  <div ng-show="!canEdit()">
+    {{ngModel | commonRecord: commonSelectSource}}
+  </div>
+</div>

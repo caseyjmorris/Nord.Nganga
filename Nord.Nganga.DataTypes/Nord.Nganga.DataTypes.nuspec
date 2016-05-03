@@ -8,11 +8,11 @@
     <owners>National Organization for Rare Disorders</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Datatypes used by Nganga models</description>
-    <releaseNotes>34a825f Published latest version to nuget package
-0ac19ae Made files more convenient, added supprot for filtered dropdowns
-182b5d3 Corrected template
-f49d690 Don't repeat keys
-9bebbad Published latest version to nuget package
+    <releaseNotes>eb99005 bump version
+76681a0 Published latest version to nuget package
+d0a21ea Published latest version to nuget package
+4a4f5d6 Published latest version to nuget package
+bec60e1 Change version
 </releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>nganga</tags>

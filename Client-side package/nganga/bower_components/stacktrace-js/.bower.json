@@ -1,0 +1,47 @@
+{
+  "name": "stacktrace-js",
+  "main": "./dist/stacktrace.concat.js",
+  "homepage": "https://github.com/stacktracejs/stacktrace.js",
+  "authors": [
+    "Eric Wendelin <me@eriwen.com> (https://www.eriwen.com)",
+    "Victor Homyakov <vkhomyackov@gmail.com> (https://github.com/victor-homyakov)",
+    "Oliver Salzburg (https://github.com/oliversalzburg)"
+  ],
+  "description": "Turns partial code location into precise code location",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "stacktrace",
+    "stack-trace",
+    "backtrace",
+    "cross-browser",
+    "framework-agnostic",
+    "error",
+    "debugger"
+  ],
+  "license": "Public Domain",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "spec"
+  ],
+  "dependencies": {
+    "error-stack-parser": "~1.2.3",
+    "stack-generator": "~1.0.7",
+    "stacktrace-gps": "~2.3.0"
+  },
+  "version": "1.1.1",
+  "_release": "1.1.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.1.1",
+    "commit": "0d3b99d73f73374dcefdff006143688ead7e22fe"
+  },
+  "_source": "https://github.com/stacktracejs/stacktrace.js.git",
+  "_target": "^1.1.1",
+  "_originalSource": "stacktrace-js",
+  "_direct": true
+}

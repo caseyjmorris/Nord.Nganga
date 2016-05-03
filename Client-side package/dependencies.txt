@@ -1,0 +1,6 @@
+toaster
+bootstrap
+local-storage
+angular-ui (likely unused)
+tablesort (likely unused)
+spinner

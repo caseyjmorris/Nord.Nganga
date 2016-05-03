@@ -10,7 +10,7 @@ namespace Nord.Nganga.TestConsumer.Models
   [NotUserEditable]
   public class SponsorProgramPeriodDetailCollectionViewModel : ProviderProgramPeriodDetailCollectionBaseViewModel
   {
-    [CollectionEditor(CollectionEditorAttribute.EditorType.Complex)]
+    [CollectionEditor(CollectionEditorAttribute.EditorType.Complex, DefaultObjectDefinitionJson = "{test: 'test'}")]
     public IEnumerable<SponsorViewModel> Sponsors { get; set; }
 
     public DateTime SomeDate { get; set; }

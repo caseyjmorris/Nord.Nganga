@@ -1,7 +1,7 @@
 ﻿delimiters "%","%"
 
 templateVersion() ::=<%
-1.3.0
+1.3.1
 %>
 
 openComment() ::= <%
@@ -258,13 +258,12 @@ field-definitions="%model.Member.TableFieldsExpression%"
 %if(model.Member.SubordinateActionsExpression)%
 additional-buttons="%model.Member.SubordinateActionsExpression%" 
 %endif%
-
 %if (model.Member.DefaultObjectJsonDefintion)%
 default-object-definition="%model.Member.DefaultObjectJsonDefintion%" 
 %endif%
 
 %if(model.Member.IsLedger)%
-ledger-sum-property="%model.Member.LedgerSumProperty%"
+ledger-sum-property="%model.Member.LedgerSumProperty%" 
 %endif%
 
 %if(model.Member.Model.IsViewOnly)%

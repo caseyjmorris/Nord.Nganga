@@ -1,0 +1,29 @@
+{
+  "name": "nganga",
+  "description": "Client-side tools for nganga package",
+  "main": "gulpfile.js",
+  "authors": [
+    "Casey J. Morris <caseyjmorris@users.noreply.github.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/NationalOrganizationForRareDisorders/Nord.Nganga",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "angularjs#^1.5.5",
+    "angular-ui-router": "^0.2.18",
+    "AngularJS-Toaster": "angularjs-toaster#^2.0.0",
+    "angular-tablesort": "^1.1.2",
+    "angular-local-storage": "^0.2.7",
+    "bootstrap": "^3.3.6",
+    "angular-ui-utils": "0.2.2",
+    "spin.js": "^2.3.2",
+    "stacktrace-js": "^1.1.1"
+  }
+}

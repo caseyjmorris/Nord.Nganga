@@ -1,0 +1,66 @@
+<div class="modal fade" id="{{nordModalTarget}}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{nordModalTitle}}</h4>
+      </div>
+      <div class="modal-body">
+        <div ng-transclude></div>
+      </div>
+
+      <div class="modal-footer">
+
+        <div ng-if="nordOnCancel===undefined">
+          <button ng-if="!nordCloseCaption"
+                  type="button"
+                  class="btn btn-default"
+                  data-dismiss="modal">
+            Close
+          </button>
+
+          <button ng-if="nordCloseCaption"
+                  type="button"
+                  class="btn btn-warning"
+                  data-dismiss="modal">
+            {{nordCloseCaption}}
+          </button>
+
+
+          <button ng-if="nordSubmitCaption"
+                  type="button"
+                  class="btn btn-primary"
+                  ng-click="nordOnSubmit()"
+                  ng-disabled="nordSubmitDisabled()">
+            {{nordSubmitCaption}}
+          </button>
+        </div>
+
+        <div ng-if="nordOnCancel!==undefined">
+          <button ng-if="!nordCloseCaption"
+                  type="button"
+                  class="btn btn-warning"
+                  ng-click="nordOnCancel()"
+                  data-dismiss="modal">
+            Close
+          </button>
+
+          <button ng-if="nordCloseCaption"
+                  type="button"
+                  class="btn btn-warning"
+                  ng-click="nordOnCancel()"
+                  data-dismiss="modal">
+            {{nordCloseCaption}}
+          </button>
+
+          <button ng-if="nordSubmitCaption"
+                  type="button"
+                  class="btn btn-primary"
+                  ng-click="nordOnSubmit()"
+                  ng-disabled="nordSubmitDisabled()">
+            {{nordSubmitCaption}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

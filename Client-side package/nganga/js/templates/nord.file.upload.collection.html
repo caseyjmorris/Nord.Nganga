@@ -1,0 +1,58 @@
+<div class="panel panel-default nganga-panel">
+  <div class="panel-heading">
+    {{fieldLabelText}}
+  </div>
+  <table class="table table-condensed table-striped table-hover table-responsive">
+    <thead>
+      <tr>
+        <th>
+          File name
+        </th>
+
+        <th>
+          Actions
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr ng-repeat="file in collection">
+        <td>
+          {{file.fileName}}
+        </td>
+        <td>
+          <div class="btn-group btn-group-sm">
+            <a class="btn btn-default" target="_blank" href="{{file.uri}}">
+              <span class="glyphicon glyphicon-eye-open"></span> View
+            </a>
+            <button type="button" class="btn btn-danger" ng-click="deleteItemAt($index)">
+              <span class="glyphicon glyphicon-remove"></span> Delete
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div ng-show="canEdit()">
+    <nord-row>
+      <h4>
+        New document
+      </h4>
+    </nord-row>
+
+    <nord-row ng-show="showDocumentTypeSelector()">
+      <nord-common-select ng-model="newDoc.documentTypeId"
+                          field-label-text="Document type" twelfths="12" common-select-source="documentTypeSource"
+                          required></nord-common-select>
+    </nord-row>
+
+    <nord-row>
+      <input type="file" multiple ng-disabled="!uploadEnabled()" id="{{uid}}-upload-control" nord-on-file-select="addFiles()"
+             ng-model="obj">
+    </nord-row>
+
+  </div>
+
+
+</div>

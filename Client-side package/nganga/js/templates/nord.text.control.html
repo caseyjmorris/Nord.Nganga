@@ -1,0 +1,16 @@
+<div class="col-md-{{twelfths}}">
+  <label ng-class="{'required-field-label': isRequired}">
+    {{fieldLabelText}}
+  </label>
+
+  <div ng-class="{'input-group': startCap || endCap}" ng-show="canEdit()">
+    <span class="input-group-addon" ng-if="startCap">{{startCap}}</span>
+    <input class="form-control" type="text" ng-required="isRequired ? 'required' : undefined" ng-model="ngModel"
+           ui-mask="{{uiMask}}">
+    <span class="input-group-addon" ng-if="endCap">{{endCap}}</span>
+  </div>
+
+  <div ng-show="!canEdit()">
+    {{startCap}} {{ngModel}} {{endCap}}
+  </div>
+</div>

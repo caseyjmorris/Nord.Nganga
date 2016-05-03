@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.Core", "Nord.Nganga.Core\Nord.Nganga.Core.csproj", "{D57B30BF-6E21-4C47-A06C-2155F6C2C8CA}"
 EndProject
@@ -46,6 +46,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{6B2CA135
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.Commands.Test", "Nord.Nganga.Commands.Test\Nord.Nganga.Commands.Test.csproj", "{07A5D767-B2AB-4708-BAC2-233F3EBEF657}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nord.Nganga.Support", "Nord.Nganga.Support\Nord.Nganga.Support.csproj", "{D4314CFE-AD9D-4412-BA21-A16A248C32AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -116,6 +118,10 @@ Global
 		{07A5D767-B2AB-4708-BAC2-233F3EBEF657}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07A5D767-B2AB-4708-BAC2-233F3EBEF657}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07A5D767-B2AB-4708-BAC2-233F3EBEF657}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4314CFE-AD9D-4412-BA21-A16A248C32AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4314CFE-AD9D-4412-BA21-A16A248C32AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4314CFE-AD9D-4412-BA21-A16A248C32AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4314CFE-AD9D-4412-BA21-A16A248C32AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

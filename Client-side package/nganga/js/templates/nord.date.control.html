@@ -1,0 +1,17 @@
+<div class="col-md-{{twelfths}}">
+  <label ng-class="{'required-field-label': isRequired}">
+    {{fieldLabelText}}
+  </label>
+
+  <div ng-class="{'input-group': startCap || endCap}" ng-show="canEdit()">
+    <span class="input-group-addon" ng-if="startCap">{{startCap}}</span>
+    <nord-date data-ng-model="ngModel" class="form-control"
+               ng-required="isRequired ? 'required' : undefined"></nord-date>
+    <span class="input-group-addon" ng-if="endCap">{{endCap}}</span>
+  </div>
+
+  <div ng-show="!canEdit()">
+    {{startCap}} {{ngModel | date:'shortDate' }} {{endCap}}
+  </div>
+
+</div>
