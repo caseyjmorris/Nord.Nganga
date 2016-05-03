@@ -1,0 +1,14 @@
+/traceopts
+/apiKey: 
+/pubFilePrefix:publish
+/assy:lib\net45\Nord.Nganga.Annotations.dll
+/pkgSrc:https://www.myget.org/F/nord-pkg/
+/tags:"Nord Nganga"
+/releaseNotes:"Baseline release"
+/title:Nord.Nganga.Annotations
+/projectUrl:https://github.com/NationalOrganizationForRareDisorders/Nord.Nganga/
+/summary:Annotations for the Nganga package.
+/injectXmlIntoMetaDataElement:<title>{title}</title><summary>{summary}</summary>
+/injectXmlIntoPackageElement:"<files><file src="lib\**" target="lib"/></files>"
+/authors:"Mark A. Lloyd, Casey Morris"
+/copyright:"Copyright ©  2016 - NORD - National Organization for Rare Disorders"

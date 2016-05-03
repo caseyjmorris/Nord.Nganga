@@ -75,8 +75,12 @@
     <Compile Include="TemplateContext.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="build.cmd" />
     <None Include="Nord.Nganga.Annotations.nuspec" />
     <None Include="publish.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="NuPrep.options.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

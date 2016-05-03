@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
-<package>
+<package >
   <metadata>
     <id>Nord.Nganga.Support</id>
-    <version>1.0.0</version>
-    <title>Nganga support tools</title>
-    <authors>Casey J. Morris, Mark Lloyd</authors>
-    <owners>National Organization for Rare Disorders</owners>
+    <version>1.0.5967.24575</version>
+    <authors>mlloyd</authors>
+    <owners>mlloyd</owners>
+    <licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl>
+    <projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl>
+    <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Support tools for Nganga</description>
-    <releaseNotes>ac3186d Published latest version to nuget package
-3c71a0b Published latest version to nuget package
-029563e nuspec
-1713bac publish support
-74b214b Break bundlers into separate project
-</releaseNotes>
+    <description>Package description</description>
+    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
     <copyright>Copyright 2016</copyright>
-    <tags>nganga support</tags>
+    <tags>Tag1 Tag2</tags>
+    <dependencies>
+      <dependency id="SampleDependency" version="1.0" />
+    </dependencies>
   </metadata>
 </package>

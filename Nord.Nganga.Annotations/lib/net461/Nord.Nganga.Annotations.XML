@@ -1,0 +1,632 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Nord.Nganga.Annotations</name>
+    </assembly>
+    <members>
+        <member name="T:Nord.Nganga.Annotations.Attributes.Angular.AngularModuleNameAttribute">
+            <summary>
+            Specifies the name of the Angular module with which this controller will be associated.
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.Angular.AngularModuleNameAttribute.ModuleName">
+            <summary>
+            The module name.
+            </summary>
+        </member>
+        <member name="M:Nord.Nganga.Annotations.Attributes.Angular.AngularModuleNameAttribute.#ctor(System.String)">
+            <summary>
+            Creates a new AngularModuleNameAttribute.
+            </summary>
+            <param name="moduleName">The module name.</param>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.Angular.AngularRouteIdParameterAttribute">
+            <summary>
+            Indicates the Angular route parameter that should be used as an ID when communicating with this controller's GET methods.
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.Angular.AngularRouteIdParameterAttribute.ParameterName">
+            <summary>
+            Name of the parameter, as stored in UI-Router parameters dictionary.
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.Angular.AngularRouteIdParameterAttribute.IsNullable">
+            <summary>
+            ID can be null.  Null IDs represent new records whereas filled-in ones represent existing records.
+            </summary>
+        </member>
+        <member name="M:Nord.Nganga.Annotations.Attributes.Angular.AngularRouteIdParameterAttribute.#ctor(System.String)">
+            <summary>
+            Creates a new AngularRouteIdParameterAttribute.
+            </summary>
+            <param name="parameterName">Name of the parameter, as stored in UI-Router parameters dictionary.</param>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.Angular.DefaultClientObjectDefinitionAttribute">
+            <summary>
+            When used on methods of a WebAPI controller allowing nullable parameters for the $stateParams property (i.e., dual-use pages supporting both "save new" and "edit" functionality), this attribute allows a backup, default object definitoin for methods if the client-side paremter is null.
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.Angular.DefaultClientObjectDefinitionAttribute.Definition">
+            <summary>
+            The definition, in JavaScript, of the default object.  If no Definition is defined, the default definition is ```{}```.
+            </summary>
+        </member>
+        <member name="M:Nord.Nganga.Annotations.Attributes.Angular.DefaultClientObjectDefinitionAttribute.#ctor(System.String)">
+            <summary>
+            Create a new DefaultClientObjectDefinitionAttribute
+            </summary>
+            <param name="definition">The definition, in JavaScript, of the default object.  If no Definition is defined, the default definition is ```{}```.</param>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.Angular.GenerateResourceOnlyAttribute">
+            <summary>
+            If this attribute is applied, the generation will not consider the method when generating controllers or views.
+            </summary>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.Angular.InjectAngularServicesAttribute">
+            <summary>
+            Include Angular services in addition to the default services.
+            </summary>
+            <remarks>
+            Apply to WebAPI controller.
+            </remarks>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.Angular.InjectAngularServicesAttribute.Services">
+            <summary>
+            Additional services to inject
+            </summary>
+        </member>
+        <member name="M:Nord.Nganga.Annotations.Attributes.Angular.InjectAngularServicesAttribute.#ctor(System.String)">
+            <summary>
+            Creates a nwe InjectAngularServicesAttribute.
+            </summary>
+            <param name="services">A comma-separated list of additional services.</param>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.Angular.InjectJavaScriptAttribute">
+            <summary>
+            When placed on a WebAPI controller, allows the injection of raw JavaScript into
+            the generated AngularJS controller.
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.Angular.InjectJavaScriptAttribute.Content">
+            <summary>
+            The JavaScript statement to be executed.
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.Angular.InjectJavaScriptAttribute.ControllerPosition">
+            <summary>
+            The position in which to inject the JavaScript statement
+            </summary>
+        </member>
+        <member name="M:Nord.Nganga.Annotations.Attributes.Angular.InjectJavaScriptAttribute.#ctor(System.String)">
+            <summary>
+            Creates a new InjectJavaScript attribute
+            </summary>
+            <param name="content">The statement body</param>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.Angular.InjectJavaScriptAttribute.Position">
+            <summary>
+            The position in which to inject the JavaScript statement.  If not specified, the end position is used.
+            </summary>
+        </member>
+        <member name="F:Nord.Nganga.Annotations.Attributes.Angular.InjectJavaScriptAttribute.Position.Beginning">
+            <summary>
+            Right after the function signature declaration
+            </summary>
+        </member>
+        <member name="F:Nord.Nganga.Annotations.Attributes.Angular.InjectJavaScriptAttribute.Position.AfterInitialization">
+            <summary>
+            After all initialization is complete but before any server endpoints are called.
+            </summary>
+        </member>
+        <member name="F:Nord.Nganga.Annotations.Attributes.Angular.InjectJavaScriptAttribute.Position.AfterGet">
+            <summary>
+            After all GET methods to retrieve data on the current page are called but before methods referring to the 
+            POST endpoints are declared.
+            </summary>
+        </member>
+        <member name="F:Nord.Nganga.Annotations.Attributes.Angular.InjectJavaScriptAttribute.Position.End">
+            <summary>
+            At the end of the function
+            </summary>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.Angular.JavaScriptOnPostCompleteAttribute">
+            <summary>
+            Allows the embedding of javascript into generated controllers.
+            ContextType determines if the code should be injected into the success or failure handlers.
+            </summary>
+            <remarks>
+            Only supported for HTTP POST methods.
+            </remarks>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.Angular.JavaScriptOnPostCompleteAttribute.Expression">
+            <summary>
+            The body of the JavaScript statement to be run.
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.Angular.JavaScriptOnPostCompleteAttribute.Context">
+            <summary>
+            Determines whether this statement should be injected into the success or failure handler.
+            </summary>
+        </member>
+        <member name="M:Nord.Nganga.Annotations.Attributes.Angular.JavaScriptOnPostCompleteAttribute.#ctor(System.String)">
+            <summary>
+            Create a new JavaScriptOnPostCompleteAttribute.
+            </summary>
+            <param name="expression">Body of statement.</param>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.Angular.JavaScriptOnPostCompleteAttribute.ContextType">
+            <summary>
+            Determines which handler the statement will be inserted into.
+            </summary>
+        </member>
+        <member name="F:Nord.Nganga.Annotations.Attributes.Angular.JavaScriptOnPostCompleteAttribute.ContextType.Success">
+            <summary>
+            The on success handler
+            </summary>
+        </member>
+        <member name="F:Nord.Nganga.Annotations.Attributes.Angular.JavaScriptOnPostCompleteAttribute.ContextType.Failure">
+            <summary>
+            The on failure handler
+            </summary>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.Angular.SuccessStateOnPostCompleteAttribute">
+            <summary>
+            Transition to a different UI router state on success.
+            JavaScript embedded via JavaScriptOnPostCompleteAttribute
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.Angular.SuccessStateOnPostCompleteAttribute.RouteParameters">
+            <summary>
+            If specified, will be used as the body of the route parameters passed to the $state service.
+            </summary>
+        </member>
+        <member name="M:Nord.Nganga.Annotations.Attributes.Angular.SuccessStateOnPostCompleteAttribute.#ctor(System.String)">
+            <summary>
+            Create a new SuccessStateOnPostCompleteAttribute.
+            </summary>
+            <param name="destinationState">success destination</param>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.Angular.PresentAsViewOnlyDataAttribute">
+            <summary>
+            All data presented by this controller should be presented in a view-only format
+            </summary>
+            <remarks>
+            This is applied to a controller.  NOT a view model!  A controller!
+            </remarks>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.Angular.UseAngularGlobalCacheAttribute">
+            <summary>
+            Indicates Angular resource services accessing this controller should use a global cache.  Use this option if the data changes very infrequently; the cache will not be invalidated unless the user refreshes the whole page.
+            </summary>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.Angular.UseAngularLocalCacheAttribute">
+            <summary>
+            Indicates an Angular cache should be used for Angular resource services interacting with this controller, but invalidated with each call to a POST method.  The cache will be local to this controller and not shared with others.
+            </summary>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.Html.AngularControllerActionSectionHeaderAttribute">
+            <summary>
+            Indicates the view generated based on this controller method should have the header specified.
+            </summary>
+            <remarks>
+            This attribute is intended to be applied directly to the get methods of a controller (or POST methods in the case of POST-only types).
+            </remarks>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.Html.AngularControllerActionSectionHeaderAttribute.Header">
+            <summary>
+            The text of the header
+            </summary>
+        </member>
+        <member name="M:Nord.Nganga.Annotations.Attributes.Html.AngularControllerActionSectionHeaderAttribute.#ctor(System.String)">
+            <summary>
+            Creates a new <see cref="T:Nord.Nganga.Annotations.Attributes.Html.AngularControllerActionSectionHeaderAttribute" />
+            </summary>
+            <param name="header">
+            The text of the header
+            </param>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.Html.CollectionEditorAttribute">
+            <summary>
+            Controls the type of HTML editor to be used for a collection of complex objects.
+            </summary>
+        </member>
+        <member name="M:Nord.Nganga.Annotations.Attributes.Html.CollectionEditorAttribute.#ctor(Nord.Nganga.Annotations.Attributes.Html.CollectionEditorAttribute.EditorType)">
+            <summary>
+            Create a new CollectionEditorAttribute.
+            </summary>
+            <param name="editor">The type of editor to be used.</param>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.Html.CollectionEditorAttribute.DefaultObjectDefinitionJson">
+            <summary>
+            If defined, this JSON is used to hydrate objects when the user elects to add a new object.
+            </summary>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.Html.CollectionEditorAttribute.EditorType">
+            <summary>
+            Type of editor control to use.
+            </summary>
+        </member>
+        <member name="F:Nord.Nganga.Annotations.Attributes.Html.CollectionEditorAttribute.EditorType.Simple">
+            <summary>
+            The simple editor, which displays all fields of all members of the collection
+            </summary>
+        </member>
+        <member name="F:Nord.Nganga.Annotations.Attributes.Html.CollectionEditorAttribute.EditorType.Complex">
+            <summary>
+            The complex editor, which uses a table to show all primitive fields of all members and a form showing a single, selected member for editing
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.Html.CollectionEditorAttribute.Editor">
+            <summary>
+            The editor to be used.
+            </summary>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.Html.FieldWidthAttribute">
+            <summary>
+            Controls the width in Bootstrap columns of a field within HTML rows.
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.Html.FieldWidthAttribute.Twelfths">
+            <summary>
+            Twelfths of the row to be used.
+            </summary>
+        </member>
+        <member name="M:Nord.Nganga.Annotations.Attributes.Html.FieldWidthAttribute.#ctor(System.Int32)">
+            <summary>
+            Creates a new FieldWidthAttribute.
+            </summary>
+            <param name="twelfths">The number of Bootstrap columns the field is to occupy</param>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.Html.InjectHtmlInViewAttribute">
+            <summary>
+            When applied to a GET method of a WebAPI controller, this attribute allows the injection
+            of arbitrary HTML into the generated view.  For longer includes, the ng-include attribute
+            is recommended.
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.Html.InjectHtmlInViewAttribute.HtmlPosition">
+            <summary>
+            Position to insert HTML.  By default, after content.
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.Html.InjectHtmlInViewAttribute.Content">
+            <summary>
+            HTML to be injected
+            </summary>
+        </member>
+        <member name="M:Nord.Nganga.Annotations.Attributes.Html.InjectHtmlInViewAttribute.#ctor(System.String)">
+            <summary>
+            Create a new InsertHtmlInViewAttribute
+            </summary>
+            <param name="content"></param>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.Html.InjectHtmlInViewAttribute.Position">
+            <summary>
+            Position to insert HTML
+            </summary>
+        </member>
+        <member name="F:Nord.Nganga.Annotations.Attributes.Html.InjectHtmlInViewAttribute.Position.BeforeHeader">
+            <summary>
+            Before the header generated by this method
+            </summary>
+        </member>
+        <member name="F:Nord.Nganga.Annotations.Attributes.Html.InjectHtmlInViewAttribute.Position.AfterHeader">
+            <summary>
+            After the header for the section generated by this method
+            </summary>
+        </member>
+        <member name="F:Nord.Nganga.Annotations.Attributes.Html.InjectHtmlInViewAttribute.Position.InsideFormAtBeginning">
+            <summary>
+            Immediately after the &lt;form&gt; tag.
+            </summary>
+        </member>
+        <member name="F:Nord.Nganga.Annotations.Attributes.Html.InjectHtmlInViewAttribute.Position.BeforeSaveButtons">
+            <summary>
+            Before the save buttons at the bottom of the form.
+            </summary>
+        </member>
+        <member name="F:Nord.Nganga.Annotations.Attributes.Html.InjectHtmlInViewAttribute.Position.InsideFormAtEnd">
+            <summary>
+            Immediately before the &lt;/form&gt; tag.
+            </summary>
+        </member>
+        <member name="F:Nord.Nganga.Annotations.Attributes.Html.InjectHtmlInViewAttribute.Position.AfterContent">
+            <summary>
+            After the section generated by this method
+            </summary>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.Html.FormHtmlAttributeAttribute">
+            <summary>
+            Decorates a generated form element with the attribute (and optional value)
+            </summary>
+            <remarks>
+            This is intended to be applied to a controller method.  The attribute (and optional value) 
+            declared here will be added to the <code>form</code> tag generated for the declaring method.
+            </remarks>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.Html.FormHtmlAttributeAttribute.HtmlAttributeName">
+            <summary>
+            The name of the HTML attribute (such as <code>style</code>, <code>required</code>, or <code>ng-show</code>)
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.Html.FormHtmlAttributeAttribute.HtmlAttributeValue">
+            <summary>
+            The value of the HTML attribute.
+            </summary>
+        </member>
+        <member name="M:Nord.Nganga.Annotations.Attributes.Html.FormHtmlAttributeAttribute.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="htmlAttributeName"></param>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.Html.SectionHtmlAttributeAttribute">
+            <summary>
+            Indicates the div enclosing a section should have the HTML attribute and value for the attribute specified.
+            </summary>
+            <remarks>
+            This is intended to be applied directly to the view model class.
+            </remarks>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.Html.SectionHtmlAttributeAttribute.SectionName">
+            <summary>
+            The section to which the rule is applied.
+            </summary>
+            <remarks>
+            If no field in this class declares a <see cref="T:Nord.Nganga.Annotations.Attributes.ViewModels.UiSectionAttribute"/> referring to this section the rule will not be applied.
+            </remarks>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.Html.SectionHtmlAttributeAttribute.HtmlAttributeName">
+            <summary>
+            The name of the HTML attribute (such as <code>style</code>, <code>required</code>, or <code>ng-show</code>)
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.Html.SectionHtmlAttributeAttribute.HtmlAttributeValue">
+            <summary>
+            The value of the HTML attribute.
+            </summary>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.MinimumTemplateVersionAttribute">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.MinimumTemplateVersionAttribute.TemplateContext">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.MinimumTemplateVersionAttribute.MinimumVersion">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Nord.Nganga.Annotations.Attributes.MinimumTemplateVersionAttribute.#ctor(Nord.Nganga.Annotations.TemplateContext,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="templateContext"></param>
+            <param name="minimumVersion"></param>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.ViewModels.BoolLabelAttribute">
+            <summary>
+            Allows customization of the labels of yes and no elements of boolean controls.
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.ViewModels.BoolLabelAttribute.YesLabelText">
+            <summary>
+            The text to show for the "yes" or true label.  Default value is "Yes."
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.ViewModels.BoolLabelAttribute.NoLabelText">
+            <summary>
+            Text to show for the "no" or false label.  Default value is "no."
+            </summary>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.ViewModels.CapAttribute">
+            <summary>
+            Allows definition of input group "caps" (such as a dollar sign before a field).
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.ViewModels.CapAttribute.StartCap">
+            <summary>
+            Text to appear before the field.
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.ViewModels.CapAttribute.EndCap">
+            <summary>
+            Text to appear after the field.
+            </summary>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.ViewModels.ExcludeFromComplexCollectionEditorTableAttribute">
+            <summary>
+            If this attribute is defined, the property will be excluded from the summary table used by the complex collection editor.
+            </summary>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.ViewModels.DocumentTypeSourceProviderAttribute">
+            <summary>
+            When provided on collection of <see cref="!:Nganga.DataTypes.UserFileViewModel"/> objects, defines the expression used to supply file types.  If blank this field will not be shown.
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.ViewModels.DocumentTypeSourceProviderAttribute.Expression">
+            <summary>
+            Body of expression to be used to retrieve document types
+            </summary>
+        </member>
+        <member name="M:Nord.Nganga.Annotations.Attributes.ViewModels.DocumentTypeSourceProviderAttribute.#ctor(System.String)">
+            <summary>
+            Instantiate a new <see cref="T:Nord.Nganga.Annotations.Attributes.ViewModels.DocumentTypeSourceProviderAttribute"/>
+            </summary>
+            <param name="expression">Body of expression to be used to retrieve document types</param>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.ViewModels.SaveButtonTextAttribute">
+            <summary>
+            Replaces the default "Save changes to modelname" text with custom save text
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.ViewModels.SaveButtonTextAttribute.Text">
+            <summary>
+            The text of the save button
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.ViewModels.SaveButtonTextAttribute.Glyphicon">
+            <summary>
+            Glyphicon to use for save button.  Default value is "glyphicon-floppy-save".
+            </summary>
+        </member>
+        <member name="M:Nord.Nganga.Annotations.Attributes.ViewModels.SaveButtonTextAttribute.#ctor(System.String)">
+            <summary>
+            Instantiate a new <see cref="T:Nord.Nganga.Annotations.Attributes.ViewModels.SaveButtonTextAttribute"/>
+            </summary>
+            <param name="text">Text of the save button</param>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.ViewModels.SubordinateItemActionAttribute">
+            <summary>
+            Supports invocation of custom targets (states and functions)...
+            When placed on a an IEnumerable&lt;...ViewModel&gt; propery, 
+            this attribute will result in an area element placed as the last field of each record (item). 
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.ViewModels.SubordinateItemActionAttribute.ColumnHeadingText">
+            <summary>
+            the column heading for the action column
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.ViewModels.SubordinateItemActionAttribute.AttributeName">
+            <summary>
+            The attribute for the inserted area element; examples are ng-click or ui-sref.  
+            The default is value is: "ui-sref".
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.ViewModels.SubordinateItemActionAttribute.AttributeValue">
+            <summary>
+            The value assigned to the attribute identified in AttributeName
+            this would typically be the target state for AttributeName="ui-sref" 
+            or the function reference for AttributeName="ng-click"
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.ViewModels.SubordinateItemActionAttribute.AreaClass">
+            <summary>
+            The class attribute value for the area containing the Attribute name/value pair
+            The default value is:  "btn btn-primary"
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.ViewModels.SubordinateItemActionAttribute.ActionText">
+            <summary>
+            A text string (becomes the button label or link label) to be used on the item
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.ViewModels.SubordinateItemActionAttribute.ActionClass">
+            <summary>
+            The class attribute to be associated with the ActionText.
+            The default value is: "glyphicon glyphicon-arrow-right"
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.ViewModels.SubordinateItemActionAttribute.DoNotEscapeAngularBraces">
+            <summary>
+            If true, Angular-style braces in the values of the fields will not be escaped, causing the values to be executed in the whole-page context.  By default, this is off and such references will run in the context of the individual item.  Note that setting this value on any subordinate action will make it apply to all subordinate actions applied to the same entity.
+            </summary>
+        </member>
+        <member name="M:Nord.Nganga.Annotations.Attributes.ViewModels.SubordinateItemActionAttribute.#ctor(System.String,System.String)">
+            <summary>
+            when placed on a an IEnumerable&lt;...ViewModel&gt; propery, 
+            this attribute will result in an area element placed as the last field of each record (item)
+            </summary>
+            <param name="actionText">The action text value.  See property description for more.</param>
+            <param name="attributeValue">The action target.</param>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.ViewModels.LedgerAttribute">
+            <summary>
+            Specifies the collection should be displayed in a ledger table (for financial information).
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.ViewModels.LedgerAttribute.SumPropertyName">
+            <summary>
+            This property will be summed to produce the current value.
+            </summary>
+        </member>
+        <member name="M:Nord.Nganga.Annotations.Attributes.ViewModels.LedgerAttribute.#ctor(System.String)">
+            <summary>
+            Creates a new <see cref="T:Nord.Nganga.Annotations.Attributes.ViewModels.LedgerAttribute"/>
+            </summary>
+            <param name="sumPropertyName">
+            This property will be summed to produce the current value.
+            </param>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.ViewModels.DefaultSortAttribute">
+            <summary>
+            Indicates that the property should be the default method of sorting when the view model is used in a table.
+            </summary>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.ViewModels.DoNotShowAttribute">
+            <summary>
+            Indicates user should not be shown the value of this property.
+            </summary>
+            <remarks>
+            While there is already a <see cref="!:System.Web.Mvc.HiddenInputAttribute"/> which serves much the same purpose, it's MVC-specific and requires a reference to MVC.  Furthermore, I ran into issues with MVC versions being out-of-sync, causing it not to be detected.  Using this custom attribute instead is my fix.
+            </remarks>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.ViewModels.InputMaskAttribute">
+            <summary>
+            Indicates user should be provided with input mask when entering information
+            </summary>
+            <remarks>
+            Value entered here is fed to ui-mask
+            </remarks>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.ViewModels.NotUserEditableAttribute">
+            <summary>
+            The user may not edit this field or view model from the UI.
+            </summary>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.ViewModels.SelectCommonAttribute">
+            <summary>
+            Property maps to the key of a common record
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.ViewModels.SelectCommonAttribute.ProviderExpression">
+            <summary>
+            Function to resolve the values of this common record
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.ViewModels.SelectCommonAttribute.CommonInformationName">
+            <summary>
+            The name of the common records
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.ViewModels.SelectCommonAttribute.ObjectName">
+            <summary>
+            The name of the object attached to the $scope which will be looked up for values.
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.ViewModels.SelectCommonAttribute.Index">
+            <summary>
+            If the common record is a dictionary, this field specifies the value that will be used as its key.
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.ViewModels.SelectCommonAttribute.RestrictUntilResolved">
+            <summary>
+            if true, the generated control will be attributed with ng-readonly="(!common.{commonInformationName}.$resolved)"
+            further, any subordinate controls will be ng-readonly until such time as a value 
+            is selected on the 'parent' - that is to say that if the Index property is not empty
+            then the ng-readonly attribute will also contain "|| (!common.{commonInformationName}[{Index}])"
+            </summary>
+        </member>
+        <member name="P:Nord.Nganga.Annotations.Attributes.ViewModels.SelectCommonAttribute.UseFilter">
+            <summary>
+            If true, a searchable, filtered dropdown list will be used in lieu of the ordinary dropdown.
+            </summary>
+        </member>
+        <member name="M:Nord.Nganga.Annotations.Attributes.ViewModels.SelectCommonAttribute.#ctor(System.String)">
+            <summary>
+            Generates a new <code>SelectCommonAttribute</code>
+            </summary>
+            <param name="commonInformationName">The name of the common records</param>
+        </member>
+        <member name="T:Nord.Nganga.Annotations.Attributes.ViewModels.UiSectionAttribute">
+            <summary>
+            Indicates this field should be treated as part of a particular section
+            </summary>
+        </member>
+    </members>
+</doc>
