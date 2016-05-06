@@ -1,4 +1,5 @@
-angular.module('nganga.ui').directive('nordDateControl',  ['directiveEditStateEvaluator',
+angular.module('nganga.ui').directive('nordDateControl', [
+  'directiveEditStateEvaluator',
   function(directiveEditStateEvaluator)
     {
       return {
@@ -19,6 +20,13 @@ angular.module('nganga.ui').directive('nordDateControl',  ['directiveEditStateEv
               post: function(scope, el, attrs, canEditIfCtrl)
                 {
                   scope.isRequired = attrs.hasOwnProperty('required');
+                  scope.$watch('ngModel', function()
+                  {
+                    if (typeof scope.ngModel === 'string')
+                      {
+                        scope.ngModel = new Date(scope.ngModel);
+                      }
+                  });
                   scope.canEdit = function()
                     {
                       return directiveEditStateEvaluator.evaluateEditState(canEditIfCtrl, attrs);
