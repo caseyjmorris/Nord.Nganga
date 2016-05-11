@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+<metadata>
+<title>Nord.Nganga.Support</title><summary>Support tools for the Nganga package.</summary>
+<id>Nord.Nganga.Support</id>
+<version>1.0.5968.18205</version>
+<authors>Mark A. Lloyd, Casey Morris</authors>
+<owners>Nord.Nganga.Support</owners>
+<projectUrl>https://github.com/NationalOrganizationForRareDisorders/Nord.Nganga/</projectUrl>
+<description>Nord.Nganga.Support</description>
+<releaseNotes>Baseline release</releaseNotes>
+<copyright>Copyright �  2016 - NORD - National Organization for Rare Disorders</copyright>
+<tags>Nord Nganga</tags>
+</metadata>
+<files><file src="lib\**" target="lib"/></files>
+</package>
