@@ -236,3 +236,6 @@ $RECYCLE.BIN/
 .idea
 *.idea
 *\.idea
+
+bower_components
+*/bower_components

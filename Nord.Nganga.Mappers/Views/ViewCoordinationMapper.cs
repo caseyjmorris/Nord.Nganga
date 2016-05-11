@@ -75,6 +75,7 @@ namespace Nord.Nganga.Mappers.Views
         NgControllerName = controller.Name.Replace("Controller", "Ctrl").Camelize(),
         ViewCoordinatedInfo = coordinatedInfo,
         Header =
+          controller.GetAttributePropertyValueOrDefault<PageHeaderAttribute, string>(a => a.Header) ??
           controller.Name.Replace("Controller", string.Empty)
             .Humanize(CasingEnumMap.Instance[this.viewModelMapper.AssemblyOptions.GetOption(CasingOptionContext.Header)]),
         EditRestricted = filteredInfo.PrivilegedRoles?.Any() ?? false
